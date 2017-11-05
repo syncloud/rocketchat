@@ -1,0 +1,22 @@
+apps:
+  nginx:
+    command: bin/service.nginx.sh start
+    daemon: simple
+    plugs:
+    - network
+    - network-bind
+    restart-condition: always
+    stop-command: bin/service.nginx.sh stop
+    reload-command: bin/service.nginx.sh reload
+  server:
+    command: bin/service.server.sh files
+    daemon: notify
+    plugs:
+    - network
+    - network-bind
+    restart-condition: always
+confinement: strict
+description: Rocket.Chat
+grade: stable
+name: rocketchat
+summary: Rocket.Chat

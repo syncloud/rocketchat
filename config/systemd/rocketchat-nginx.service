@@ -1,0 +1,16 @@
+[Unit]
+Description=rocketchat nginx
+Requires=rocketchat-server.service
+After=rocketchat-server.service
+
+[Service]
+User=rocketchat
+Type=simple
+PIDFile={{ app_dir }}/nginx/logs/nginx.pid
+ExecStartPre={{ app_dir }}/nginx/sbin/nginx -t -c {{ app_data_dir }}/config/nginx.conf -g 'error_log {{ app_data_dir }}/log/nginx_error.log warn;'
+ExecStart={{ app_dir }}/nginx/sbin/nginx -c {{ app_data_dir }}/config/nginx.conf -g 'error_log {{ app_data_dir }}/log/nginx_error.log warn;'
+ExecReload={{ app_dir }}/nginx/sbin/nginx -c {{ app_data_dir }}/config/nginx.conf -s reload -g 'error_log {{ app_data_dir }}/log/nginx_error.log warn;'
+ExecStop={{ app_dir }}/nginx/sbin/nginx -c {{ app_data_dir }}/config/nginx.conf -s stop -g 'error_log {{ app_data_dir }}/log/nginx_error.log warn;'
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,12 @@
+[Unit]
+Description=Rocket.Chat Server
+
+[Service]
+User=rocketchat
+Type=forking
+PIDFile={{ app_data_dir }}/file.pid
+ExecStart={{ app_dir }}/bin/service.server.sh {{ app_data_dir }}/config
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
