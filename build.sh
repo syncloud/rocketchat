@@ -12,7 +12,7 @@ export TMPDIR=/tmp
 export TMP=/tmp
 
 NAME=rocketchat
-ROCKETCHAT_VERSION=
+ROCKETCHAT_VERSION=0.59.3
 COIN_CACHE_DIR=${DIR}/coin.cache
 ARCH=$(uname -m)
 VERSION=$1
@@ -27,29 +27,22 @@ mkdir ${DIR}/lib
 #coin --to lib py https://pypi.python.org/packages/source/m/massedit/massedit-0.67.1.zip
 #coin --to lib py https://pypi.python.org/packages/source/s/syncloud-lib/syncloud-lib-2.tar.gz
 
-cp -r ${DIR}/src lib/syncloud-${NAME}-${VERSION}
-
 rm -rf build
 BUILD_DIR=${DIR}/build/${NAME}
 mkdir -p ${BUILD_DIR}
 
 DOWNLOAD_URL=http://artifact.syncloud.org/3rdparty
 
-coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/php7-${ARCH}.tar.gz
-coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/nginx-${ARCH}.tar.gz
-coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/postgresql-${ARCH}.tar.gz
-
+coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/nodejs-${ARCH}.tar.gz
 coin --to ${BUILD_DIR} raw https://download.rocket.chat/stable
 
 cp -r bin ${BUILD_DIR}
 cp -r config ${BUILD_DIR}/config.templates
-cp -r lib ${BUILD_DIR}
+#cp -r lib ${BUILD_DIR}
+cp -r hooks ${BUILD_DIR}
 
 rm -rf ${BUILD_DIR}/${NAME}/config
 ls -la ${BUILD_DIR}/${NAME}/apps
-
-#disable internal updates as they break us
-rm -r ${BUILD_DIR}/${NAME}/apps/updatenotification
 
 mkdir build/${NAME}/META
 echo ${NAME} >> build/${NAME}/META/app
