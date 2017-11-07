@@ -47,7 +47,7 @@ cp -r ${DIR}/hooks ${BUILD_DIR}
 ls -la ${BUILD_DIR}
 ls -la ${BUILD_DIR}/bundle
 cat ${BUILD_DIR}/bundle/README
-ls -la ${BUILD_DIR}/bundle/programms
+ls -la ${BUILD_DIR}/bundle/programs
 ls -la ${BUILD_DIR}/bundle/server
 
 mkdir ${DIR}/build/${NAME}/META
