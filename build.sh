@@ -48,7 +48,7 @@ ls -la ${BUILD_DIR}
 ls -la ${BUILD_DIR}/bundle
 cat ${BUILD_DIR}/bundle/README
 ls -la ${BUILD_DIR}/bundle/programs
-ls -la ${BUILD_DIR}/bundle/server
+ls -la ${BUILD_DIR}/bundle/programs/server
 
 mkdir ${DIR}/build/${NAME}/META
 echo ${NAME} >> ${DIR}/build/${NAME}/META/app
