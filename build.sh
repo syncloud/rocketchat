@@ -34,9 +34,7 @@ mkdir -p ${BUILD_DIR}
 DOWNLOAD_URL=http://artifact.syncloud.org/3rdparty
 
 coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/nodejs-${ARCH}.tar.gz
-wget https://download.rocket.chat/stable -O ${DIR}/build/rocketchat.tar.gz --progress dot:giga
-cd ${DIR}/build
-tar xf rocketchat.tar.gz -C ${BUILD_DIR}
+coin --to ${BUILD_DIR} raw https://download.rocket.chat/build/rocket.chat-${ROCKETCHAT_VERSION}.tgz
 
 cp -r ${DIR}/bin ${BUILD_DIR}
 cp -r ${DIR}/config ${BUILD_DIR}/config.templates
@@ -45,6 +43,9 @@ cp -r ${DIR}/hooks ${BUILD_DIR}
 
 ls -la ${BUILD_DIR}
 ls -la ${BUILD_DIR}/bundle
+cat ${BUILD_DIR}/bundle/README
+ls -la ${BUILD_DIR}/bundle/programms
+ls -la ${BUILD_DIR}/bundle/server
 
 mkdir ${DIR}/build/${NAME}/META
 echo ${NAME} >> ${DIR}/build/${NAME}/META/app
