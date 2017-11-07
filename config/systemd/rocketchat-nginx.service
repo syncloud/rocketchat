@@ -1,7 +1,5 @@
 [Unit]
-Description=rocketchat nginx
-Requires=rocketchat-server.service
-After=rocketchat-server.service
+Description=Rocket.Chat Nginx
 
 [Service]
 User=rocketchat
