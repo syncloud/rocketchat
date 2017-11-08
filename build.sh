@@ -18,11 +18,8 @@ ARCH=$(uname -m)
 VERSION=$1
 INSTALLER=$2
 
-rm -rf ${DIR}/build
-BUILD_DIR=${DIR}/build/${NAME}
-mkdir -p ${BUILD_DIR}
-
-mkdir ${BUILD_DIR}/lib
+rm -rf ${DIR}/lib
+mkdir ${DIR}/lib
 
 #coin --to lib py https://pypi.python.org/packages/2.7/b/beautifulsoup4/beautifulsoup4-4.4.0-py2-none-any.whl
 #coin --to lib py https://pypi.python.org/packages/ea/03/92d3278bf8287c5caa07dbd9ea139027d5a3592b0f4d14abf072f890fab2/requests-2.11.1-py2.py3-none-any.whl#md5=b4269c6fb64b9361288620ba028fd385
@@ -30,6 +27,9 @@ mkdir ${BUILD_DIR}/lib
 #coin --to lib py https://pypi.python.org/packages/source/m/massedit/massedit-0.67.1.zip
 #coin --to lib py https://pypi.python.org/packages/source/s/syncloud-lib/syncloud-lib-2.tar.gz
 
+rm -rf ${DIR}/build
+BUILD_DIR=${DIR}/build/${NAME}
+mkdir -p ${BUILD_DIR}
 
 DOWNLOAD_URL=http://artifact.syncloud.org/3rdparty
 
@@ -41,7 +41,7 @@ tar xf rocketchat.tar.gz -C ${BUILD_DIR}
 
 cp -r ${DIR}/bin ${BUILD_DIR}
 cp -r ${DIR}/config ${BUILD_DIR}/config.templates
-#cp -r lib ${BUILD_DIR}
+cp -r ${DIR}/lib ${BUILD_DIR}
 cp -r ${DIR}/hooks ${BUILD_DIR}
 
 ls -la ${BUILD_DIR}
