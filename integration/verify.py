@@ -19,7 +19,7 @@ libs = [abspath(join(lib_path, item)) for item in listdir(lib_path) if isdir(joi
 map(lambda x: sys.path.append(x), libs)
 
 import requests
-from bs4 import BeautifulSoup
+
 
 SYNCLOUD_INFO = 'syncloud.info'
 DEVICE_USER = 'user'
