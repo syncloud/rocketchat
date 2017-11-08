@@ -1,0 +1,3 @@
+import hooks
+
+hooks.imstall()

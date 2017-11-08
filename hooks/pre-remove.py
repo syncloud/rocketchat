@@ -1,3 +1,3 @@
-import gogs_hooks
+import hooks
 
-gogs_hooks.remove()
+hooks.remove()
