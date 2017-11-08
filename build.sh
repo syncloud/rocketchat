@@ -54,7 +54,7 @@ ls -la ${BUILD_DIR}/bundle/programs/server
 
 cd ${BUILD_DIR}/bundle/programs/server
 export USER=$(whoami)
-${BUILD_DIR}/nodejs/bin/npm install
+${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm
 
 mkdir ${DIR}/build/${NAME}/META
 echo ${NAME} >> ${DIR}/build/${NAME}/META/app
