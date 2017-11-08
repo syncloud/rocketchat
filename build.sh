@@ -50,6 +50,9 @@ cat ${BUILD_DIR}/bundle/README
 ls -la ${BUILD_DIR}/bundle/programs
 ls -la ${BUILD_DIR}/bundle/programs/server
 
+cd ${BUILD_DIR}/bundle/programs/server
+${BUILD_DIR}/nodejs/bin/npm install
+
 mkdir ${DIR}/build/${NAME}/META
 echo ${NAME} >> ${DIR}/build/${NAME}/META/app
 echo ${VERSION} >> ${DIR}/build/${NAME}/META/version
