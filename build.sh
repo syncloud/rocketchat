@@ -51,6 +51,7 @@ ls -la ${BUILD_DIR}/bundle/programs
 ls -la ${BUILD_DIR}/bundle/programs/server
 
 cd ${BUILD_DIR}/bundle/programs/server
+export USER=$(whoami)
 ${BUILD_DIR}/nodejs/bin/npm install
 
 mkdir ${DIR}/build/${NAME}/META
