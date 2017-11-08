@@ -47,11 +47,13 @@ cp -r ${DIR}/hooks ${BUILD_DIR}
 ls -la ${BUILD_DIR}
 ls -la ${BUILD_DIR}/bundle
 chown -R $(whoami). ${BUILD_DIR}/bundle
+ls -la ${BUILD_DIR}/bundle
 cat ${BUILD_DIR}/bundle/README
 ls -la ${BUILD_DIR}/bundle/programs
 ls -la ${BUILD_DIR}/bundle/programs/server
 
 cd ${BUILD_DIR}/bundle/programs/server
+export USER=$(whoami)
 ${BUILD_DIR}/nodejs/bin/npm install
 
 mkdir ${DIR}/build/${NAME}/META
