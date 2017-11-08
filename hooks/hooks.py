@@ -41,7 +41,7 @@ def install():
         'app_dir': app_dir,
         'app_data_dir': app_data_dir,
         'log_path': log_path,
-        'app_url': app.app_url(),
+        'url': app.app_url(),
         'web_secret': unicode(uuid.uuid4().hex)
     }
 
