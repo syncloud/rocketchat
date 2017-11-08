@@ -1,3 +1,3 @@
 import hooks
 
-hooks.imstall()
+hooks.install()
