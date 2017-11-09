@@ -47,14 +47,16 @@ def driver():
     return driver
 
 
-def test_login(driver, user_domain):
+def test_index(driver, user_domain):
 
-    driver.get("https://{0}".format(user_domain))
+    driver.get("http://{0}".format(user_domain))
     time.sleep(10)
     print(driver.execute_script('return window.JSErrorCollector_errors ? window.JSErrorCollector_errors.pump() : []'))
+    driver.get_screenshot_as_file(join(screenshot_dir, 'index.png'))
+    print(driver.page_source.encode('utf-8'))
 
 
-def test_main(driver, user_domain):
+def test_login(driver, user_domain):
 
     user = driver.find_element_by_id("user")
     user.send_keys(DEVICE_USER)
@@ -91,7 +93,3 @@ def test_main(driver, user_domain):
     driver.get_screenshot_as_file(join(screenshot_dir, 'main.png'))
 
 
-def test_settings(driver, user_domain):
-    driver.get("https://{0}/index.php/settings/admin".format(user_domain))
-    time.sleep(10)
-    driver.get_screenshot_as_file(join(screenshot_dir, 'admin.png'))
