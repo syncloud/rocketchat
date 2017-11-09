@@ -54,7 +54,8 @@ ls -la ${BUILD_DIR}/bundle/programs/server
 
 cd ${BUILD_DIR}/bundle/programs/server
 export USER=$(whoami)
-${BUILD_DIR}/nodejs/bin/npm install -g --unsafe-perm
+rm /usr/bin/phantomjs
+${BUILD_DIR}/nodejs/bin/npm install
 
 mkdir ${DIR}/build/${NAME}/META
 echo ${NAME} >> ${DIR}/build/${NAME}/META/app
