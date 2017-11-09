@@ -23,6 +23,7 @@ from syncloud_platform.gaplib import fs, linux, gen
 APP_NAME = 'rocketchat'
 USER_NAME = 'rocketchat'
 SYSTEMD_ROCKETCHAT = 'rocketchat-server'
+SYSTEMD_NGINX = 'rocketchat-nginx'
 
 
 def install():
@@ -54,11 +55,13 @@ def install():
     fs.chownpath(app_data_dir, USER_NAME, recursive=True)
 
     app.add_service(SYSTEMD_ROCKETCHAT)
+    app.add_service(SYSTEMD_NGINX)
     
 
 def remove():
     app = api.get_app_setup(APP_NAME)
 
+    app.remove_service(SYSTEMD_NGINX)
     app.remove_service(SYSTEMD_ROCKETCHAT)
 
     app_dir = app.get_install_dir()
