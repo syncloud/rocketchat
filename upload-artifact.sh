@@ -10,14 +10,14 @@ if [ -z "$3" ]; then
   exit 1
 fi
 
-if [ ! -d $1 ]; then
-    echo "nothing to upload, $1 does not exist"
-    exit 0
-fi
-
 APP=$1
 SRC=$2
 DST=$3
+
+if [ ! -d $SRC ]; then
+    echo "nothing to upload, $SRC does not exist"
+    exit 0
+fi
 
 echo "$ARTIFACT_SSH_KEY" | base64 --decode > artifact_ssh.key
 chmod 600 artifact_ssh.key
