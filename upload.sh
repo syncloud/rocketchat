@@ -2,7 +2,7 @@
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
-app=nextcloud
+app=rocketchat
 branch=$1
 build_number=$2
 bucket=apps.syncloud.org
