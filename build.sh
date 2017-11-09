@@ -34,6 +34,7 @@ mkdir -p ${BUILD_DIR}
 DOWNLOAD_URL=http://artifact.syncloud.org/3rdparty
 
 coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/nodejs-${ARCH}.tar.gz
+coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/nginx-${ARCH}.tar.gz
 
 wget https://download.rocket.chat/build/rocket.chat-${ROCKETCHAT_VERSION}.tgz -O ${DIR}/build/rocketchat.tar.gz --progress dot:giga
 cd ${DIR}/build
