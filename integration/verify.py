@@ -90,10 +90,6 @@ def module_setup(request, device_host, data_dir, platform_data_dir, app_dir):
 def module_teardown(device_host, data_dir, platform_data_dir, app_dir):
     platform_log_dir = join(LOG_DIR, 'platform_log')
     os.mkdir(platform_log_dir)
-    run_ssh(device_host, 'ls -la {0}'.format(data_dir), password=LOGS_SSH_PASSWORD, throw=False)
-    run_ssh(device_host, 'ls -la {0}/rocketcaht/config'.format(data_dir), password=LOGS_SSH_PASSWORD, throw=False)
-    run_ssh(device_host, 'ls -la /data/rocketcaht', password=LOGS_SSH_PASSWORD, throw=False)
-    run_ssh(device_host, 'cat {0}/rocketcaht/config/config.php'.format(data_dir), password=LOGS_SSH_PASSWORD, throw=False)
     run_scp('root@{0}:{1}/log/* {2}'.format(device_host, platform_data_dir, platform_log_dir), password=LOGS_SSH_PASSWORD, throw=False)
     
     run_scp('root@{0}:/var/log/sam.log {1}'.format(device_host, platform_log_dir), password=LOGS_SSH_PASSWORD, throw=False)

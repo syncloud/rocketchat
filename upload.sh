@@ -2,9 +2,9 @@
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
-app=rocketchat
-branch=$1
-build_number=$2
+app=$1
+branch=$2
+build_number=$3
 bucket=apps.syncloud.org
 arch=$(uname -m)
 

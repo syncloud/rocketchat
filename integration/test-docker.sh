@@ -2,8 +2,8 @@
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
-if [ "$#" -lt 7 ]; then
-    echo "usage $0 redirect_user redirect_password redirect_domain version release [sam|snapd] device_host"
+if [ "$#" -lt 8 ]; then
+    echo "usage $0 redirect_user redirect_password redirect_domain version release [sam|snapd] device_host app"
     exit 1
 fi
 
@@ -13,7 +13,7 @@ RELEASE=$5
 INSTALLER=$6
 DEVICE_HOST=$7
 
-APP=rocketchat
+APP=$8
 GECKODRIVER=0.14.0
 FIREFOX=52.0
 ARCH=$(uname -m)

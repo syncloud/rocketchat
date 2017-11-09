@@ -3,20 +3,20 @@
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 cd ${DIR}
 
-if [[ -z "$2" ]]; then
-    echo "usage $0 version installer"
+if [[ -z "$3" ]]; then
+    echo "usage $0 app version installer"
     exit 1
 fi
 
 export TMPDIR=/tmp
 export TMP=/tmp
 
-NAME=rocketchat
+NAME=$1
 ROCKETCHAT_VERSION=0.59.3
 COIN_CACHE_DIR=${DIR}/coin.cache
 ARCH=$(uname -m)
-VERSION=$1
-INSTALLER=$2
+VERSION=$2
+INSTALLER=$3
 
 rm -rf ${DIR}/lib
 mkdir ${DIR}/lib
@@ -54,7 +54,7 @@ ls -la ${BUILD_DIR}/bundle/programs/server
 
 cd ${BUILD_DIR}/bundle/programs/server
 export USER=$(whoami)
-${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm
+${BUILD_DIR}/nodejs/bin/npm install -g --unsafe-perm
 
 mkdir ${DIR}/build/${NAME}/META
 echo ${NAME} >> ${DIR}/build/${NAME}/META/app

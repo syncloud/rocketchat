@@ -10,32 +10,37 @@ pipeline:
     image: syncloud/build-deps-${arch}
     commands:
       - echo $(date +%y%m%d) > version
+      - echo "rocketchat" > name
       
   build:
     image: syncloud/build-deps-${arch}
     commands:
       - VERSION=$(cat version)
-      - ./build.sh $VERSION ${installer}
+      - NAME=$(cat name)
+      - ./build.sh $NAME $VERSION ${installer}
 
   integration:
     image: syncloud/build-deps-${arch}
     commands:
       - VERSION=$(cat version)
-      - ./integration/test-docker.sh teamcity@syncloud.it password teamcity $VERSION master ${installer} device
+      - NAME=$(cat name)
+      - ./integration/test-docker.sh teamcity@syncloud.it password teamcity $VERSION master ${installer} device $NAME
 
   upload:
     image: syncloud/build-deps-${arch}
     secrets: [AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY]
     commands:
       - VERSION=$(cat version)
-      - ./upload.sh $DRONE_BRANCH $VERSION
+      - NAME=$(cat name)
+      - ./upload.sh $NAME $DRONE_BRANCH $VERSION
 
   ci-artifact:
     image: syncloud/build-deps-${arch}
     secrets: [ARTIFACT_SSH_KEY]
     commands:
-      - ./upload-artifact.sh integration/log $DRONE_BUILD_NUMBER-${installer}-$(dpkg --print-architecture)
-      - ./upload-artifact.sh integration/screenshot $DRONE_BUILD_NUMBER-${installer}-$(dpkg --print-architecture)
+      - NAME=$(cat name)
+      - ./upload-artifact.sh $NAME integration/log $DRONE_BUILD_NUMBER-${installer}-$(dpkg --print-architecture)
+      - ./upload-artifact.sh $NAME integration/screenshot $DRONE_BUILD_NUMBER-${installer}-$(dpkg --print-architecture)
     when:
       status: [ failure, success ] 
 
