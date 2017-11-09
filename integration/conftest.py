@@ -13,7 +13,7 @@ def pytest_addoption(parser):
     parser.addoption("--installer", action="store")
     parser.addoption("--device-host", action="store")
     parser.addoption("--app-archive-path", action="store")
-
+    parser.addoption("--app", action="store")
 
 @pytest.fixture(scope="session")
 def auth(request):
