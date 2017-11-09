@@ -109,10 +109,10 @@ def syncloud_session(device_host):
     return session
 
 
-# @pytest.fixture(scope='function')
-# def rocketcaht_session_domain(user_domain, device_host):
-#     session = requests.session()
-#     response = session.get('http://{0}/index.php/login'.format(device_host), headers={"Host": user_domain}, allow_redirects=False)
+@pytest.fixture(scope='function')
+def rocketcaht_session_domain(user_domain, device_host):
+    session = requests.session()
+    response = session.get('http://{0}'.format(user_domain), allow_redirects=False)
     print(response.text)
     # soup = BeautifulSoup(response.text, "html.parser")
     # requesttoken = soup.find_all('input', {'name': 'requesttoken'})[0]['value']
@@ -145,22 +145,9 @@ def test_activate_device(auth, device_host):
 #     assert '"success": true' in response.text
 #     assert response.status_code == 200
 
-#def test_occ(device_host, app_dir, data_dir):
-#    run_ssh(device_host, '{0}/bin/occ-runner help maintenance:install'.format(app_dir), password=LOGS_SSH_PASSWORD, env_vars='DATA_DIR={0}'.format(data_dir))
 
 def test_install(app_archive_path, device_host, installer):
     local_install(device_host, DEVICE_PASSWORD, app_archive_path, installer)
-
-
-def test_resource(rocketcaht_session_domain, user_domain, device_host):
-    session, _ = rocketcaht_session_domain
-    response = session.get('http://{0}/core/img/loading.gif'.format(device_host), headers={"Host": user_domain})
-    assert response.status_code == 200, response.text
-
-
-def test_visible_through_platform(user_domain, device_host):
-    response = requests.get('http://{0}/index.php/login'.format(device_host), headers={"Host": user_domain}, allow_redirects=False)
-    assert response.status_code == 200, response.text
 
 
 def test_remove(syncloud_session, device_host):
@@ -170,6 +157,3 @@ def test_remove(syncloud_session, device_host):
 
 def test_reinstall(app_archive_path, device_host, installer):
     local_install(device_host, DEVICE_PASSWORD, app_archive_path, installer)
-
-
-
