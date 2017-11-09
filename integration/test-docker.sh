@@ -76,4 +76,4 @@ echo "$device_ip $APP.$DOMAIN.syncloud.info" >> /etc/hosts
 
 cat /etc/hosts
 
-xvfb-run -l --server-args="-screen 0, 1024x4096x24" py.test -x -s ${TEST_SUITE} --email=$1 --password=$2 --domain=$DOMAIN --release=$RELEASE --app-archive-path=${APP_ARCHIVE_PATH} --installer=${INSTALLER} --device-host=${DEVICE_HOST}
+xvfb-run -l --server-args="-screen 0, 1024x4096x24" py.test -x -s ${TEST_SUITE} --email=$1 --password=$2 --domain=$DOMAIN --release=$RELEASE --app-archive-path=${APP_ARCHIVE_PATH} --installer=${INSTALLER} --device-host=${DEVICE_HOST} --app=$APP
