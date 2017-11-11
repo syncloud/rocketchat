@@ -37,7 +37,8 @@ def install():
 
     log_path = join(app_data_dir, 'log')
     fs.makepath(log_path)
-
+    fs.makepath(join(app_data_dir, 'nginx'))
+    
     variables = {
         'app_dir': app_dir,
         'app_data_dir': app_data_dir,
