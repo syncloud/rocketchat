@@ -44,7 +44,7 @@ mkdir -p ${BUILD_DIR}
 
 cd ${DIR}/build
 
-wget $SRC_SNAP_URL
+wget $SRC_SNAP_URL --progress dot:giga
 unsquashfs -d ${DIR}/build/src_snap $SRC_SNAP
 
 ls -la ${DIR}/build/src_snap/
@@ -52,8 +52,10 @@ ls -la ${DIR}/build/src_snap/bin
 
 mkdir ${BUILD_DIR}/mongodb
 mkdir ${BUILD_DIR}/mongodb/bin
+mkdir ${BUILD_DIR}/mongodb/lib
 
-cp ${DIR}/build/src_snap/bin/mongod ${BUILD_DIR}/mongodb/bin/
+cp ${DIR}/build/src_snap/usr/bin/mongod ${BUILD_DIR}/mongodb/bin/
+cp -r ${DIR}/build/src_snap/usr/lib/* ${BUILD_DIR}/mongodb/lib/
 
 coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/nodejs-${ARCH}.tar.gz
 coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/nginx-${ARCH}.tar.gz
