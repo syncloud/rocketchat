@@ -24,7 +24,7 @@ APP_NAME = 'rocketchat'
 USER_NAME = 'rocketchat'
 SYSTEMD_ROCKETCHAT = 'rocketchat-server'
 SYSTEMD_NGINX = 'rocketchat-nginx'
-
+SYSTEMD_MONGODB = 'rocketchat-mongodb'
 
 def install():
     log = logger.get_logger('rocketchat_installer')
@@ -54,6 +54,7 @@ def install():
     fs.chownpath(app_dir, USER_NAME, recursive=True)
     fs.chownpath(app_data_dir, USER_NAME, recursive=True)
 
+    app.add_service(SYSTEMD_MONGODB)
     app.add_service(SYSTEMD_ROCKETCHAT)
     app.add_service(SYSTEMD_NGINX)
     
@@ -63,6 +64,7 @@ def remove():
 
     app.remove_service(SYSTEMD_NGINX)
     app.remove_service(SYSTEMD_ROCKETCHAT)
+    app.remove_service(SYSTEMD_MONGODB)
 
     app_dir = app.get_install_dir()
 
