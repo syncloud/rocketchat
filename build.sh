@@ -28,7 +28,7 @@ mkdir ${DIR}/lib
 #coin --to lib py https://pypi.python.org/packages/source/m/massedit/massedit-0.67.1.zip
 #coin --to lib py https://pypi.python.org/packages/source/s/syncloud-lib/syncloud-lib-2.tar.gz
 
-if [ $SNAP_ARCH == "armhf ]; then
+if [ $SNAP_ARCH == "armhf" ]; then
     SRC_SNAP_BUILD=22904
 else
     SRC_SNAP_BUILD=22903
