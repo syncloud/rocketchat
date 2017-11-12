@@ -35,14 +35,13 @@ def install():
 
     linux.useradd(USER_NAME)
 
-    log_path = join(app_data_dir, 'log')
-    fs.makepath(log_path)
+    fs.makepath(join(app_data_dir, 'log'))
     fs.makepath(join(app_data_dir, 'nginx'))
-    
+    fs.makepath(join(app_data_dir, 'mongodb'))
+
     variables = {
         'app_dir': app_dir,
         'app_data_dir': app_data_dir,
-        'log_path': log_path,
         'url': app.app_url(),
         'web_secret': unicode(uuid.uuid4().hex)
     }

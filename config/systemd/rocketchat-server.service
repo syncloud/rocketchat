@@ -1,6 +1,7 @@
 [Unit]
 Description=Rocket.Chat Server
-After=network.target rocketchat.mongo.target rocketchat.nginx.target
+Requires=network.target rocketchat-mongodb.service rocketchat-nginx.service
+After=network.target rocketchat-mongodb.service rocketchat-nginx.service
 
 [Service]
 ExecStart={{ app_dir }}/nodejs/bin/node {{ app_dir }}/bundle/main.js # Specify the location of node and location of main.js
@@ -15,7 +16,7 @@ StandardError=syslog
 SyslogIdentifier=rocketchat
 User=rocketchat
 #Group=<alternate group>
-Environment=NODE_ENV=production PORT=3000 ROOT_URL={{ url }} MONGO_URL=mongodb://localhost:27017/rocketchat
+Environment=NODE_ENV=production PORT=3000 ROOT_URL={{ url }} MONGO_URL=mongodb://{{ app_data_dir }}/mongodb-27017.sock/rocketchat
 
 [Install]
 WantedBy=multi-user.target 

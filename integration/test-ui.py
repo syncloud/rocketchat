@@ -56,40 +56,40 @@ def test_index(driver, user_domain):
     print(driver.page_source.encode('utf-8'))
 
 
-def test_login(driver, user_domain):
-
-    user = driver.find_element_by_id("user")
-    user.send_keys(DEVICE_USER)
-    password = driver.find_element_by_id("password")
-    password.send_keys(DEVICE_PASSWORD)
-    driver.get_screenshot_as_file(join(screenshot_dir, 'login.png'))
-    # print(driver.page_source.encode('utf-8'))
-
-    password.send_keys(Keys.RETURN)
-    driver.get_screenshot_as_file(join(screenshot_dir, 'login_progress.png'))
-    #time.sleep(30)
-    #driver.get_screenshot_as_file(join(screenshot_dir, 'login_progress_2.png'))
-   
-    # try:
-    #     password.submit()
-    # except WebDriverException, e:
-    #     if 'submit is not a function' in e.msg:
-    #         print("https://github.com/SeleniumHQ/selenium/issues/3483")
-    #         print(e)
-    #         pass
-    #     else:
-    #         raise e
-    # time.sleep(5)
-    #
-    
-    wait_driver = WebDriverWait(driver, 120)
-    #wait_driver.until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, '#header #expandDisplayName'), DEVICE_USER))
-
-    wait_driver.until(EC.element_to_be_clickable((By.ID, 'closeWizard')))
-    wizard_close_button = driver.find_element_by_id("closeWizard")
-    wizard_close_button.click()
-
-    time.sleep(2)
-    driver.get_screenshot_as_file(join(screenshot_dir, 'main.png'))
-
-
+# def test_login(driver, user_domain):
+#
+#     user = driver.find_element_by_id("user")
+#     user.send_keys(DEVICE_USER)
+#     password = driver.find_element_by_id("password")
+#     password.send_keys(DEVICE_PASSWORD)
+#     driver.get_screenshot_as_file(join(screenshot_dir, 'login.png'))
+#     # print(driver.page_source.encode('utf-8'))
+#
+#     password.send_keys(Keys.RETURN)
+#     driver.get_screenshot_as_file(join(screenshot_dir, 'login_progress.png'))
+#     #time.sleep(30)
+#     #driver.get_screenshot_as_file(join(screenshot_dir, 'login_progress_2.png'))
+#
+#     # try:
+#     #     password.submit()
+#     # except WebDriverException, e:
+#     #     if 'submit is not a function' in e.msg:
+#     #         print("https://github.com/SeleniumHQ/selenium/issues/3483")
+#     #         print(e)
+#     #         pass
+#     #     else:
+#     #         raise e
+#     # time.sleep(5)
+#     #
+#
+#     wait_driver = WebDriverWait(driver, 120)
+#     #wait_driver.until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, '#header #expandDisplayName'), DEVICE_USER))
+#
+#     wait_driver.until(EC.element_to_be_clickable((By.ID, 'closeWizard')))
+#     wizard_close_button = driver.find_element_by_id("closeWizard")
+#     wizard_close_button.click()
+#
+#     time.sleep(2)
+#     driver.get_screenshot_as_file(join(screenshot_dir, 'main.png'))
+#
+#

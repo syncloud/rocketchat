@@ -112,7 +112,7 @@ def syncloud_session(device_host):
 @pytest.fixture(scope='function')
 def rocketcaht_session_domain(user_domain, device_host):
     session = requests.session()
-    response = session.get('http://{0}'.format(user_domain), allow_redirects=False)
+    response = session.get('http://{0}'.format(user_domain), allow_redirects=True)
     print(response.text)
     # soup = BeautifulSoup(response.text, "html.parser")
     # requesttoken = soup.find_all('input', {'name': 'requesttoken'})[0]['value']
@@ -121,8 +121,9 @@ def rocketcaht_session_domain(user_domain, device_host):
     #                         data={'user': DEVICE_USER, 'password': DEVICE_PASSWORD, 'requesttoken': requesttoken},
     #                         allow_redirects=False)
     # assert response.status_code == 303, response.text
-    # return session, requesttoken
+    return session
 #
+
 
 def test_start(module_setup):
     shutil.rmtree(LOG_DIR, ignore_errors=True)

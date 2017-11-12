@@ -1,0 +1,10 @@
+[Unit]
+Description=Rocket.Chat MongoDB
+After=network.target
+
+[Service]
+User=rocketchat
+ExecStart={{ app_dir }}/mongodb/bin/mongod --quiet --config {{ app_data_dir }}/config/mongodb.conf
+
+[Install]
+WantedBy=multi-user.target
