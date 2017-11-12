@@ -54,11 +54,14 @@ mkdir ${BUILD_DIR}/mongodb
 mkdir ${BUILD_DIR}/mongodb/bin
 mkdir ${BUILD_DIR}/mongodb/lib
 
-cp ${DIR}/build/src_snap/usr/bin/mongod ${BUILD_DIR}/mongodb/bin/ || true
-cp ${DIR}/build/src_snap/bin/mongod ${BUILD_DIR}/mongodb/bin/ || true
+cp ${DIR}/bin/mongod ${BUILD_DIR}/mongodb/bin/
+cp ${DIR}/build/src_snap/usr/bin/mongod ${BUILD_DIR}/mongodb/bin/mongo.bin || true
+cp ${DIR}/build/src_snap/bin/mongod ${BUILD_DIR}/mongodb/bin/mongo.bin || true
 
 cp -r ${DIR}/build/src_snap/lib/$(dpkg-architecture -q DEB_HOST_GNU_TYPE)/* ${BUILD_DIR}/mongodb/lib/
 cp -r ${DIR}/build/src_snap/usr/lib/* ${BUILD_DIR}/mongodb/lib/
+
+${BUILD_DIR}/mongodb/bin/mongod --version
 
 coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/nodejs-${ARCH}.tar.gz
 coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/nginx-${ARCH}.tar.gz
