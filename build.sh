@@ -55,8 +55,8 @@ mkdir ${BUILD_DIR}/mongodb/bin
 mkdir ${BUILD_DIR}/mongodb/lib
 
 cp ${DIR}/bin/mongod ${BUILD_DIR}/mongodb/bin/
-cp ${DIR}/build/src_snap/usr/bin/mongod ${BUILD_DIR}/mongodb/bin/mongo.bin || true
-cp ${DIR}/build/src_snap/bin/mongod ${BUILD_DIR}/mongodb/bin/mongo.bin || true
+cp ${DIR}/build/src_snap/usr/bin/mongod ${BUILD_DIR}/mongodb/bin/mongod.bin || true
+cp ${DIR}/build/src_snap/bin/mongod ${BUILD_DIR}/mongodb/bin/mongod.bin || true
 
 cp -r ${DIR}/build/src_snap/lib/$(dpkg-architecture -q DEB_HOST_GNU_TYPE)/* ${BUILD_DIR}/mongodb/lib/
 cp -r ${DIR}/build/src_snap/usr/lib/* ${BUILD_DIR}/mongodb/lib/
