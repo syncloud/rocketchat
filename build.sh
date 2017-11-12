@@ -15,6 +15,7 @@ NAME=$1
 ROCKETCHAT_VERSION=0.59.3
 COIN_CACHE_DIR=${DIR}/coin.cache
 ARCH=$(uname -m)
+SNAP_ARCH=$(dpkg --print-architecture)
 VERSION=$2
 INSTALLER=$3
 
@@ -27,18 +28,39 @@ mkdir ${DIR}/lib
 #coin --to lib py https://pypi.python.org/packages/source/m/massedit/massedit-0.67.1.zip
 #coin --to lib py https://pypi.python.org/packages/source/s/syncloud-lib/syncloud-lib-2.tar.gz
 
+if [ $SNAP_ARCH == "armhf ]; then
+    SRC_SNAP_BUILD=22904
+else
+    SRC_SNAP_BUILD=22903
+fi
+
+SRC_SNAP=rocketchat-server_0.52.0_$SNAP_ARCH.snap
+SRC_SNAP_URL=https://code.launchpad.net/~sing-li/+snap/rocketchat-server/+build/$SRC_SNAP_BUILD/+files/$SRC_SNAP
+DOWNLOAD_URL=http://artifact.syncloud.org/3rdparty
+
 rm -rf ${DIR}/build
 BUILD_DIR=${DIR}/build/${NAME}
 mkdir -p ${BUILD_DIR}
 
-DOWNLOAD_URL=http://artifact.syncloud.org/3rdparty
+cd ${DIR}/build
+
+wget $SRC_SNAP_URL
+unsquashfs -d ${DIR}/build/src_snap $SRC_SNAP
+
+ls -la ${DIR}/build/src_snap/
+ls -la ${DIR}/build/src_snap/bin
+
+mkdir ${BUILD_DIR}/mongodb
+mkdir ${BUILD_DIR}/mongodb/bin
+
+cp ${DIR}/build/src_snap/bin/mongod ${BUILD_DIR}/mongodb/bin/
 
 coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/nodejs-${ARCH}.tar.gz
 coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/nginx-${ARCH}.tar.gz
-coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/mongodb-${ARCH}.tar.gz
+#coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/mongodb-${ARCH}.tar.gz
 
 wget https://download.rocket.chat/build/rocket.chat-${ROCKETCHAT_VERSION}.tgz -O ${DIR}/build/rocketchat.tar.gz --progress dot:giga
-cd ${DIR}/build
+
 tar xf rocketchat.tar.gz -C ${BUILD_DIR}
 
 cp -r ${DIR}/bin ${BUILD_DIR}
