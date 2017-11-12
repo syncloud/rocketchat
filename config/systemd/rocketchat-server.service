@@ -4,7 +4,8 @@ Requires=network.target rocketchat-mongodb.service
 After=network.target rocketchat-mongodb.service
 
 [Service]
-ExecStart={{ app_dir }}/nodejs/bin/node {{ app_dir }}/bundle/main.js # Specify the location of node and location of main.js
+ExecStart={{ app_dir }}/nodejs/bin/node {{ app_dir }}/bundle/main.js
+# Specify the location of node and location of main.js
 # If set to always, the service will be restarted regardless of whether it exited cleanly or not, got terminated abnormally by a signal, or hit a timeout.
 Restart=always
 # Restart service after 10 seconds if node service crashes
