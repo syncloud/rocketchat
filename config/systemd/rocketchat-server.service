@@ -1,7 +1,7 @@
 [Unit]
 Description=Rocket.Chat Server
-Requires=network.target rocketchat-mongodb.service rocketchat-nginx.service
-After=network.target rocketchat-mongodb.service rocketchat-nginx.service
+Requires=network.target rocketchat-mongodb.service
+After=network.target rocketchat-mongodb.service
 
 [Service]
 ExecStart={{ app_dir }}/nodejs/bin/node {{ app_dir }}/bundle/main.js # Specify the location of node and location of main.js
