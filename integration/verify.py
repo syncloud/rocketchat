@@ -94,8 +94,10 @@ def module_teardown(device_host, data_dir, platform_data_dir, app_dir):
     
     run_scp('root@{0}:/var/log/sam.log {1}'.format(device_host, platform_log_dir), password=LOGS_SSH_PASSWORD, throw=False)
 
-    print('systemd logs')
-    run_ssh(device_host, 'journalctl | tail -200', password=LOGS_SSH_PASSWORD)
+    print('systemd 
+    run_ssh(device_host, 'journalctl | tail -500 > {1}/log/journalctl.log'.format(data_dir), password=LOGS_SSH_PASSWORD)
+    run_ssh(device_host, 'tail -500 /var/log/syslog > {1}/log/syslog.log'.format(data_dir), password=LOGS_SSH_PASSWORD, throw=False)
+    run_ssh(device_host, 'tail -500 /var/log/messages > {1}/log/messages.log'.format(data_dir), password=LOGS_SSH_PASSWORD, throw=False)
 
     app_log_dir  = join(LOG_DIR, 'rocketcaht_log')
     os.mkdir(app_log_dir )
