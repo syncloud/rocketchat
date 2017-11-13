@@ -17,7 +17,10 @@ StandardError=syslog
 SyslogIdentifier=rocketchat
 User=rocketchat
 #Group=<alternate group>
-Environment=NODE_ENV=production PORT=3000 ROOT_URL={{ url }} MONGO_URL=mongodb://{{ app_data_dir }}/mongodb-27017.sock/rocketchat
+Environment=NODE_ENV=production
+Environment=PORT=3000
+Environment=ROOT_URL={{ url }}
+Environment=MONGO_URL=mongodb://{{ app_data_dir }}/mongodb-27017.sock/rocketchat
 
 [Install]
 WantedBy=multi-user.target 
