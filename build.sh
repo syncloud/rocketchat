@@ -59,7 +59,7 @@ cp ${DIR}/build/src_snap/usr/bin/mongod ${BUILD_DIR}/mongodb/bin/mongod.bin || t
 cp ${DIR}/build/src_snap/bin/mongod ${BUILD_DIR}/mongodb/bin/mongod.bin || true
 
 cp -r ${DIR}/build/src_snap/lib/$(dpkg-architecture -q DEB_HOST_GNU_TYPE)/* ${BUILD_DIR}/mongodb/lib/
-cp -r ${DIR}/build/src_snap/usr/lib/* ${BUILD_DIR}/mongodb/lib/
+cp -r ${DIR}/build/src_snap/usr/lib/$(dpkg-architecture -q DEB_HOST_GNU_TYPE)/* ${BUILD_DIR}/mongodb/lib/
 
 ${BUILD_DIR}/mongodb/bin/mongod --version
 
