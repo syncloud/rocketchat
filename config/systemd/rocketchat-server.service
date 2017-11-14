@@ -4,7 +4,12 @@ Requires=network.target rocketchat-mongodb.service
 After=network.target rocketchat-mongodb.service
 
 [Service]
-ExecStart={{ app_dir }}/nodejs/bin/node {{ app_dir }}/bundle/main.js >> {{ app_data_dir }}/log/rocketchat.log 2>&1
+Type=simple
+Environment=NODE_ENV=production
+Environment=PORT=3000
+Environment=ROOT_URL={{ url }}
+Environment=MONGO_URL=mongodb://{{ app_data_dir }}/mongodb-27017.sock/rocketchat
+ExecStart={{ app_dir }}/nodejs/bin/node {{ app_dir }}/bundle/main.js
 # Specify the location of node and location of main.js
 # If set to always, the service will be restarted regardless of whether it exited cleanly or not, got terminated abnormally by a signal, or hit a timeout.
 Restart=always
@@ -17,10 +22,6 @@ StandardError=syslog
 SyslogIdentifier=rocketchat
 User=rocketchat
 #Group=<alternate group>
-Environment=NODE_ENV=production
-Environment=PORT=3000
-Environment=ROOT_URL={{ url }}
-Environment=MONGO_URL=mongodb://{{ app_data_dir }}/mongodb-27017.sock/rocketchat
 
 [Install]
 WantedBy=multi-user.target 
