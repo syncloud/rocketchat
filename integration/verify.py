@@ -154,7 +154,7 @@ def test_activate_device(auth, device_host):
 
 def test_install(app_archive_path, device_host, installer, user_domain):
     local_install(device_host, DEVICE_PASSWORD, app_archive_path, installer)
-    wait_for_rest(requests.session(), user_domain, '/', 200, 50)
+    wait_for_rest(requests.session(), user_domain, '/', 200, 500)
 
 
 def test_remove(syncloud_session, device_host):
