@@ -152,8 +152,9 @@ def test_activate_device(auth, device_host):
 #     assert response.status_code == 200
 
 
-def test_install(app_archive_path, device_host, installer):
+def test_install(app_archive_path, device_host, installer, user_domain):
     local_install(device_host, DEVICE_PASSWORD, app_archive_path, installer)
+    wait_for_rest(requests.session(), user_domain, '/', 200, 50)
 
 
 def test_remove(syncloud_session, device_host):
@@ -161,5 +162,5 @@ def test_remove(syncloud_session, device_host):
     assert response.status_code == 200, response.text
 
 
-def test_reinstall(app_archive_path, device_host, installer):
-    local_install(device_host, DEVICE_PASSWORD, app_archive_path, installer)
+#def test_reinstall(app_archive_path, device_host, installer):
+#    local_install(device_host, DEVICE_PASSWORD, app_archive_path, installer)

@@ -52,13 +52,13 @@ def wait_for_sam(public_web_session, host):
         time.sleep(1)
 
 
-def wait_for_rest(public_web_session, host, url, code):
+def wait_for_rest(session, host, url, code, attempts=10):
     
     attempt=0
-    attempt_limit=10
+    attempt_limit=attempts
     while attempt < attempt_limit:
         try:
-            response = public_web_session.get('http://{0}{1}'.format(host, url))
+            response = session.get('http://{0}{1}'.format(host, url))
             if response.text:
                 print(response.text)
             print('code: {0}'.format(response.status_code))
