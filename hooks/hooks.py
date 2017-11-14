@@ -25,6 +25,8 @@ USER_NAME = 'rocketchat'
 SYSTEMD_ROCKETCHAT = 'rocketchat-server'
 SYSTEMD_NGINX = 'rocketchat-nginx'
 SYSTEMD_MONGODB = 'rocketchat-mongodb'
+PORT = 3000
+
 
 def install():
     log = logger.get_logger('rocketchat_installer')
@@ -43,7 +45,8 @@ def install():
         'app_dir': app_dir,
         'app_data_dir': app_data_dir,
         'url': app.app_url(),
-        'web_secret': unicode(uuid.uuid4().hex)
+        'web_secret': unicode(uuid.uuid4().hex),
+        'port': PORT
     }
 
     templates_path = join(app_dir, 'config.templates')
