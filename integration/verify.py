@@ -10,7 +10,7 @@ import shutil
 
 from integration.util.loop import loop_device_add, loop_device_cleanup
 from integration.util.ssh import run_scp, run_ssh
-from integration.util.helper import local_install
+from integration.util.helper import local_install, wait_for_rest
 app_path = join(dirname(__file__), '..')
 sys.path.append(join(app_path, 'src'))
 
