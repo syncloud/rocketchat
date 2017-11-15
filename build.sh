@@ -86,7 +86,7 @@ ls -la ${BUILD_DIR}/bundle/programs/server
 
 cd ${BUILD_DIR}/bundle/programs/server
 export USER=$(whoami)
-rm /usr/bin/phantomjs
+#rm /usr/bin/phantomjs
 #set -e
 ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --verbose
 #build_code=$?
