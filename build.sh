@@ -44,29 +44,28 @@ mkdir -p ${BUILD_DIR}
 
 cd ${DIR}/build
 
-wget $SRC_SNAP_URL --progress dot:giga
-unsquashfs -d ${DIR}/build/src_snap $SRC_SNAP
+#wget $SRC_SNAP_URL --progress dot:giga
+#unsquashfs -d ${DIR}/build/src_snap $SRC_SNAP
+#ls -la ${DIR}/build/src_snap/
+#ls -la ${DIR}/build/src_snap/bin
 
-ls -la ${DIR}/build/src_snap/
-ls -la ${DIR}/build/src_snap/bin
+#mkdir ${BUILD_DIR}/mongodb
+#mkdir ${BUILD_DIR}/mongodb/bin
+#mkdir ${BUILD_DIR}/mongodb/lib
 
-mkdir ${BUILD_DIR}/mongodb
-mkdir ${BUILD_DIR}/mongodb/bin
-mkdir ${BUILD_DIR}/mongodb/lib
+#cp ${DIR}/bin/mongod ${BUILD_DIR}/mongodb/bin/
+#cp ${DIR}/build/src_snap/usr/bin/mongod ${BUILD_DIR}/mongodb/bin/mongod.bin || true
+#cp ${DIR}/build/src_snap/bin/mongod ${BUILD_DIR}/mongodb/bin/mongod.bin || true
 
-cp ${DIR}/bin/mongod ${BUILD_DIR}/mongodb/bin/
-cp ${DIR}/build/src_snap/usr/bin/mongod ${BUILD_DIR}/mongodb/bin/mongod.bin || true
-cp ${DIR}/build/src_snap/bin/mongod ${BUILD_DIR}/mongodb/bin/mongod.bin || true
-
-cp -r -L ${DIR}/build/src_snap/lib/$(dpkg-architecture -q DEB_HOST_GNU_TYPE)/* ${BUILD_DIR}/mongodb/lib/
-cp -r -L ${DIR}/build/src_snap/usr/lib/$(dpkg-architecture -q DEB_HOST_GNU_TYPE)/* ${BUILD_DIR}/mongodb/lib/
-cp -r -L ${DIR}/build/src_snap/usr/lib/* ${BUILD_DIR}/mongodb/lib/
-
-${BUILD_DIR}/mongodb/bin/mongod --version
+#cp -r -L ${DIR}/build/src_snap/lib/$(dpkg-architecture -q DEB_HOST_GNU_TYPE)/* ${BUILD_DIR}/mongodb/lib/
+#cp -r -L ${DIR}/build/src_snap/usr/lib/$(dpkg-architecture -q DEB_HOST_GNU_TYPE)/* ${BUILD_DIR}/mongodb/lib/
+#cp -r -L ${DIR}/build/src_snap/usr/lib/* ${BUILD_DIR}/mongodb/lib/
 
 coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/nodejs-${ARCH}.tar.gz
 coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/nginx-${ARCH}.tar.gz
-#coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/mongodb-${ARCH}.tar.gz
+coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/mongodb-${ARCH}.tar.gz
+
+${BUILD_DIR}/mongodb/bin/mongod --version
 
 wget https://download.rocket.chat/build/rocket.chat-${ROCKETCHAT_VERSION}.tgz -O ${DIR}/build/rocketchat.tar.gz --progress dot:giga
 
