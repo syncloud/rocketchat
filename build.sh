@@ -64,6 +64,7 @@ cd ${DIR}/build
 coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/nodejs-${ARCH}.tar.gz
 coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/nginx-${ARCH}.tar.gz
 coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/mongodb-${ARCH}.tar.gz
+coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/phantomjs-${ARCH}.tar.gz
 
 ${BUILD_DIR}/mongodb/bin/mongod --version
 
@@ -86,7 +87,8 @@ ls -la ${BUILD_DIR}/bundle/programs/server
 
 cd ${BUILD_DIR}/bundle/programs/server
 export USER=$(whoami)
-#rm /usr/bin/phantomjs
+rm /usr/bin/phantomjs
+export PATH=${BUILD_DIR}/phantomjs/bin:$PATH
 #set -e
 ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --verbose
 #build_code=$?
