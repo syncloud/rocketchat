@@ -91,7 +91,9 @@ export PATH=${BUILD_DIR}/phantomjs/bin:$PATH
 export LD_LIBRARY_PATH=${BUILD_DIR}/phantomjs/lib
 echo "version: \"$(phantomjs --version)\""
 
-${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --verbose -f phantomjs@1.9.20
+cd $DIR
+#${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --verbose -f phantomjs@1.9.20
+${BUILD_DIR}/nodejs/bin/node phantomjs-install.js
 exit 0
 ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --verbose
 
