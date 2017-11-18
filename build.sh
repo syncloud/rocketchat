@@ -85,11 +85,13 @@ cat ${BUILD_DIR}/bundle/README
 ls -la ${BUILD_DIR}/bundle/programs
 ls -la ${BUILD_DIR}/bundle/programs/server
 
-cd ${BUILD_DIR}/bundle/programs/server
+#cd ${BUILD_DIR}/bundle/programs/server
 export USER=$(whoami)
 rm /usr/bin/phantomjs
 export PATH=${BUILD_DIR}/phantomjs/bin:$PATH
-#set -e
+export LD_LIBRARY_PATH=${BUILD_DIR}/phantomjs/lib
+phantomjs --version
+
 ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --verbose -f phantomjs@1.9.20
 exit 0
 ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --verbose
