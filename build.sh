@@ -91,13 +91,8 @@ rm /usr/bin/phantomjs
 export PATH=${BUILD_DIR}/phantomjs/bin:$PATH
 #set -e
 ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --verbose -f phantomjs@1.9.20
+exit 0
 ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --verbose
-#build_code=$?
-#set -e
-#if [ $build_code != "0" ]; then
-#    cat npm-debug.log
-#    exit 1
-#fi
 
 mkdir ${DIR}/build/${NAME}/META
 echo ${NAME} >> ${DIR}/build/${NAME}/META/app
