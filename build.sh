@@ -68,29 +68,28 @@ coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/phantomjs-${ARCH}.tar.gz
 
 ${BUILD_DIR}/mongodb/bin/mongod --version
 
-wget https://download.rocket.chat/build/rocket.chat-${ROCKETCHAT_VERSION}.tgz -O ${DIR}/build/rocketchat.tar.gz --progress dot:giga
+#wget https://download.rocket.chat/build/rocket.chat-${ROCKETCHAT_VERSION}.tgz -O ${DIR}/build/rocketchat.tar.gz --progress dot:giga
+#tar xf rocketchat.tar.gz -C ${BUILD_DIR}
 
-tar xf rocketchat.tar.gz -C ${BUILD_DIR}
+#cp -r ${DIR}/bin ${BUILD_DIR}
+#cp -r ${DIR}/config ${BUILD_DIR}/config.templates
+#cp -r ${DIR}/lib ${BUILD_DIR}
+#cp -r ${DIR}/hooks ${BUILD_DIR}
 
-cp -r ${DIR}/bin ${BUILD_DIR}
-cp -r ${DIR}/config ${BUILD_DIR}/config.templates
-cp -r ${DIR}/lib ${BUILD_DIR}
-cp -r ${DIR}/hooks ${BUILD_DIR}
-
-ls -la ${BUILD_DIR}
-ls -la ${BUILD_DIR}/bundle
-chown -R $(whoami). ${BUILD_DIR}/bundle
-ls -la ${BUILD_DIR}/bundle
-cat ${BUILD_DIR}/bundle/README
-ls -la ${BUILD_DIR}/bundle/programs
-ls -la ${BUILD_DIR}/bundle/programs/server
+#ls -la ${BUILD_DIR}
+#ls -la ${BUILD_DIR}/bundle
+#chown -R $(whoami). ${BUILD_DIR}/bundle
+#ls -la ${BUILD_DIR}/bundle
+#cat ${BUILD_DIR}/bundle/README
+#ls -la ${BUILD_DIR}/bundle/programs
+#ls -la ${BUILD_DIR}/bundle/programs/server
 
 #cd ${BUILD_DIR}/bundle/programs/server
-export USER=$(whoami)
+#export USER=$(whoami)
 rm /usr/bin/phantomjs
 export PATH=${BUILD_DIR}/phantomjs/bin:$PATH
 export LD_LIBRARY_PATH=${BUILD_DIR}/phantomjs/lib
-phantomjs --version
+echo "version: \"$(phantomjs --version)\""
 
 ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --verbose -f phantomjs@1.9.20
 exit 0
