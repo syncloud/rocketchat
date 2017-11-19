@@ -73,7 +73,7 @@ ${BUILD_DIR}/mongodb/bin/mongod --version
 
 rm /usr/bin/phantomjs
 
-${BUILD_DIR}/nodejs/bin/npm install phantomjs@1.9.20 || true
+#${BUILD_DIR}/nodejs/bin/npm install phantomjs@1.9.20 || true
 
 export PATH=${BUILD_DIR}/phantomjs/bin:$PATH
 export LD_LIBRARY_PATH=${BUILD_DIR}/phantomjs/lib
@@ -83,7 +83,7 @@ git clone git://github.com/Medium/phantomjs.git npm-phantomjs
 cd npm-phantomjs
 git checkout v1.9.20
 sed -i "s/exports.version.*/exports.version = '1.9.20'/g" lib/phantomjs.js
-
+${BUILD_DIR}/nodejs/bin/npm install
 ${BUILD_DIR}/nodejs/bin/node ./install.js
 
 exit 0
