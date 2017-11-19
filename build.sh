@@ -102,7 +102,7 @@ git clone git://github.com/Medium/phantomjs.git npm-phantomjs
 cd npm-phantomjs
 git checkout v1.9.20
 sed -i "s/exports.version.*/exports.version = '1.9.20'/g" lib/phantomjs.js
-${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --production
+${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --production -g
 #${BUILD_DIR}/nodejs/bin/node ./install.js
 cd ..
 mv npm-phantomjs/node_modules .
