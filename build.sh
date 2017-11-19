@@ -19,6 +19,9 @@ SNAP_ARCH=$(dpkg --print-architecture)
 VERSION=$2
 INSTALLER=$3
 
+apt-get update
+apt-get -y install git
+
 rm -rf ${DIR}/lib
 mkdir ${DIR}/lib
 
@@ -68,24 +71,6 @@ coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/phantomjs-${ARCH}.tar.gz
 
 ${BUILD_DIR}/mongodb/bin/mongod --version
 
-#wget https://download.rocket.chat/build/rocket.chat-${ROCKETCHAT_VERSION}.tgz -O ${DIR}/build/rocketchat.tar.gz --progress dot:giga
-#tar xf rocketchat.tar.gz -C ${BUILD_DIR}
-
-#cp -r ${DIR}/bin ${BUILD_DIR}
-#cp -r ${DIR}/config ${BUILD_DIR}/config.templates
-#cp -r ${DIR}/lib ${BUILD_DIR}
-#cp -r ${DIR}/hooks ${BUILD_DIR}
-
-#ls -la ${BUILD_DIR}
-#ls -la ${BUILD_DIR}/bundle
-#chown -R $(whoami). ${BUILD_DIR}/bundle
-#ls -la ${BUILD_DIR}/bundle
-#cat ${BUILD_DIR}/bundle/README
-#ls -la ${BUILD_DIR}/bundle/programs
-#ls -la ${BUILD_DIR}/bundle/programs/server
-
-#cd ${BUILD_DIR}/bundle/programs/server
-#export USER=$(whoami)
 rm /usr/bin/phantomjs
 export PATH=${BUILD_DIR}/phantomjs/bin:$PATH
 export LD_LIBRARY_PATH=${BUILD_DIR}/phantomjs/lib
@@ -94,11 +79,29 @@ echo "version: \"$(phantomjs --version)\""
 git clone git://github.com/Medium/phantomjs.git npm-phantomjs
 cd npm-phantomjs
 git checkout 1.9.20
-
-#${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --verbose -f phantomjs@1.9.20
-cd $DIR/npm-phantomjs
+sed -i "s/exports.version.*/exports.version = '1.9.20'/g" lib/phantomjs.js
 ${BUILD_DIR}/nodejs/bin/node ./install.js
+
 exit 0
+
+wget https://download.rocket.chat/build/rocket.chat-${ROCKETCHAT_VERSION}.tgz -O ${DIR}/build/rocketchat.tar.gz --progress dot:giga
+tar xf rocketchat.tar.gz -C ${BUILD_DIR}
+
+cp -r ${DIR}/bin ${BUILD_DIR}
+cp -r ${DIR}/config ${BUILD_DIR}/config.templates
+cp -r ${DIR}/lib ${BUILD_DIR}
+cp -r ${DIR}/hooks ${BUILD_DIR}
+
+ls -la ${BUILD_DIR}
+ls -la ${BUILD_DIR}/bundle
+chown -R $(whoami). ${BUILD_DIR}/bundle
+ls -la ${BUILD_DIR}/bundle
+cat ${BUILD_DIR}/bundle/README
+ls -la ${BUILD_DIR}/bundle/programs
+ls -la ${BUILD_DIR}/bundle/programs/server
+
+cd ${BUILD_DIR}/bundle/programs/server
+export USER=$(whoami)
 ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --verbose
 
 mkdir ${DIR}/build/${NAME}/META
