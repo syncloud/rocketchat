@@ -86,7 +86,7 @@ sed -i "s/exports.version.*/exports.version = '1.9.20'/g" lib/phantomjs.js
 ${BUILD_DIR}/nodejs/bin/npm install
 ${BUILD_DIR}/nodejs/bin/node ./install.js
 
-exit 0
+#exit 0
 
 wget https://download.rocket.chat/build/rocket.chat-${ROCKETCHAT_VERSION}.tgz -O ${DIR}/build/rocketchat.tar.gz --progress dot:giga
 tar xf rocketchat.tar.gz -C ${BUILD_DIR}
