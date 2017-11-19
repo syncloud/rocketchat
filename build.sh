@@ -79,13 +79,6 @@ export PATH=${BUILD_DIR}/phantomjs/bin:$PATH
 export LD_LIBRARY_PATH=${BUILD_DIR}/phantomjs/lib
 echo "version: \"$(phantomjs --version)\""
 
-git clone git://github.com/Medium/phantomjs.git npm-phantomjs
-cd npm-phantomjs
-git checkout v1.9.20
-sed -i "s/exports.version.*/exports.version = '1.9.20'/g" lib/phantomjs.js
-${BUILD_DIR}/nodejs/bin/npm install
-${BUILD_DIR}/nodejs/bin/node ./install.js
-
 cd ${DIR}/build
 wget https://download.rocket.chat/build/rocket.chat-${ROCKETCHAT_VERSION}.tgz -O ${DIR}/build/rocketchat.tar.gz --progress dot:giga
 tar xf rocketchat.tar.gz -C ${BUILD_DIR}
@@ -104,6 +97,15 @@ ls -la ${BUILD_DIR}/bundle/programs
 ls -la ${BUILD_DIR}/bundle/programs/server
 
 cd ${BUILD_DIR}/bundle/programs/server
+
+git clone git://github.com/Medium/phantomjs.git npm-phantomjs
+cd npm-phantomjs
+git checkout v1.9.20
+sed -i "s/exports.version.*/exports.version = '1.9.20'/g" lib/phantomjs.js
+${BUILD_DIR}/nodejs/bin/npm install
+${BUILD_DIR}/nodejs/bin/node ./install.js
+cd ..
+
 export USER=$(whoami)
 ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --verbose
 
