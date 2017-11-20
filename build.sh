@@ -72,6 +72,7 @@ coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/phantomjs-${ARCH}.tar.gz
 ${BUILD_DIR}/mongodb/bin/mongod --version
 
 rm /usr/bin/phantomjs
+rm -rf /usr/local/lib/node_modules
 
 #${BUILD_DIR}/nodejs/bin/npm install phantomjs@1.9.20 || true
 
@@ -105,7 +106,7 @@ sed -i "s/exports.version.*/exports.version = '1.9.20'/g" lib/phantomjs.js
 ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --production -g
 #${BUILD_DIR}/nodejs/bin/node ./install.js
 cd ..
-mv npm-phantomjs/node_modules .
+#mv npm-phantomjs/node_modules .
 export USER=$(whoami)
 ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --verbose --production
 
