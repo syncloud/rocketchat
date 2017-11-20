@@ -431,6 +431,7 @@ function getDownloadSpec() {
       process.env.PHANTOMJS_CDNURL ||
       DEFAULT_CDN
   var arch = getTargetArch()
+  downloadArch = ''
   if (arch === 'x64') {
       downloadArch = 'x86_64'
   } else {
