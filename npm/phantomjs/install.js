@@ -1,7 +1,3 @@
-
-Code Issues 112 Pull requests 10 Pulse
-install.js
-
 // Copyright 2012 The Obvious Corporation.
 
 /*
