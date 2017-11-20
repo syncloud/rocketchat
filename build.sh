@@ -72,7 +72,7 @@ coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/phantomjs-${ARCH}.tar.gz
 ${BUILD_DIR}/mongodb/bin/mongod --version
 
 rm /usr/bin/phantomjs
-rm -rf /usr/local/lib/node_modules
+rm -rf ${BUILD_DIR}/lib/node_modules
 
 #${BUILD_DIR}/nodejs/bin/npm install phantomjs@1.9.20 || true
 
