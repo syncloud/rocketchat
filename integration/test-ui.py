@@ -56,15 +56,15 @@ def test_index(driver, user_domain):
     print(driver.page_source.encode('utf-8'))
 
 
-# def test_login(driver, user_domain):
-#
-#     user = driver.find_element_by_id("user")
-#     user.send_keys(DEVICE_USER)
-#     password = driver.find_element_by_id("password")
-#     password.send_keys(DEVICE_PASSWORD)
-#     driver.get_screenshot_as_file(join(screenshot_dir, 'login.png'))
-#     # print(driver.page_source.encode('utf-8'))
-#
+def test_login(driver, user_domain):
+
+     user = driver.find_element_by_id("emailOrUsername")
+     user.send_keys(DEVICE_USER)
+     password = driver.find_element_by_id("pass")
+     password.send_keys(DEVICE_PASSWORD)
+     driver.get_screenshot_as_file(join(screenshot_dir, 'login.png'))
+     # print(driver.page_source.encode('utf-8'))
+
 #     password.send_keys(Keys.RETURN)
 #     driver.get_screenshot_as_file(join(screenshot_dir, 'login_progress.png'))
 #     #time.sleep(30)
