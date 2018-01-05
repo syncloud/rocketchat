@@ -56,7 +56,7 @@ def install():
 
     fs.chownpath(app_data_dir, USER_NAME, recursive=True)
     
-    if not environ['SNAP']:
+    if 'SNAP' not in environ:
         fs.chownpath(app_dir, USER_NAME, recursive=True)
   
         app.add_service(SYSTEMD_MONGODB)
