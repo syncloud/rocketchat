@@ -1,5 +1,5 @@
 from os.path import dirname, join, abspath, isdir
-from os import listdir
+from os import listdir, environ
 import sys
 
 app_path = abspath(join(dirname(__file__), '..'))
@@ -19,7 +19,7 @@ from syncloud_app import logger
 
 from syncloud_platform.application import api
 from syncloud_platform.gaplib import fs, linux, gen
-
+from syncloudlib.application import path
 APP_NAME = 'rocketchat'
 USER_NAME = 'rocketchat'
 SYSTEMD_ROCKETCHAT = 'rocketchat-server'
@@ -32,8 +32,8 @@ def install():
     log = logger.get_logger('rocketchat_installer')
 
     app = api.get_app_setup(APP_NAME)
-    app_dir = app.get_install_dir()
-    app_data_dir = app.get_data_dir()
+    app_dir = path.get_app_dir(APP_NAME)
+    app_data_dir = path.get_data_dir(APP_NAME)
 
     linux.useradd(USER_NAME)
 
@@ -54,12 +54,14 @@ def install():
 
     gen.generate_files(templates_path, config_path, variables)
 
-    fs.chownpath(app_dir, USER_NAME, recursive=True)
     fs.chownpath(app_data_dir, USER_NAME, recursive=True)
-
-    app.add_service(SYSTEMD_MONGODB)
-    app.add_service(SYSTEMD_ROCKETCHAT)
-    app.add_service(SYSTEMD_NGINX)
+    
+    if not environ['SNAP']:
+        fs.chownpath(app_dir, USER_NAME, recursive=True)
+  
+        app.add_service(SYSTEMD_MONGODB)
+        app.add_service(SYSTEMD_ROCKETCHAT)
+        app.add_service(SYSTEMD_NGINX)
     
 
 def remove():

@@ -29,7 +29,7 @@ mkdir ${DIR}/lib
 #coin --to lib py https://pypi.python.org/packages/ea/03/92d3278bf8287c5caa07dbd9ea139027d5a3592b0f4d14abf072f890fab2/requests-2.11.1-py2.py3-none-any.whl#md5=b4269c6fb64b9361288620ba028fd385
 #coin --to lib py https://pypi.python.org/packages/f3/94/67d781fb32afbee0fffa0ad9e16ad0491f1a9c303e14790ae4e18f11be19/requests-unixsocket-0.1.5.tar.gz#md5=08453c8ef7dc03863ff4a30b901e7c20
 #coin --to lib py https://pypi.python.org/packages/source/m/massedit/massedit-0.67.1.zip
-#coin --to lib py https://pypi.python.org/packages/source/s/syncloud-lib/syncloud-lib-2.tar.gz
+#coin --to lib py https://pypi.python.org/packages/df/5e/afeef90d3f90521a5422053892a4f44c1451f1584053f9669705ab98dd43/syncloud-lib-28.tar.gz#md5=10c8347b0a15d760da39b56d91d5a11e
 
 if [ $SNAP_ARCH == "armhf" ]; then
     SRC_SNAP_BUILD=22904
