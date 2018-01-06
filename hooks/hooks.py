@@ -19,7 +19,7 @@ from syncloud_app import logger
 
 from syncloud_platform.application import api
 from syncloud_platform.gaplib import fs, linux, gen
-from syncloudlib.application import path
+from syncloudlib.application import paths
 APP_NAME = 'rocketchat'
 USER_NAME = 'rocketchat'
 SYSTEMD_ROCKETCHAT = 'rocketchat-server'
@@ -32,8 +32,8 @@ def install():
     log = logger.get_logger('rocketchat_installer')
 
     app = api.get_app_setup(APP_NAME)
-    app_dir = path.get_app_dir(APP_NAME)
-    app_data_dir = path.get_data_dir(APP_NAME)
+    app_dir = paths.get_app_dir(APP_NAME)
+    app_data_dir = paths.get_data_dir(APP_NAME)
 
     linux.useradd(USER_NAME)
 
