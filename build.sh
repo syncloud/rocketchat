@@ -29,7 +29,7 @@ mkdir ${DIR}/lib
 #coin --to lib py https://pypi.python.org/packages/ea/03/92d3278bf8287c5caa07dbd9ea139027d5a3592b0f4d14abf072f890fab2/requests-2.11.1-py2.py3-none-any.whl#md5=b4269c6fb64b9361288620ba028fd385
 #coin --to lib py https://pypi.python.org/packages/f3/94/67d781fb32afbee0fffa0ad9e16ad0491f1a9c303e14790ae4e18f11be19/requests-unixsocket-0.1.5.tar.gz#md5=08453c8ef7dc03863ff4a30b901e7c20
 #coin --to lib py https://pypi.python.org/packages/source/m/massedit/massedit-0.67.1.zip
-coin --to lib py https://pypi.python.org/packages/1d/67/15adbefa53c09365e18be0698971bea99e135bc0a29e9df499de439f1096/syncloud-lib-31.tar.gz#md5=f0d1b2545eacaf6a382d12009b3802c8
+coin --to lib py https://pypi.python.org/packages/d6/88/63beb59293e89e727a027cb0ae218d2a3671f6faea6f138767e9d5621d93/syncloud-lib-36.tar.gz#md5=2f78174937bbf6b0124c70da20801f8b
 
 DOWNLOAD_URL=http://artifact.syncloud.org/3rdparty
 

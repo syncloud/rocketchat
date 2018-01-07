@@ -19,7 +19,9 @@ from syncloud_app import logger
 
 from syncloud_platform.application import api
 from syncloud_platform.gaplib import fs, linux, gen
-from syncloudlib.application import paths
+from syncloudlib.application import paths, urls
+
+
 APP_NAME = 'rocketchat'
 USER_NAME = 'rocketchat'
 SYSTEMD_ROCKETCHAT = 'rocketchat-server'
@@ -31,9 +33,9 @@ PORT = 3000
 def install():
     log = logger.get_logger('rocketchat_installer')
 
-    app = api.get_app_setup(APP_NAME)
     app_dir = paths.get_app_dir(APP_NAME)
     app_data_dir = paths.get_data_dir(APP_NAME)
+    app_url = urls.get_app_url(APP_NAME)
 
     linux.useradd(USER_NAME)
 
@@ -44,7 +46,7 @@ def install():
     variables = {
         'app_dir': app_dir,
         'app_data_dir': app_data_dir,
-        'url': app.app_url(),
+        'url': app_url,
         'web_secret': unicode(uuid.uuid4().hex),
         'port': PORT
     }
@@ -57,6 +59,8 @@ def install():
     fs.chownpath(app_data_dir, USER_NAME, recursive=True)
     
     if 'SNAP' not in environ:
+        app = api.get_app_setup(APP_NAME)
+    
         fs.chownpath(app_dir, USER_NAME, recursive=True)
   
         app.add_service(SYSTEMD_MONGODB)
@@ -71,7 +75,7 @@ def remove():
     app.remove_service(SYSTEMD_ROCKETCHAT)
     app.remove_service(SYSTEMD_MONGODB)
 
-    app_dir = app.get_install_dir()
+    app_dir = paths.get_data_dir(APP_NAME)
 
     fs.removepath(app_dir)
 
