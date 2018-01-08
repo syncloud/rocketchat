@@ -15,6 +15,7 @@ apps:
     - network
     - network-bind
     restart-condition: always
+    post-start-command: bin/service.nginx.sh post-start
     stop-command: bin/service.nginx.sh stop
     reload-command: bin/service.nginx.sh reload
   server:
