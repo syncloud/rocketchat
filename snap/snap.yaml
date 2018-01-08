@@ -6,8 +6,6 @@ apps:
     - network
     - network-bind
     restart-condition: always
-    stop-command: bin/service.monhodb.sh stop
-    reload-command: bin/service.mongodb.sh reload
   nginx:
     command: bin/service.nginx.sh start
     daemon: simple
@@ -19,12 +17,13 @@ apps:
     stop-command: bin/service.nginx.sh stop
     reload-command: bin/service.nginx.sh reload
   server:
-    command: bin/service.server.sh files
+    command: bin/service.server.sh start
     daemon: simple
     plugs:
     - network
     - network-bind
     restart-condition: always
+    post-start-command: bin/service.server.sh post-start
 confinement: strict
 description: Rocket.Chat
 grade: stable
