@@ -1,4 +1,13 @@
 apps:
+  mongodb:
+    command: bin/service.mongodb.sh start
+    daemon: simple
+    plugs:
+    - network
+    - network-bind
+    restart-condition: always
+    stop-command: bin/service.monhodb.sh stop
+    reload-command: bin/service.mongodb.sh reload
   nginx:
     command: bin/service.nginx.sh start
     daemon: simple
@@ -10,7 +19,7 @@ apps:
     reload-command: bin/service.nginx.sh reload
   server:
     command: bin/service.server.sh files
-    daemon: notify
+    daemon: simple
     plugs:
     - network
     - network-bind
