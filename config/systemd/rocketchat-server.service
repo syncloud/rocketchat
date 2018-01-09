@@ -5,13 +5,8 @@ After=network.target rocketchat-mongodb.service
 
 [Service]
 Type=simple
-Environment=NODE_ENV=production
-Environment=PORT={{ port }}
-Environment=ROOT_URL={{ url }}
-Environment=MONGO_URL=mongodb://{{ app_data_dir }}/mongodb-27017.sock/rocketchat
-ExecStart={{ app_dir }}/nodejs/bin/node {{ app_dir }}/bundle/main.js
-ExecPostStart=timeout 5 /bin/bash -c 'until echo > /dev/tcp/localhost/{{ port }}; do sleep 1; done'
-
+ExecStart={{ app_dir }}/bin/service.server.sh start
+ExecPostStart={{ app_dir }}/bin/service.server.sh post-start
 Restart=always
 RestartSec=10
 StandardOutput=syslog
