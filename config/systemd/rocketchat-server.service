@@ -5,6 +5,7 @@ After=network.target rocketchat-mongodb.service
 
 [Service]
 Type=simple
+Environment=SNAP_COMMON={{ app_data_dir }}
 ExecStart={{ app_dir }}/bin/service.server.sh start
 ExecPostStart={{ app_dir }}/bin/service.server.sh post-start
 Restart=always
