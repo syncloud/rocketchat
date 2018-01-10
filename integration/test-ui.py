@@ -65,10 +65,10 @@ def test_login(driver, user_domain):
      driver.get_screenshot_as_file(join(screenshot_dir, 'login.png'))
      # print(driver.page_source.encode('utf-8'))
 
-#     password.send_keys(Keys.RETURN)
-#     driver.get_screenshot_as_file(join(screenshot_dir, 'login_progress.png'))
-#     #time.sleep(30)
-#     #driver.get_screenshot_as_file(join(screenshot_dir, 'login_progress_2.png'))
+     password.send_keys(Keys.RETURN)
+     driver.get_screenshot_as_file(join(screenshot_dir, 'login_progress.png'))
+     time.sleep(30)
+     driver.get_screenshot_as_file(join(screenshot_dir, 'login_progress_2.png'))
 #
 #     # try:
 #     #     password.submit()
