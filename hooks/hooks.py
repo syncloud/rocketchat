@@ -1,7 +1,7 @@
 from os.path import dirname, join, abspath, isdir
 from os import listdir, environ
 import sys
-
+from subprocess import check_output
 app_path = abspath(join(dirname(__file__), '..'))
 
 lib_path = join(app_path, 'lib')
@@ -67,6 +67,8 @@ def install():
         app.add_service(SYSTEMD_ROCKETCHAT)
         app.add_service(SYSTEMD_NGINX)
     
+    config_result = check_output('{0}/mongodb/bin/mongo {1}/config/mongodb.config.js'.format(app_dir, app_data_dir), shell=True)
+    log.info(config_result)
 
 def remove():
     app = api.get_app_setup(APP_NAME)

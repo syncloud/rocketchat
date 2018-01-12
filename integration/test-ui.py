@@ -65,9 +65,9 @@ def test_login(driver, user_domain):
      driver.get_screenshot_as_file(join(screenshot_dir, 'login.png'))
      # print(driver.page_source.encode('utf-8'))
 
-     password.submit()
+     password.send_keys(Keys.RETURN)
      driver.get_screenshot_as_file(join(screenshot_dir, 'login_progress.png'))
-     time.sleep(30)
+     time.sleep(1)
      driver.get_screenshot_as_file(join(screenshot_dir, 'login_progress_2.png'))
      
      print(driver.execute_script('return window.JSErrorCollector_errors ? window.JSErrorCollector_errors.pump() : []'))

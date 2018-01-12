@@ -1,9 +1,5 @@
 conn = new Mongo();
 db = conn.getDB("rocketchat");
-cursor = db.rocketchat_settings.find();
-while ( cursor.hasNext() ) {
-   printjson( cursor.next() );
-}
 
 db.rocketchat_settings.update(
   { _id : "LDAP_Enable" },
@@ -55,7 +51,14 @@ db.rocketchat_settings.update(
   { $set : { value: "cn" } }
 );
 
+db.rocketchat_settings.update(
+  { _id : "Accounts_RegistrationForm" },
+  { $set : { value: "Disabled" } }
+);
+
+/*
 cursor = db.rocketchat_settings.find();
 while ( cursor.hasNext() ) {
    printjson( cursor.next() );
 }
+*/
