@@ -12,7 +12,17 @@ db.rocketchat_settings.update(
 
 db.rocketchat_settings.update(
   { _id : "LDAP_Host" },
-  { $set : { value: "ldap://localhost" } }
+  { $set : { value: "localhost" } }
+);
+
+db.rocketchat_settings.update(
+  { _id : "LDAP_Reject_Unauthorized" },
+  { $set : { value: false } }
+);
+
+db.rocketchat_settings.update(
+  { _id : "LDAP_BaseDN" },
+  { $set : { value: "dc=syncloud,dc=org" } }
 );
 
 db.rocketchat_settings.update(
@@ -32,7 +42,17 @@ db.rocketchat_settings.update(
 
 db.rocketchat_settings.update(
   { _id : "LDAP_User_Search_Filter" },
-  { $set : { value: "(&(objectclass=inetOrgPerson)(uid=%s))" } }
+  { $set : { value: "(objectclass=inetOrgPerson)" } }
+);
+
+db.rocketchat_settings.update(
+  { _id : "LDAP_User_Search_Field" },
+  { $set : { value: "cn" } }
+);
+
+db.rocketchat_settings.update(
+  { _id : "LDAP_Username_Field" },
+  { $set : { value: "cn" } }
 );
 
 cursor = db.rocketchat_settings.find();
