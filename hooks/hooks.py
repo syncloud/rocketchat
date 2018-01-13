@@ -12,7 +12,7 @@ from bs4 import BeautifulSoup
 from os.path import isdir, join
 import requests_unixsocket
 import time
-from subprocess import check_output
+from subprocess import check_output, CalledProcessError
 import shutil
 import uuid
 from syncloud_app import logger
@@ -67,9 +67,13 @@ def install():
         app.add_service(SYSTEMD_ROCKETCHAT)
         app.add_service(SYSTEMD_NGINX)
     
-    config_result = check_output('{0}/mongodb/bin/mongo {1}/config/mongodb.config.js'.format(app_dir, app_data_dir), shell=True)
-    log.info(config_result)
-
+    try:
+        config_result = check_output('{0}/mongodb/bin/mongo {1}/config/mongodb.config.js'.format(app_dir, app_data_dir), shell=True)
+        log.info(config_result)
+    except CalledProcessError, e:
+        log.error(e.output.strip())
+        raise e
+        
 def remove():
     app = api.get_app_setup(APP_NAME)
 
