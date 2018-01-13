@@ -11,7 +11,9 @@ case $1 in
 start)
     exec ${DIR}/mongodb/bin/mongod --quiet --config ${SNAP_COMMON}/config/mongodb.conf
     ;;
-
+post-start)
+    timeout 60 /bin/bash -c 'until echo > /dev/tcp/localhost/'$PORT'; do sleep 1; done'
+    ;;
 *)
     echo "not valid command"
     exit 1
