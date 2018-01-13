@@ -7,7 +7,7 @@ if [[ -z "$1" ]]; then
     exit 1
 fi
 
-PORT=27017
+. $SNAP_COMMON/config/rocketchat.env
 
 case $1 in
 start)
