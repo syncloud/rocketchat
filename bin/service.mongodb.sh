@@ -7,6 +7,8 @@ if [[ -z "$1" ]]; then
     exit 1
 fi
 
+PORT=27017
+
 case $1 in
 start)
     exec ${DIR}/mongodb/bin/mongod --quiet --config ${SNAP_COMMON}/config/mongodb.conf

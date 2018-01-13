@@ -5,7 +5,6 @@ After=network.target
 [Service]
 User=rocketchat
 Environment=SNAP_COMMON={{ app_data_dir }}
-Environment=PORT=27017
 ExecStart={{ app_dir }}/bin/service.mongodb.sh start
 ExecStartPost={{ app_dir }}/bin/service.mongodb.sh post-start
 [Install]
