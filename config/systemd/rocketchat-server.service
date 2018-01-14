@@ -10,6 +10,7 @@ ExecStart={{ app_dir }}/bin/service.server.sh start
 ExecStartPost={{ app_dir }}/bin/service.server.sh post-start
 Restart=always
 RestartSec=10
+TimeoutStartSec=600
 StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=rocketchat
