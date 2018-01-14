@@ -48,7 +48,8 @@ def install():
         'app_data_dir': app_data_dir,
         'url': app_url,
         'web_secret': unicode(uuid.uuid4().hex),
-        'port': PORT
+        'port': PORT,
+        'mongodb_port': MONGODB_PORT
     }
 
     templates_path = join(app_dir, 'config.templates')
