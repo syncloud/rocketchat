@@ -14,7 +14,7 @@ start)
     exec ${DIR}/nodejs/bin/node ${DIR}/bundle/main.js
     ;;
 post-start)
-    timeout 300 /bin/bash -c 'until echo > /dev/tcp/localhost/'$PORT'; do sleep 1; done'
+    timeout 600 /bin/bash -c 'until echo > /dev/tcp/localhost/'$PORT'; do sleep 1; done'
     ;;
 *)
     echo "not valid command"
