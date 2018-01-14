@@ -28,7 +28,7 @@ SYSTEMD_ROCKETCHAT = 'rocketchat-server'
 SYSTEMD_NGINX = 'rocketchat-nginx'
 SYSTEMD_MONGODB = 'rocketchat-mongodb'
 PORT = 3000
-
+MONGODB_PORT = 27017
 
 def install():
     log = logger.get_logger('rocketchat_installer')
