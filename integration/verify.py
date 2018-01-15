@@ -118,7 +118,12 @@ def test_activate_device(auth, device_host):
 def test_install(app_archive_path, device_host, installer, user_domain):
     local_install(device_host, DEVICE_PASSWORD, app_archive_path, installer)
     wait_for_rest(requests.session(), user_domain, '/', 200, 500)
-    
+
+
+def test_mongo_config(device_host, app_dir, data_dir):
+    run_scp('{0}/mongodb.config.dump.js root@{1}:/'.format(DIR, device_host), password=DEVICE_PASSWORD, throw=False)
+    run_ssh(device_host, '{0}/mongodb/bin/mongo /mongodb.config.dump.js > {1}/log/mongo.config.dump.log'.format(app_dir, data_dir), password=DEVICE_PASSWORD, throw=False)
+
 
 def test_remove(syncloud_session, device_host):
     response = syncloud_session.get('http://{0}/rest/remove?app_id=rocketcaht'.format(device_host), allow_redirects=False)
