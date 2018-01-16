@@ -69,7 +69,7 @@ def install():
         app.add_service(SYSTEMD_NGINX)
     
     try:
-        log.info('applying mongo config changes:)
+        log.info('applying mongo config changes')
         config_result = check_output('{0}/mongodb/bin/mongo {1}/config/mongodb.config.js'.format(app_dir, app_data_dir), shell=True)
         log.info('done: {0}'.format(config_result))
     except CalledProcessError, e:
