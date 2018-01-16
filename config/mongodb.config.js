@@ -55,6 +55,10 @@ db.rocketchat_settings.update(
   { _id : "Accounts_RegistrationForm" },
   { $set : { value: "Public" } }
 );
+db.rocketchat_settings.update(
+  { _id : "LDAP_Internal_Log_Level" },
+  { $set : { value: "debug" } }
+);
 
 /*
 cursor = db.rocketchat_settings.find();
