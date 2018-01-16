@@ -1,10 +1,10 @@
 conn = new Mongo();
 db = conn.getDB("rocketchat");
 
-db.rocketchat_settings.update(
+printjson(db.rocketchat_settings.update(
   { _id : "LDAP_Enable" },
   { $set : { value: true } }
-);
+));
 
 db.rocketchat_settings.update(
   { _id : "LDAP_Host" },
