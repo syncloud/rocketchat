@@ -51,12 +51,10 @@ db.rocketchat_settings.update(
   { $set : { value: "cn" } }
 );
 
-/*
 db.rocketchat_settings.update(
   { _id : "Accounts_RegistrationForm" },
-  { $set : { value: "Disabled" } }
+  { $set : { value: "Public" } }
 );
-*/
 
 /*
 cursor = db.rocketchat_settings.find();
