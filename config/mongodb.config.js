@@ -1,63 +1,60 @@
 conn = new Mongo();
 db = conn.getDB("rocketchat");
 
-printjson(db.rocketchat_settings.update(
-  { _id : "LDAP_Enable" },
-  { $set : { value: true } }
-));
+//"valueSource" : "meteorSettingsValue",
 
 db.rocketchat_settings.update(
-  { _id : "LDAP_Host" },
-  { $set : { value: "localhost" } }
+  { _id : "LDAP_Enable" },
+  { $set : { meteorSettingsValue: true } }
 );
 
 db.rocketchat_settings.update(
-  { _id : "LDAP_Reject_Unauthorized" },
-  { $set : { value: false } }
+  { _id : "LDAP_Host" },
+  { $set : { meteorSettingsValue: "localhost" } }
 );
 
 db.rocketchat_settings.update(
   { _id : "LDAP_BaseDN" },
-  { $set : { value: "dc=syncloud,dc=org" } }
+  { $set : { meteorSettingsValue: "dc=syncloud,dc=org" } }
 );
 
 db.rocketchat_settings.update(
   { _id : "LDAP_Authentication" },
-  { $set : { value: true } }
+  { $set : { meteorSettingsValue: true } }
 );
 
 db.rocketchat_settings.update(
   { _id : "LDAP_Authentication_UserDN" },
-  { $set : { value: "dc=syncloud,dc=org" } }
+  { $set : { meteorSettingsValue: "dc=syncloud,dc=org" } }
 );
 
 db.rocketchat_settings.update(
   { _id : "LDAP_Authentication_Password" },
-  { $set : { value: "syncloud" } }
+  { $set : { meteorSettingsValue: "syncloud" } }
 );
 
 db.rocketchat_settings.update(
   { _id : "LDAP_User_Search_Filter" },
-  { $set : { value: "(objectclass=inetOrgPerson)" } }
+  { $set : { meteorSettingsValue: "(objectclass=inetOrgPerson)" } }
 );
 
 db.rocketchat_settings.update(
   { _id : "LDAP_User_Search_Field" },
-  { $set : { value: "cn" } }
+  { $set : { meteorSettingsValue: "cn" } }
 );
 
 db.rocketchat_settings.update(
   { _id : "LDAP_Username_Field" },
-  { $set : { value: "cn" } }
+  { $set : { meteorSettingsValue: "cn" } }
 );
 
 db.rocketchat_settings.update(
   { _id : "Accounts_RegistrationForm" },
-  { $set : { value: "Public" } }
+  { $set : { meteorSettingsValue: "Public" } }
 );
 db.rocketchat_settings.update(
   { _id : "LDAP_Internal_Log_Level" },
-  { $set : { value: "debug" } }
+  { $set : { meteorSettingsValue: "debug" } }
 );
 
 /*
