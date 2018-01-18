@@ -10,13 +10,13 @@ map(lambda l: sys.path.insert(0, l), libs)
 from bs4 import BeautifulSoup
 
 from os.path import isdir, join
-import requests_unixsocket
+import requests
 import time
 from subprocess import check_output, CalledProcessError
 import shutil
 import uuid
 from syncloud_app import logger
-
+import json
 from syncloud_platform.application import api
 from syncloud_platform.gaplib import fs, linux, gen
 from syncloudlib.application import paths, urls
@@ -29,9 +29,10 @@ SYSTEMD_NGINX = 'rocketchat-nginx'
 SYSTEMD_MONGODB = 'rocketchat-mongodb'
 PORT = 3000
 MONGODB_PORT = 27017
+REST_URL = "http://localhost:{0}/api/v1".format(PORT)
 
 def install():
-    log = logger.get_logger('rocketchat_installer')
+    log = logger.get_logger('rocketchat')
 
     app_dir = paths.get_app_dir(APP_NAME)
     app_data_dir = paths.get_data_dir(APP_NAME)
@@ -67,14 +68,27 @@ def install():
         app.add_service(SYSTEMD_MONGODB)
         app.add_service(SYSTEMD_ROCKETCHAT)
         app.add_service(SYSTEMD_NGINX)
+
+def after_service_start():
+    log = logger.get_logger('rocketchat')
+
+    password = unicode(uuid.uuid4().hex)
+    response = requests.post("{0}/users.register".format(REST_URL), data='{ "username": "installer" }&{ "email": "installer@example.com" }&{ "pass": "{0}" }&{ "name": "installer" }'.format(password))
+    result = json.loads(response.text)
+    if not result['success']:
+        log.info('cannot create install account')
+        log.info('response: {0}'.format(response.text.encode("utf-8")))
+        return
     
-    try:
-        log.info('applying mongo config changes')
-        config_result = check_output('{0}/mongodb/bin/mongo {1}/config/mongodb.config.js'.format(app_dir, app_data_dir), shell=True)
-        log.info('done: {0}'.format(config_result))
-    except CalledProcessError, e:
-        log.error(e.output.strip())
-        raise e
+    log.info('install account has been created')
+      
+    #try:
+    #    log.info('applying mongo config changes')
+    #    config_result = check_output('{0}/mongodb/bin/mongo {1}/config/mongodb.config.js'.format(app_dir, app_data_dir), shell=True)
+    #    log.info('done: {0}'.format(config_result))
+    #except CalledProcessError, e:
+    #    log.error(e.output.strip())
+    #    raise e
         
 def remove():
     app = api.get_app_setup(APP_NAME)
