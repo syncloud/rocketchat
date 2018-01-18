@@ -73,7 +73,7 @@ def after_service_start():
     log = logger.get_logger('rocketchat')
 
     password = unicode(uuid.uuid4().hex)
-    response = requests.post("{0}/users.register".format(REST_URL), data='{ "username": "installer" }&{ "email": "installer@example.com" }&{ "pass": "{0}" }&{ "name": "installer" }'.format(password))
+    response = requests.post("{0}/users.register".format(REST_URL), data='{{ "username": "installer" }}&{{ "email": "installer@example.com" }}&{{ "pass": "{0}" }}&{{ "name": "installer" }}'.format(password))
     result = json.loads(response.text)
     if not result['success']:
         log.info('cannot create install account')
