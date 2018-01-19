@@ -84,6 +84,10 @@ def after_service_start():
       
     response = requests.post("{0}/login" .format(REST_URL), json={ "username": "installer", "password": password } )
     result = json.loads(response.text)
+    if 'success' not in result:
+        log.error(response.text.encode("utf-8"))
+        raise Exception('install user login error')
+    
     if not result['success']:
         log.error(response.text.encode("utf-8"))
         raise Exception('unable to login under install user')
