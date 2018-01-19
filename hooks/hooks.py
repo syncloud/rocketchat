@@ -79,9 +79,19 @@ def after_service_start():
         log.info('cannot create install account')
         log.info('response: {0}'.format(response.text.encode("utf-8")))
         return
-    
+        
     log.info('install account has been created')
       
+    response = requests.post("{0}/login" .format(REST_URL), json={ "username": "installer", "password": password } )
+    result = json.loads(response.text)
+    if not result['success']:
+        log.error(response.text.encode("utf-8"))
+        raise Exception('unable to login under install user')
+    
+    authToken = result['data']['authToken']
+    userId = result['data']['userId']
+    log.info('install account token extracted')
+    
     #try:
     #    log.info('applying mongo config changes')
     #    config_result = check_output('{0}/mongodb/bin/mongo {1}/config/mongodb.config.js'.format(app_dir, app_data_dir), shell=True)
