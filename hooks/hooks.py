@@ -86,6 +86,7 @@ def after_service_start():
     result = json.loads(response.text)
     if result['status'] == 'success':
         log.error(response.text.encode("utf-8"))
+        log.info(result['status'])
         raise Exception('unable to login under install user')
     
     authToken = result['data']['authToken']
