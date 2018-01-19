@@ -96,7 +96,7 @@ def after_service_start():
     update_setting('LDAP_Enable', True, authToken, userId)
     update_setting('LDAP_Host', 'localhost', authToken, userId)
     update_setting('LDAP_BaseDN', 'dc=syncloud,dc=org', authToken, userId)
-    update_setting('LDAP_Authentication', true, authToken, userId)
+    update_setting('LDAP_Authentication', True, authToken, userId)
     update_setting('LDAP_Authentication_UserDN', 'dc=syncloud,dc=org', authToken, userId)
     update_setting('LDAP_Authentication_Password', 'syncloud', authToken, userId)
     update_setting('LDAP_User_Search_Filter', '(objectclass=inetOrgPerson)', authToken, userId)
