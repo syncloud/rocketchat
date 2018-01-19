@@ -67,10 +67,11 @@ def test_login(driver, user_domain):
 
      password.send_keys(Keys.RETURN)
      driver.get_screenshot_as_file(join(screenshot_dir, 'login_progress.png'))
-     time.sleep(1)
+     time.sleep(20)
      driver.get_screenshot_as_file(join(screenshot_dir, 'login_progress_2.png'))
      
      print(driver.execute_script('return window.JSErrorCollector_errors ? window.JSErrorCollector_errors.pump() : []'))
+
 
 #
 #     # try:

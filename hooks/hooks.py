@@ -1,19 +1,15 @@
-from os.path import dirname, join, abspath, isdir
-from os import listdir, environ
 import sys
-from subprocess import check_output
+from os import listdir, environ
+from os.path import dirname, join, abspath, isdir
+
 app_path = abspath(join(dirname(__file__), '..'))
 
 lib_path = join(app_path, 'lib')
 libs = [join(lib_path, item) for item in listdir(lib_path) if isdir(join(lib_path, item))]
 map(lambda l: sys.path.insert(0, l), libs)
-from bs4 import BeautifulSoup
 
-from os.path import isdir, join
+from os.path import join
 import requests
-import time
-from subprocess import check_output, CalledProcessError
-import shutil
 import uuid
 from syncloud_app import logger
 import json
@@ -30,6 +26,7 @@ SYSTEMD_MONGODB = 'rocketchat-mongodb'
 PORT = 3000
 MONGODB_PORT = 27017
 REST_URL = "http://localhost:{0}/api/v1".format(PORT)
+
 
 def install():
     log = logger.get_logger('rocketchat')
@@ -69,11 +66,18 @@ def install():
         app.add_service(SYSTEMD_ROCKETCHAT)
         app.add_service(SYSTEMD_NGINX)
 
+
 def after_service_start():
     log = logger.get_logger('rocketchat')
 
     password = unicode(uuid.uuid4().hex)
-    response = requests.post("{0}/users.register".format(REST_URL), json={ "username": "installer", "email": "installer@example.com", "pass": password, "name": "installer" } )
+    response = requests.post("{0}/users.register".format(REST_URL),
+                             json={
+                                 "username": "installer",
+                                 "email": "installer@example.com",
+                                 "pass": password,
+                                 "name": "installer"})
+
     result = json.loads(response.text)
     if not result['success']:
         log.info('cannot create install account')
@@ -82,7 +86,7 @@ def after_service_start():
         
     log.info('install account has been created')
       
-    response = requests.post("{0}/login" .format(REST_URL), json={ "username": "installer", "password": password } )
+    response = requests.post("{0}/login" .format(REST_URL), json={"username": "installer", "password": password})
     result = json.loads(response.text)
     if not result['status'] == 'success':
         log.error(response.text.encode("utf-8"))
@@ -106,9 +110,12 @@ def after_service_start():
     update_setting('LDAP_Internal_Log_Level', 'debug', authToken, userId)
 
 
-def update_setting(name, value, authToken, userId):
-      
-    response = requests.post("{0}/settings/{1}" .format(REST_URL, name), headers={"X-Auth-Token": authToken, "X-User-Id": userId}, json={"value": value} )
+def update_setting(name, value, auth_token, user_id):
+    log = logger.get_logger('rocketchat')
+
+    response = requests.post("{0}/settings/{1}" .format(REST_URL, name),
+                             headers={"X-Auth-Token": auth_token, "X-User-Id": user_id},
+                             json={"value": value})
     result = json.loads(response.text)
     if not result['success']:
         log.info('cannot update setting: {0}'.format(name))
@@ -116,7 +123,6 @@ def update_setting(name, value, authToken, userId):
         raise Exception('unable to update settings')
 
 
-        
 def remove():
     app = api.get_app_setup(APP_NAME)
 
@@ -127,4 +133,3 @@ def remove():
     app_dir = paths.get_data_dir(APP_NAME)
 
     fs.removepath(app_dir)
-
