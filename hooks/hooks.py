@@ -84,7 +84,7 @@ def after_service_start():
       
     response = requests.post("{0}/login" .format(REST_URL), json={ "username": "installer", "password": password } )
     result = json.loads(response.text)
-    if result['status'] == 'success':
+    if not result['status'] == 'success':
         log.error(response.text.encode("utf-8"))
         log.info(result['status'])
         raise Exception('unable to login under install user')
@@ -92,14 +92,30 @@ def after_service_start():
     authToken = result['data']['authToken']
     userId = result['data']['userId']
     log.info('install account token extracted')
-    
-    #try:
-    #    log.info('applying mongo config changes')
-    #    config_result = check_output('{0}/mongodb/bin/mongo {1}/config/mongodb.config.js'.format(app_dir, app_data_dir), shell=True)
-    #    log.info('done: {0}'.format(config_result))
-    #except CalledProcessError, e:
-    #    log.error(e.output.strip())
-    #    raise e
+  
+    update_setting('LDAP_Enable', True, authToken, userId)
+    update_setting('LDAP_Host', 'localhost', authToken, userId)
+    update_setting('LDAP_BaseDN', 'dc=syncloud,dc=org', authToken, userId)
+    update_setting('LDAP_Authentication', true, authToken, userId)
+    update_setting('LDAP_Authentication_UserDN', 'dc=syncloud,dc=org', authToken, userId)
+    update_setting('LDAP_Authentication_Password', 'syncloud', authToken, userId)
+    update_setting('LDAP_User_Search_Filter', '(objectclass=inetOrgPerson)', authToken, userId)
+    update_setting('LDAP_User_Search_Field', 'cn', authToken, userId)
+    update_setting('LDAP_Username_Field', 'cn', authToken, userId)
+    update_setting('Accounts_RegistrationForm', 'Public', authToken, userId)
+    update_setting('LDAP_Internal_Log_Level', 'debug', authToken, userId)
+
+
+def update_setting(name, value, authToken, userId):
+      
+    response = requests.post("{0}/settings/{1}" .format(REST_URL, name), headers={"X-Auth-Token": authToken, "X-User-Id": userId}, json={"value": value} )
+    result = json.loads(response.text)
+    if not result['success']:
+        log.info('cannot update setting: {0}'.format(name))
+        log.info('response: {0}'.format(response.text.encode("utf-8")))
+        raise Exception('unable to update settings')
+
+
         
 def remove():
     app = api.get_app_setup(APP_NAME)
