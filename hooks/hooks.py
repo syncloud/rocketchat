@@ -1,5 +1,5 @@
 import sys
-from os import listdir, environ
+from os import listdir, environ, path
 from os.path import dirname, join, abspath, isdir
 
 app_path = abspath(join(dirname(__file__), '..'))
@@ -73,7 +73,7 @@ class RocketChatInstaller():
 
 
     def configure(self):
-        if os.path.isfile(self.install_file):
+        if path.isfile(self.install_file):
             self.log.info('already configured')
             return
             
