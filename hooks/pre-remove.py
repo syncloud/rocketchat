@@ -1,3 +1,4 @@
-import hooks
+from hooks import RocketChatInstaller
 
-hooks.remove()
+imstaller = RocketChatInstaller()
+imstaller.remove()

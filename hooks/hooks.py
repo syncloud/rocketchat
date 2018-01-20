@@ -28,108 +28,114 @@ MONGODB_PORT = 27017
 REST_URL = "http://localhost:{0}/api/v1".format(PORT)
 
 
-def install():
-    log = logger.get_logger('rocketchat')
+class RocketChatInstaller():
+    def __init__(self):
+        self.log = logger.get_logger('rocketchat')
+        self.app_dir = paths.get_app_dir(APP_NAME)
+        self.app_data_dir = paths.get_data_dir(APP_NAME)
+        self.app_url = urls.get_app_url(APP_NAME)
+        #self.app = api.get_app_setup(APP_NAME)
+        self.install_file = join(self.app_data_dir, 'installed')
 
-    app_dir = paths.get_app_dir(APP_NAME)
-    app_data_dir = paths.get_data_dir(APP_NAME)
-    app_url = urls.get_app_url(APP_NAME)
-
-    linux.useradd(USER_NAME)
-
-    fs.makepath(join(app_data_dir, 'log'))
-    fs.makepath(join(app_data_dir, 'nginx'))
-    fs.makepath(join(app_data_dir, 'mongodb'))
-
-    variables = {
-        'app_dir': app_dir,
-        'app_data_dir': app_data_dir,
-        'url': app_url,
-        'web_secret': unicode(uuid.uuid4().hex),
-        'port': PORT,
-        'mongodb_port': MONGODB_PORT
-    }
-
-    templates_path = join(app_dir, 'config.templates')
-    config_path = join(app_data_dir, 'config')
-
-    gen.generate_files(templates_path, config_path, variables)
-
-    fs.chownpath(app_data_dir, USER_NAME, recursive=True)
     
-    if 'SNAP' not in environ:
-        app = api.get_app_setup(APP_NAME)
+    def install(self):
     
-        fs.chownpath(app_dir, USER_NAME, recursive=True)
+        linux.useradd(USER_NAME)
+
+        fs.makepath(join(self.app_data_dir, 'log'))
+        fs.makepath(join(self.app_data_dir, 'nginx'))
+        fs.makepath(join(self.app_data_dir, 'mongodb'))
+
+        variables = {
+            'app_dir': self.app_dir,
+            'app_data_dir': self.app_data_dir,
+            'url': self.app_url,
+            'web_secret': unicode(uuid.uuid4().hex),
+            'port': PORT,
+            'mongodb_port': MONGODB_PORT
+        }
+
+        templates_path = join(self.app_dir, 'config.templates')
+        config_path = join(self.app_data_dir, 'config')
+
+        gen.generate_files(templates_path, config_path, variables)
+       
+        fs.chownpath(self.app_data_dir, USER_NAME, recursive=True)
+    
+        if 'SNAP' not in environ:
+            app = api.get_app_setup(APP_NAME)
+    
+            fs.chownpath(self.app_dir, USER_NAME, recursive=True)
   
-        app.add_service(SYSTEMD_MONGODB)
-        app.add_service(SYSTEMD_ROCKETCHAT)
-        app.add_service(SYSTEMD_NGINX)
+            app.add_service(SYSTEMD_MONGODB)
+            app.add_service(SYSTEMD_ROCKETCHAT)
+            app.add_service(SYSTEMD_NGINX)
 
 
-def after_service_start():
-    log = logger.get_logger('rocketchat')
-
-    password = unicode(uuid.uuid4().hex)
-    response = requests.post("{0}/users.register".format(REST_URL),
-                             json={
-                                 "username": "installer",
-                                 "email": "installer@example.com",
-                                 "pass": password,
-                                 "name": "installer"})
-
-    result = json.loads(response.text)
-    if not result['success']:
-        log.info('cannot create install account')
-        log.info('response: {0}'.format(response.text.encode("utf-8")))
-        return
+    def configure(self):
+        if os.path.isfile(self.install_file):
+            self.log.info('already configured')
+            return
+            
+        password = unicode(uuid.uuid4().hex)
+        response = requests.post("{0}/users.register".format(REST_URL),
+                                 json={
+                                     "username": "installer",
+                                     "email": "installer@example.com",
+                                     "pass": password,
+                                     "name": "installer"})
+  
+        result = json.loads(response.text)
+        if not result['success']:
+            self.log.info('response: {0}'.format(response.text.encode("utf-8")))
+            raise Exception('cannot create install account')
         
-    log.info('install account has been created')
+        self.log.info('install account has been created')
       
-    response = requests.post("{0}/login" .format(REST_URL), json={"username": "installer", "password": password})
-    result = json.loads(response.text)
-    if not result['status'] == 'success':
-        log.error(response.text.encode("utf-8"))
-        log.info(result['status'])
-        raise Exception('unable to login under install user')
-    
-    authToken = result['data']['authToken']
-    userId = result['data']['userId']
-    log.info('install account token extracted')
+        response = requests.post("{0}/login" .format(REST_URL), json={"username": "installer", "password": password})
+        result = json.loads(response.text)
+        if not result['status'] == 'success':
+            self.log.error(response.text.encode("utf-8"))
+            self.log.info(result['status'])
+            raise Exception('unable to login under install user')
+     
+        authToken = result['data']['authToken']
+        userId = result['data']['userId']
+        self.log.info('install account token extracted')
   
-    update_setting('LDAP_Enable', True, authToken, userId)
-    update_setting('LDAP_Host', 'localhost', authToken, userId)
-    update_setting('LDAP_BaseDN', 'dc=syncloud,dc=org', authToken, userId)
-    update_setting('LDAP_Authentication', True, authToken, userId)
-    update_setting('LDAP_Authentication_UserDN', 'dc=syncloud,dc=org', authToken, userId)
-    update_setting('LDAP_Authentication_Password', 'syncloud', authToken, userId)
-    update_setting('LDAP_User_Search_Filter', '(objectclass=inetOrgPerson)', authToken, userId)
-    update_setting('LDAP_User_Search_Field', 'cn', authToken, userId)
-    update_setting('LDAP_Username_Field', 'cn', authToken, userId)
-    update_setting('Accounts_RegistrationForm', 'Public', authToken, userId)
-    update_setting('LDAP_Internal_Log_Level', 'debug', authToken, userId)
+        self.update_setting('LDAP_Enable', True, authToken, userId)
+        self.update_setting('LDAP_Host', 'localhost', authToken, userId)
+        self.update_setting('LDAP_BaseDN', 'dc=syncloud,dc=org', authToken, userId)
+        self.update_setting('LDAP_Authentication', True, authToken, userId)
+        self.update_setting('LDAP_Authentication_UserDN', 'dc=syncloud,dc=org', authToken, userId)
+        self.update_setting('LDAP_Authentication_Password', 'syncloud', authToken, userId)
+        self.update_setting('LDAP_User_Search_Filter', '(objectclass=inetOrgPerson)', authToken, userId)
+        self.update_setting('LDAP_User_Search_Field', 'cn', authToken, userId)
+        self.update_setting('LDAP_Username_Field', 'cn', authToken, userId)
+        self.update_setting('Accounts_RegistrationForm', 'Public', authToken, userId)
+        self.update_setting('LDAP_Internal_Log_Level', 'debug', authToken, userId)
+      
+        with open(self.install_file, 'w') as f:
+            f.write('installed\n')
 
 
-def update_setting(name, value, auth_token, user_id):
-    log = logger.get_logger('rocketchat')
+    def update_setting(self, name, value, auth_token, user_id):
+ 
+        response = requests.post("{0}/settings/{1}" .format(REST_URL, name),
+                                 headers={"X-Auth-Token": auth_token, "X-User-Id": user_id},
+                                 json={"value": value})
+        result = json.loads(response.text)
+        if not result['success']:
+            self.log.info('cannot update setting: {0}'.format(name))
+            self.log.info('response: {0}'.format(response.text.encode("utf-8")))
+            raise Exception('unable to update settings')
 
-    response = requests.post("{0}/settings/{1}" .format(REST_URL, name),
-                             headers={"X-Auth-Token": auth_token, "X-User-Id": user_id},
-                             json={"value": value})
-    result = json.loads(response.text)
-    if not result['success']:
-        log.info('cannot update setting: {0}'.format(name))
-        log.info('response: {0}'.format(response.text.encode("utf-8")))
-        raise Exception('unable to update settings')
 
+    def remove(self):
+        app = api.get_app_setup(APP_NAME)
 
-def remove():
-    app = api.get_app_setup(APP_NAME)
+        app.remove_service(SYSTEMD_NGINX)
+        app.remove_service(SYSTEMD_ROCKETCHAT)
+        app.remove_service(SYSTEMD_MONGODB)
 
-    app.remove_service(SYSTEMD_NGINX)
-    app.remove_service(SYSTEMD_ROCKETCHAT)
-    app.remove_service(SYSTEMD_MONGODB)
-
-    app_dir = paths.get_data_dir(APP_NAME)
-
-    fs.removepath(app_dir)
+        fs.removepath(self.app_dir)

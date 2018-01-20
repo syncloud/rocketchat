@@ -1,4 +1,5 @@
-import hooks
+from hooks import RocketChatInstaller
 
-hooks.install()
-hooks.after_service_start()
+imstaller = RocketChatInstaller()
+imstaller.install()
+imstaller.configure()
