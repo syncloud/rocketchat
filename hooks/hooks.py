@@ -115,7 +115,7 @@ class RocketChatInstaller():
         self.update_setting('Accounts_RegistrationForm', 'Public', authToken, userId)
         self.update_setting('LDAP_Internal_Log_Level', 'debug', authToken, userId)
         
-        response = requests.post("{0}/users.delete".format(REST_URL), headers={"X-Auth-Token": auth_token, "X-User-Id": user_id}, json={"userId": userId})
+        response = requests.post("{0}/users.delete".format(REST_URL), headers={"X-Auth-Token": authToken, "X-User-Id": userId}, json={"userId": userId})
         result = json.loads(response.text)
         if not result['success']:
             self.log.error(response.text.encode("utf-8"))
