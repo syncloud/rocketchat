@@ -46,7 +46,6 @@ coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/phantomjs-${ARCH}.tar.gz
 
 ${BUILD_DIR}/mongodb/bin/mongod --version
 
-rm /usr/bin/phantomjs
 rm -rf ${BUILD_DIR}/lib/node_modules
 
 export PATH=${BUILD_DIR}/phantomjs/bin:$PATH
