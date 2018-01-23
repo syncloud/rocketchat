@@ -56,7 +56,13 @@ echo "version: \"$(phantomjs --version)\""
 cd ${DIR}/build
 wget https://download.rocket.chat/build/rocket.chat-${ROCKETCHAT_VERSION}.tgz -O ${DIR}/build/rocketchat.tar.gz --progress dot:giga
 tar xf rocketchat.tar.gz -C ${BUILD_DIR}
+cd ${BUILD_DIR}/rocketchat
+for f in ${DIR}/patches/*.patch
+do
+  patch -p0 < $f
+done
 
+cd ${DIR}
 cp -r ${DIR}/bin ${BUILD_DIR}
 cp -r ${DIR}/config ${BUILD_DIR}/config.templates
 cp -r ${DIR}/lib ${BUILD_DIR}
