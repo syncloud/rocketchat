@@ -57,8 +57,7 @@ cd ${DIR}/build
 wget https://download.rocket.chat/build/rocket.chat-${ROCKETCHAT_VERSION}.tgz -O ${DIR}/build/rocketchat.tar.gz --progress dot:giga
 tar xf rocketchat.tar.gz -C ${BUILD_DIR}
 cd ${BUILD_DIR}/bundle
-find . -name deleteUser.js
-find . -name removeUserFromRole.js
+
 for f in ${DIR}/patches/*.patch
 do
   patch -p0 < $f
