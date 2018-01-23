@@ -1,5 +1,5 @@
---- packages/rocketchat-authorization/server/methods/removeUserFromRole.js	2018-01-22 22:19:33.820631883 +0000
-+++ packages/rocketchat-authorization/server/methods/removeUserFromRole.js.new	2018-01-22 22:30:51.685111375 +0000
+--- packages/rocketchat-authorization/server/methods/removeUserFromRole.js.new	2018-01-22 22:19:33.820631883 +0000
++++ packages/rocketchat-authorization/server/methods/removeUserFromRole.js 2018-01-22 22:30:51.685111375 +0000
 @@ -39,12 +39,12 @@
  			}).count();
  
