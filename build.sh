@@ -19,9 +19,6 @@ SNAP_ARCH=$(dpkg --print-architecture)
 VERSION=$2
 INSTALLER=$3
 
-apt-get update
-apt-get -y install git
-
 rm -rf ${DIR}/lib
 mkdir ${DIR}/lib
 
