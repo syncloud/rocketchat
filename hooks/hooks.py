@@ -15,7 +15,7 @@ from syncloud_app import logger
 import json
 from syncloud_platform.application import api
 from syncloud_platform.gaplib import fs, linux, gen
-from syncloudlib.application import paths, urls
+from syncloudlib.application import paths, urls, storage
 
 
 APP_NAME = 'rocketchat'
@@ -61,7 +61,9 @@ class RocketChatInstaller():
         gen.generate_files(templates_path, config_path, variables)
        
         fs.chownpath(self.app_data_dir, USER_NAME, recursive=True)
-    
+        
+        self.prepare_storage()
+        
         if 'SNAP' not in environ:
             app = api.get_app_setup(APP_NAME)
     
@@ -72,7 +74,7 @@ class RocketChatInstaller():
             app.add_service(SYSTEMD_NGINX)
 
 
-    def configure(self):
+    def configure(self, storage_path):
         if path.isfile(self.install_file):
             self.log.info('already configured')
             return
@@ -114,6 +116,11 @@ class RocketChatInstaller():
         self.update_setting('LDAP_Username_Field', 'cn', authToken, userId)
         self.update_setting('Accounts_RegistrationForm', 'Public', authToken, userId)
         self.update_setting('LDAP_Internal_Log_Level', 'debug', authToken, userId)
+        self.update_setting('FileUpload_Storage_Type', 'FileSystem', authToken, userId)
+        
+        app_storage_dir = storage.init_storage(APP_NAME, USER_NAME)
+        
+        self.update_setting('FileUpload_FileSystemPath', app_storage_dir, authToken, userId)
         
         response = requests.post("{0}/users.delete".format(REST_URL), headers={"X-Auth-Token": authToken, "X-User-Id": userId}, json={"userId": userId})
         result = json.loads(response.text)
@@ -136,7 +143,10 @@ class RocketChatInstaller():
             self.log.info('response: {0}'.format(response.text.encode("utf-8")))
             raise Exception('unable to update settings')
 
-
+    def prepare_storage(self):
+        app_storage_dir = storage.init_storage(APP_NAME, USER_NAME)
+        return app_storage_dir
+        
     def remove(self):
         app = api.get_app_setup(APP_NAME)
 
