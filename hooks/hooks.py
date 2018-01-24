@@ -74,7 +74,7 @@ class RocketChatInstaller():
             app.add_service(SYSTEMD_NGINX)
 
 
-    def configure(self, storage_path):
+    def configure(self):
         if path.isfile(self.install_file):
             self.log.info('already configured')
             return
