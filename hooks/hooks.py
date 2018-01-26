@@ -38,7 +38,7 @@ class RocketChatInstaller():
         self.install_file = join(self.app_data_dir, 'installed')
 
     
-    def install(self):
+    def pre_start(self):
     
         linux.useradd(USER_NAME)
 
@@ -64,17 +64,18 @@ class RocketChatInstaller():
         
         self.prepare_storage()
         
-        if 'SNAP' not in environ:
-            app = api.get_app_setup(APP_NAME)
+   
+      def start(self):
+        app = api.get_app_setup(APP_NAME)
     
-            fs.chownpath(self.app_dir, USER_NAME, recursive=True)
+        fs.chownpath(self.app_dir, USER_NAME, recursive=True)
   
-            app.add_service(SYSTEMD_MONGODB)
-            app.add_service(SYSTEMD_ROCKETCHAT)
-            app.add_service(SYSTEMD_NGINX)
+        app.add_service(SYSTEMD_MONGODB)
+        app.add_service(SYSTEMD_ROCKETCHAT)
+        app.add_service(SYSTEMD_NGINX)
 
 
-    def configure(self):
+    def post_start(self):
         if path.isfile(self.install_file):
             self.log.info('already configured')
             return
