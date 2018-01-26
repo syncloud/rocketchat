@@ -19,6 +19,7 @@ apps:
     reload-command: bin/service.nginx.sh reload
   server:
     command: bin/service.server.sh start
+    start-timeout: 600s
     daemon: simple
     plugs:
     - network
