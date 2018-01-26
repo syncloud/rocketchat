@@ -65,7 +65,7 @@ class RocketChatInstaller():
         self.prepare_storage()
         
    
-      def start(self):
+    def start(self):
         app = api.get_app_setup(APP_NAME)
     
         fs.chownpath(self.app_dir, USER_NAME, recursive=True)
