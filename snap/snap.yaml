@@ -17,6 +17,7 @@ apps:
     post-start-command: bin/service.nginx.sh post-start
     stop-command: bin/service.nginx.sh stop
     reload-command: bin/service.nginx.sh reload
+    after: [server]
   server:
     command: bin/service.server.sh start
     start-timeout: 600s
@@ -26,6 +27,7 @@ apps:
     - network-bind
     restart-condition: always
     post-start-command: bin/service.server.sh post-start
+    after: [mongodb]
 confinement: strict
 description: Rocket.Chat
 grade: stable
