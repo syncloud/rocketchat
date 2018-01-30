@@ -7,6 +7,7 @@ apps:
     - network-bind
     restart-condition: always
     post-start-command: bin/service.mongodb.sh post-start
+    before: [server]
   nginx:
     command: bin/service.nginx.sh start
     daemon: simple
