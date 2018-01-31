@@ -20,6 +20,7 @@ apps:
     restart-condition: always
     post-start-command: bin/service.server.sh post-start
     after: [mongodb]
+    start-timeout: 600s
   mongodb:
     command: bin/service.mongodb.sh start
     daemon: simple
@@ -29,7 +30,6 @@ apps:
     restart-condition: always
     post-start-command: bin/service.mongodb.sh post-start
     before: [server]
-    start-timeout: 600s
 confinement: strict
 description: Rocket.Chat
 grade: stable
