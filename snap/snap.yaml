@@ -1,13 +1,4 @@
 apps:
-  mongodb:
-    command: bin/service.mongodb.sh start
-    daemon: simple
-    plugs:
-    - network
-    - network-bind
-    restart-condition: always
-    post-start-command: bin/service.mongodb.sh post-start
-    before: [server]
   nginx:
     command: bin/service.nginx.sh start
     daemon: simple
@@ -29,6 +20,15 @@ apps:
     restart-condition: always
     post-start-command: bin/service.server.sh post-start
     after: [mongodb]
+  mongodb:
+    command: bin/service.mongodb.sh start
+    daemon: simple
+    plugs:
+    - network
+    - network-bind
+    restart-condition: always
+    post-start-command: bin/service.mongodb.sh post-start
+    before: [server]
 confinement: strict
 description: Rocket.Chat
 grade: stable
