@@ -24,7 +24,7 @@ pipeline:
     commands:
       - VERSION=$(cat version)
       - NAME=$(cat name)
-      #- ./integration/test-docker.sh teamcity@syncloud.it password teamcity $VERSION master ${installer} device $NAME
+      - ./integration/test-docker.sh teamcity@syncloud.it password teamcity $VERSION master ${installer} device $NAME
 
   upload:
     image: syncloud/build-deps-${arch}
