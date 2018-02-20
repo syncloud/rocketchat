@@ -58,6 +58,9 @@ def test_index(driver, user_domain):
 
 def test_login(driver, user_domain):
 
+     wait_driver = WebDriverWait(driver, 120)
+     wait_driver.until(EC.element_to_be_clickable((By.ID, 'emailOrUsername')))
+
      user = driver.find_element_by_id("emailOrUsername")
      user.send_keys(DEVICE_USER)
      password = driver.find_element_by_id("pass")
