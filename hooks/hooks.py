@@ -115,7 +115,7 @@ class RocketChatInstaller():
         self.update_setting('LDAP_User_Search_Filter', '(objectclass=inetOrgPerson)', authToken, userId)
         self.update_setting('LDAP_User_Search_Field', 'cn', authToken, userId)
         self.update_setting('LDAP_Username_Field', 'cn', authToken, userId)
-        self.update_setting('Accounts_RegistrationForm', 'Public', authToken, userId)
+        self.update_setting('Accounts_RegistrationForm', 'Disabled', authToken, userId)
         self.update_setting('LDAP_Internal_Log_Level', 'debug', authToken, userId)
         self.update_setting('FileUpload_Storage_Type', 'FileSystem', authToken, userId)
         
