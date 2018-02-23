@@ -73,7 +73,7 @@ def test_login(driver, user_domain):
      time.sleep(20)
      driver.get_screenshot_as_file(join(screenshot_dir, 'main.png'))
      
-     with open(jpin(LOG_DIR, 'ui-main.html.log'), 'w') as f:
+     with open(join(LOG_DIR, 'ui-main.html.log'), 'w') as f:
             f.write(driver.page_source.encode('utf-8'))
 
      print(driver.execute_script('return window.JSErrorCollector_errors ? window.JSErrorCollector_errors.pump() : []'))
