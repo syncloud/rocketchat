@@ -5,10 +5,9 @@ Description=Rocket.Chat Nginx
 User=rocketchat
 Type=simple
 PIDFile={{ app_data_dir }}/log/nginx.pid
-ExecStartPre={{ app_dir }}/nginx/sbin/nginx -t -c {{ app_data_dir }}/config/nginx.conf -g 'error_log {{ app_data_dir }}/log/nginx_error.log warn;'
-ExecStart={{ app_dir }}/nginx/sbin/nginx -c {{ app_data_dir }}/config/nginx.conf -g 'error_log {{ app_data_dir }}/log/nginx_error.log warn;'
-ExecReload={{ app_dir }}/nginx/sbin/nginx -c {{ app_data_dir }}/config/nginx.conf -s reload -g 'error_log {{ app_data_dir }}/log/nginx_error.log warn;'
-ExecStop={{ app_dir }}/nginx/sbin/nginx -c {{ app_data_dir }}/config/nginx.conf -s stop -g 'error_log {{ app_data_dir }}/log/nginx_error.log warn;'
-
+ExecStartPre={{ app_dir }}/bin/service.nginx.sh pre-start
+ExecStart={{ app_dir }}/bin/service.nginx.sh start
+ExecStartPost={{ app_dir }}/bin/service.nginx.sh post-start
+ExecStop={{ app_dir }}/bin/service.nginx.sh stop
 [Install]
 WantedBy=multi-user.target
