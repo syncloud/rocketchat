@@ -78,14 +78,14 @@ def module_teardown(device_host, data_dir, platform_data_dir, app_dir):
 @pytest.fixture(scope='function')
 def syncloud_session(device_host):
     session = requests.session()
-    session.post('http://{0}/rest/login'.format(device_host), data={'name': DEVICE_USER, 'password': DEVICE_PASSWORD})
+    session.post('https://{0}/rest/login'.format(device_host), data={'name': DEVICE_USER, 'password': DEVICE_PASSWORD}, verify=False)
     return session
 
 
 @pytest.fixture(scope='function')
 def rocketcaht_session_domain(user_domain, device_host):
     session = requests.session()
-    response = session.get('http://{0}'.format(user_domain), allow_redirects=True)
+    response = session.get('https://{0}'.format(user_domain), allow_redirects=True, verify=False)
     print(response.text)
     # soup = BeautifulSoup(response.text, "html.parser")
     # requesttoken = soup.find_all('input', {'name': 'requesttoken'})[0]['value']
@@ -106,7 +106,7 @@ def test_start(module_setup):
 def test_activate_device(auth, device_host):
     email, password, domain, release = auth
 
-    response = requests.post('http://{0}:81/rest/activate'.format(device_host),
+    response = requests.post('https://{0}:81/rest/activate'.format(device_host), verify=False,
                              data={'main_domain': SYNCLOUD_INFO, 'redirect_email': email, 'redirect_password': password,
                                    'user_domain': domain, 'device_username': DEVICE_USER, 'device_password': DEVICE_PASSWORD})
     assert response.status_code == 200, response.text
@@ -131,7 +131,7 @@ def test_mongo_config(device_host, app_dir, data_dir):
 
 
 def test_remove(syncloud_session, device_host):
-    response = syncloud_session.get('http://{0}/rest/remove?app_id=rocketcaht'.format(device_host), allow_redirects=False)
+    response = syncloud_session.get('https://{0}/rest/remove?app_id=rocketcaht'.format(device_host), allow_redirects=False, verify=False)
     assert response.status_code == 200, response.text
 
 
