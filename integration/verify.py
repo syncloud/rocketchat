@@ -106,7 +106,7 @@ def test_start(module_setup):
 def test_activate_device(auth, device_host):
     email, password, domain, release = auth
 
-    response = requests.post('https://{0}:81/rest/activate'.format(device_host), verify=False,
+    response = requests.post('http://{0}:81/rest/activate'.format(device_host),
                              data={'main_domain': SYNCLOUD_INFO, 'redirect_email': email, 'redirect_password': password,
                                    'user_domain': domain, 'device_username': DEVICE_USER, 'device_password': DEVICE_PASSWORD})
     assert response.status_code == 200, response.text
