@@ -1,21 +1,21 @@
---- programs/server/app/app.js.orig	2018-01-23 21:20:08.278212628 +0000
-+++ programs/server/app/app.js	2018-01-23 21:20:42.597173450 +0000
-@@ -7410,12 +7410,12 @@
- 		}).count();
- 		const userIsAdmin = user.roles.indexOf('admin') > -1;
-
--		if (adminCount === 1 && userIsAdmin) {
--			throw new Meteor.Error('error-action-not-allowed', 'Leaving the app without admins is not allowed', {
--				method: 'deleteUser',
--				action: 'Remove_last_admin'
--			});
--		}
-+		//if (adminCount === 1 && userIsAdmin) {
-+		//	throw new Meteor.Error('error-action-not-allowed', 'Leaving the app without admins is not allowed', {
-+		//		method: 'deleteUser',
-+		//		action: 'Remove_last_admin'
-+		//	});
-+		//}
-
- 		RocketChat.deleteUser(userId);
- 		return true;
+--- programs/server/app/app.js.orig	2018-02-28 01:08:40.000000000 +0000
++++ programs/server/app/app.js	2018-03-01 21:23:21.802516919 +0000
+@@ -8095,12 +8095,12 @@
+     }).count();
+     const userIsAdmin = user.roles.indexOf('admin') > -1;
+ 
+-    if (adminCount === 1 && userIsAdmin) {
+-      throw new Meteor.Error('error-action-not-allowed', 'Leaving the app without admins is not allowed', {
+-        method: 'deleteUser',
+-        action: 'Remove_last_admin'
+-      });
+-    }
++    //if (adminCount === 1 && userIsAdmin) {
++    //  throw new Meteor.Error('error-action-not-allowed', 'Leaving the app without admins is not allowed', {
++    //    method: 'deleteUser',
++    //    action: 'Remove_last_admin'
++    //  });
++    //}
+ 
+     RocketChat.deleteUser(userId);
+     return true;

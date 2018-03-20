@@ -12,7 +12,7 @@ export TMPDIR=/tmp
 export TMP=/tmp
 
 NAME=$1
-ROCKETCHAT_VERSION=0.60.2
+ROCKETCHAT_VERSION=0.62.2
 COIN_CACHE_DIR=${DIR}/coin.cache
 ARCH=$(uname -m)
 SNAP_ARCH=$(dpkg --print-architecture)
@@ -83,6 +83,9 @@ sed -i "s/exports.version.*/exports.version = '1.9.20'/g" lib/phantomjs.js
 ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --production -g
 
 cd ..
+
+#remove platform specific pre compiled libraries
+rm -rf ${BUILD_DIR}/bundle/programs/server/npm/node_modules/sharp/vendor
 
 export USER=$(whoami)
 ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --verbose --production
