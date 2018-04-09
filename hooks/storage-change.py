@@ -1,3 +1,4 @@
-import gogs_hooks
+from hooks import RocketChatInstaller
 
-gogs_hooks.prepare_storage()
+imstaller = RocketChatInstaller()
+imstaller.prepare_storage()
