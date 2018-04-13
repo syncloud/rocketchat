@@ -30,6 +30,7 @@ apps:
     post-start-command: bin/service.nginx.sh post-start
     stop-command: bin/service.nginx.sh stop
     reload-command: bin/service.nginx.sh reload
+    start-timeout: 600s
     after: [server]
 confinement: strict
 description: Rocket.Chat
