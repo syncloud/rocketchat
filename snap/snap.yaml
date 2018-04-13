@@ -6,7 +6,6 @@ apps:
     - network
     - network-bind
     restart-condition: always
-    post-start-command: bin/service.mongodb.sh post-start
     before: [server]
     start-timeout: 600s
   server:
