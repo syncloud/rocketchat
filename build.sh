@@ -12,7 +12,7 @@ export TMPDIR=/tmp
 export TMP=/tmp
 
 NAME=$1
-ROCKETCHAT_VERSION=0.62.2
+ROCKETCHAT_VERSION=0.64.2
 COIN_CACHE_DIR=${DIR}/coin.cache
 ARCH=$(uname -m)
 SNAP_ARCH=$(dpkg --print-architecture)
@@ -50,7 +50,7 @@ export LD_LIBRARY_PATH=${BUILD_DIR}/phantomjs/lib
 echo "version: \"$(phantomjs --version)\""
 
 cd ${DIR}/build
-wget https://download.rocket.chat/build/rocket.chat-${ROCKETCHAT_VERSION}.tgz -O ${DIR}/build/rocketchat.tar.gz --progress dot:giga
+wget https://cdn-download.rocket.chat/build/rocket.chat-${ROCKETCHAT_VERSION}.tgz -O ${DIR}/build/rocketchat.tar.gz --progress dot:giga
 tar xf rocketchat.tar.gz -C ${BUILD_DIR}
 cd ${BUILD_DIR}/bundle
 

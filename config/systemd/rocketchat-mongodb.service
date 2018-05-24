@@ -6,7 +6,6 @@ After=network.target
 User=rocketchat
 Environment=SNAP_COMMON={{ app_data_dir }}
 ExecStart={{ app_dir }}/bin/service.mongodb.sh start
-ExecStartPost={{ app_dir }}/bin/service.mongodb.sh post-start
 TimeoutStartSec=600
 [Install]
 WantedBy=multi-user.target

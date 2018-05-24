@@ -10,5 +10,6 @@ ExecStartPre={{ app_dir }}/bin/service.nginx.sh pre-start
 ExecStart={{ app_dir }}/bin/service.nginx.sh start
 ExecStartPost={{ app_dir }}/bin/service.nginx.sh post-start
 ExecStop={{ app_dir }}/bin/service.nginx.sh stop
+TimeoutStartSec=600
 [Install]
 WantedBy=multi-user.target
