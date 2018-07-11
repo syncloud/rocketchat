@@ -4,14 +4,13 @@ from os.path import dirname, join, exists
 import time
 import pytest
 from selenium import webdriver
-from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import Select
 
 DIR = dirname(__file__)
 LOG_DIR = join(DIR, 'log')
@@ -73,7 +72,7 @@ def test_login(driver, user_domain):
     screenshots(driver, screenshot_dir, 'setup')
      
      
-def test_setup(driver, user_domain);
+def test_setup(driver, user_domain):
 
     select = Select(driver.find_element_by_id('Organization_Type'))
     select.select_by_visible_text('Community')
