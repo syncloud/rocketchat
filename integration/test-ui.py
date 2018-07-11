@@ -76,12 +76,28 @@ def test_setup(driver, user_domain):
 
     select = Select(driver.find_element_by_name('Organization_Type'))
     select.select_by_visible_text('Community')
+
+    anme = driver.find_element_by_name('Organization_Name')
+    anme.send_keys('Syncloud')
+
+    select = Select(driver.find_element_by_name('Industry'))
+    select.select_by_visible_text('Technology Provider')
+
+    select = Select(driver.find_element_by_name('Size'))
+    select.select_by_visible_text('4000 or more people')
+
+    select = Select(driver.find_element_by_name('Country'))
+    select.select_by_visible_text('United Kingdom')
+
+    website = driver.find_element_by_name('Website')
+    website.send_keys('syncloud.org')
+
     screenshots(driver, screenshot_dir, 'setup-filled')
     
 
 def screenshots(driver, dir, name):
     desktop_w = 1024
-    desktop_h = 768
+    desktop_h = 1024
     driver.set_window_position(0, 0)
     driver.set_window_size(desktop_w, desktop_h)
 
