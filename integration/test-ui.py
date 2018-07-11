@@ -58,25 +58,27 @@ def test_index(driver, user_domain):
 
 def test_login(driver, user_domain):
 
-     wait_driver = WebDriverWait(driver, 120)
-     wait_driver.until(EC.element_to_be_clickable((By.ID, 'emailOrUsername')))
+    wait_driver = WebDriverWait(driver, 120)
+    wait_driver.until(EC.element_to_be_clickable((By.ID, 'emailOrUsername')))
 
-     user = driver.find_element_by_id("emailOrUsername")
-     user.send_keys(DEVICE_USER)
-     password = driver.find_element_by_id("pass")
-     password.send_keys(DEVICE_PASSWORD)
-     screenshots(driver, screenshot_dir, 'login')
+    user = driver.find_element_by_id("emailOrUsername")
+    user.send_keys(DEVICE_USER)
+    password = driver.find_element_by_id("pass")
+    password.send_keys(DEVICE_PASSWORD)
+    screenshots(driver, screenshot_dir, 'login')
 
-     password.send_keys(Keys.RETURN)
-     screenshots(driver, screenshot_dir, 'login_progress')
-     time.sleep(20)
-     screenshots(driver, screenshot_dir, 'main')
+    password.send_keys(Keys.RETURN)
+    screenshots(driver, screenshot_dir, 'login_progress')
+    time.sleep(20)
+    screenshots(driver, screenshot_dir, 'setup')
      
-     with open(join(LOG_DIR, 'ui-main.html.log'), 'w') as f:
-            f.write(driver.page_source.encode('utf-8'))
+     
+def test_setup(driver, user_domain);
 
-     print(driver.execute_script('return window.JSErrorCollector_errors ? window.JSErrorCollector_errors.pump() : []'))
-
+    select = Select(driver.find_element_by_id('Organization_Type'))
+    select.select_by_visible_text('Community')
+    screenshots(driver, screenshot_dir, 'setup-filled')
+    
 
 def screenshots(driver, dir, name):
     desktop_w = 1024
