@@ -74,7 +74,7 @@ def test_login(driver, user_domain):
      
 def test_setup(driver, user_domain):
 
-    select = Select(driver.find_element_by_id('Organization_Type'))
+    select = Select(driver.find_element_by_name('Organization_Type'))
     select.select_by_visible_text('Community')
     screenshots(driver, screenshot_dir, 'setup-filled')
     
