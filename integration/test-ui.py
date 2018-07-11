@@ -49,10 +49,10 @@ def driver():
 
 def test_index(driver, user_domain):
 
-    driver.get("http://{0}".format(user_domain))
+    driver.get("https://{0}".format(user_domain))
     time.sleep(10)
     print(driver.execute_script('return window.JSErrorCollector_errors ? window.JSErrorCollector_errors.pump() : []'))
-    driver.get_screenshot_as_file(join(screenshot_dir, 'index.png'))
+    screenshots(driver, screenshot_dir, 'index')
     print(driver.page_source.encode('utf-8'))
 
 
@@ -65,13 +65,12 @@ def test_login(driver, user_domain):
      user.send_keys(DEVICE_USER)
      password = driver.find_element_by_id("pass")
      password.send_keys(DEVICE_PASSWORD)
-     driver.get_screenshot_as_file(join(screenshot_dir, 'login.png'))
-     # print(driver.page_source.encode('utf-8'))
+     screenshots(driver, screenshot_dir, 'login')
 
      password.send_keys(Keys.RETURN)
-     driver.get_screenshot_as_file(join(screenshot_dir, 'login_progress.png'))
+     screenshots(driver, screenshot_dir, 'login_progress')
      time.sleep(20)
-     driver.get_screenshot_as_file(join(screenshot_dir, 'main.png'))
+     screenshots(driver, screenshot_dir, 'main')
      
      with open(join(LOG_DIR, 'ui-main.html.log'), 'w') as f:
             f.write(driver.page_source.encode('utf-8'))
@@ -79,27 +78,20 @@ def test_login(driver, user_domain):
      print(driver.execute_script('return window.JSErrorCollector_errors ? window.JSErrorCollector_errors.pump() : []'))
 
 
-#
-#     # try:
-#     #     password.submit()
-#     # except WebDriverException, e:
-#     #     if 'submit is not a function' in e.msg:
-#     #         print("https://github.com/SeleniumHQ/selenium/issues/3483")
-#     #         print(e)
-#     #         pass
-#     #     else:
-#     #         raise e
-#     # time.sleep(5)
-#     #
-#
-#     wait_driver = WebDriverWait(driver, 120)
-#     #wait_driver.until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, '#header #expandDisplayName'), DEVICE_USER))
-#
-#     wait_driver.until(EC.element_to_be_clickable((By.ID, 'closeWizard')))
-#     wizard_close_button = driver.find_element_by_id("closeWizard")
-#     wizard_close_button.click()
-#
-#     time.sleep(2)
-#     driver.get_screenshot_as_file(join(screenshot_dir, 'main.png'))
-#
-      
+def screenshots(driver, dir, name):
+    desktop_w = 1024
+    desktop_h = 768
+    driver.set_window_position(0, 0)
+    driver.set_window_size(desktop_w, desktop_h)
+
+    driver.get_screenshot_as_file(join(dir, '{}.png'.format(name)))
+
+    mobile_w = 400
+    mobile_h = 2000
+    driver.set_window_position(0, 0)
+    driver.set_window_size(mobile_w, mobile_h)
+    driver.get_screenshot_as_file(join(dir, '{}-mobile.png'.format(name)))
+    
+    with open(join(dir, '{0}.html.log'.format(name)), "w") as f:
+        f.write(driver.page_source.encode("utf-8"))
+   
