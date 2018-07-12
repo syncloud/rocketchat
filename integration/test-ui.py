@@ -92,6 +92,9 @@ def test_setup(driver, user_domain):
     website = driver.find_element_by_name('Website')
     website.send_keys('syncloud.org')
 
+    driver.find_element_by_css_selector('.setup-wizard-forms__footer-next').click()
+    time.sleep(10)
+    
     screenshots(driver, screenshot_dir, 'setup-filled')
     
 
