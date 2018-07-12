@@ -112,7 +112,7 @@ def test_setup(driver, user_domain):
 def test_welcome(driver, user_domain):
     
     screenshots(driver, screenshot_dir, 'welcome')
-    driver.find_element_by_css_selector(.js-finish').click()
+    driver.find_element_by_css_selector('.js-finish').click()
     time.sleep(10)
 
 
