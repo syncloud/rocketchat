@@ -104,7 +104,12 @@ def test_setup(driver, user_domain):
     select.select_by_visible_text('Private Team')
     
     screenshots(driver, screenshot_dir, 'setup-wizard-step-2')
-    
+
+    driver.find_element_by_css_selector('.setup-wizard-forms__footer-next').click()
+    time.sleep(10)
+
+    screenshots(driver, screenshot_dir, 'setup-wizard-step-3')
+    driver.find_element_by_css_selector('.setup-wizard-forms__content-register-radio-text').click()
     driver.find_element_by_css_selector('.setup-wizard-forms__footer-next').click()
     time.sleep(10)
 
