@@ -92,12 +92,28 @@ def test_setup(driver, user_domain):
     website = driver.find_element_by_name('Website')
     website.send_keys('syncloud.org')
 
+    screenshots(driver, screenshot_dir, 'setup-wizard-step-1')
+    
     driver.find_element_by_css_selector('.setup-wizard-forms__footer-next').click()
     time.sleep(10)
     
-    screenshots(driver, screenshot_dir, 'setup-filled')
-    
+    site = driver.find_element_by_name('Site_Name')
+    site.send_keys('Syncloud')
 
+    select = Select(driver.find_element_by_name('Server_Type'))
+    select.select_by_visible_text('Private Team')
+    
+    screenshots(driver, screenshot_dir, 'setup-wizard-step-2')
+    
+    driver.find_element_by_css_selector('.setup-wizard-forms__footer-next').click()
+    time.sleep(10)
+
+
+def test_main(driver, user_domain):
+
+    screenshots(driver, screenshot_dir, 'main')
+
+    
 def screenshots(driver, dir, name):
     desktop_w = 1024
     desktop_h = 1024
