@@ -35,7 +35,7 @@ def driver():
     binary = FirefoxBinary(firefox_path)
 
     profile = webdriver.FirefoxProfile()
-    profile.add_extension('{0}/JSErrorCollector.xpi'.format(DIR))
+    profile.add_extension('tools/firefox/JSErrorCollector.xpi')
     profile.set_preference('app.update.auto', False)
     profile.set_preference('app.update.enabled', False)
     driver = webdriver.Firefox(profile,
