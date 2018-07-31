@@ -4,14 +4,13 @@ from os.path import dirname, join, exists
 import time
 import pytest
 from selenium import webdriver
-from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import Select
 
 DIR = dirname(__file__)
 LOG_DIR = join(DIR, 'log')
@@ -28,7 +27,7 @@ def driver():
         shutil.rmtree(screenshot_dir)
     os.mkdir(screenshot_dir)
 
-    firefox_path = '{0}/firefox/firefox'.format(DIR)
+    firefox_path = '/tools/firefox/firefox'
     caps = DesiredCapabilities.FIREFOX
     caps["marionette"] = True
     caps['acceptSslCerts'] = True
@@ -36,12 +35,12 @@ def driver():
     binary = FirefoxBinary(firefox_path)
 
     profile = webdriver.FirefoxProfile()
-    profile.add_extension('{0}/JSErrorCollector.xpi'.format(DIR))
+    profile.add_extension('/tools/firefox/JSErrorCollector.xpi')
     profile.set_preference('app.update.auto', False)
     profile.set_preference('app.update.enabled', False)
     driver = webdriver.Firefox(profile,
                                capabilities=caps, log_path="{0}/firefox.log".format(LOG_DIR),
-                               firefox_binary=binary, executable_path=join(DIR, 'geckodriver/geckodriver'))
+                               firefox_binary=binary, executable_path=join(DIR, '/tools/geckodriver/geckodriver'))
     # driver.set_page_load_timeout(30)
     # print driver.capabilities['version']
     return driver
@@ -49,57 +48,98 @@ def driver():
 
 def test_index(driver, user_domain):
 
-    driver.get("http://{0}".format(user_domain))
+    driver.get("https://{0}".format(user_domain))
     time.sleep(10)
     print(driver.execute_script('return window.JSErrorCollector_errors ? window.JSErrorCollector_errors.pump() : []'))
-    driver.get_screenshot_as_file(join(screenshot_dir, 'index.png'))
+    screenshots(driver, screenshot_dir, 'index')
     print(driver.page_source.encode('utf-8'))
 
 
 def test_login(driver, user_domain):
 
-     wait_driver = WebDriverWait(driver, 120)
-     wait_driver.until(EC.element_to_be_clickable((By.ID, 'emailOrUsername')))
+    wait_driver = WebDriverWait(driver, 120)
+    wait_driver.until(EC.element_to_be_clickable((By.ID, 'emailOrUsername')))
 
-     user = driver.find_element_by_id("emailOrUsername")
-     user.send_keys(DEVICE_USER)
-     password = driver.find_element_by_id("pass")
-     password.send_keys(DEVICE_PASSWORD)
-     driver.get_screenshot_as_file(join(screenshot_dir, 'login.png'))
-     # print(driver.page_source.encode('utf-8'))
+    user = driver.find_element_by_id("emailOrUsername")
+    user.send_keys(DEVICE_USER)
+    password = driver.find_element_by_id("pass")
+    password.send_keys(DEVICE_PASSWORD)
+    screenshots(driver, screenshot_dir, 'login')
 
-     password.send_keys(Keys.RETURN)
-     driver.get_screenshot_as_file(join(screenshot_dir, 'login_progress.png'))
-     time.sleep(20)
-     driver.get_screenshot_as_file(join(screenshot_dir, 'main.png'))
+    password.send_keys(Keys.RETURN)
+    screenshots(driver, screenshot_dir, 'login_progress')
+    time.sleep(20)
+    screenshots(driver, screenshot_dir, 'setup')
      
-     with open(join(LOG_DIR, 'ui-main.html.log'), 'w') as f:
-            f.write(driver.page_source.encode('utf-8'))
+     
+def test_setup(driver, user_domain):
 
-     print(driver.execute_script('return window.JSErrorCollector_errors ? window.JSErrorCollector_errors.pump() : []'))
+    select = Select(driver.find_element_by_name('Organization_Type'))
+    select.select_by_visible_text('Community')
+
+    anme = driver.find_element_by_name('Organization_Name')
+    anme.send_keys('Syncloud')
+
+    select = Select(driver.find_element_by_name('Industry'))
+    select.select_by_visible_text('Technology Provider')
+
+    select = Select(driver.find_element_by_name('Size'))
+    select.select_by_visible_text('4000 or more people')
+
+    select = Select(driver.find_element_by_name('Country'))
+    select.select_by_visible_text('United Kingdom')
+
+    website = driver.find_element_by_name('Website')
+    website.send_keys('syncloud.org')
+
+    screenshots(driver, screenshot_dir, 'setup-wizard-step-1')
+    
+    driver.find_element_by_css_selector('.setup-wizard-forms__footer-next').click()
+    time.sleep(10)
+    
+    site = driver.find_element_by_name('Site_Name')
+    site.send_keys('Syncloud')
+
+    select = Select(driver.find_element_by_name('Server_Type'))
+    select.select_by_visible_text('Private Team')
+    
+    screenshots(driver, screenshot_dir, 'setup-wizard-step-2')
+
+    driver.find_element_by_css_selector('.setup-wizard-forms__footer-next').click()
+    time.sleep(10)
+
+    screenshots(driver, screenshot_dir, 'setup-wizard-step-3')
+    driver.find_element_by_css_selector('.setup-wizard-forms__content-register-radio-text').click()
+    driver.find_element_by_css_selector('.setup-wizard-forms__footer-next').click()
+    time.sleep(10)
 
 
-#
-#     # try:
-#     #     password.submit()
-#     # except WebDriverException, e:
-#     #     if 'submit is not a function' in e.msg:
-#     #         print("https://github.com/SeleniumHQ/selenium/issues/3483")
-#     #         print(e)
-#     #         pass
-#     #     else:
-#     #         raise e
-#     # time.sleep(5)
-#     #
-#
-#     wait_driver = WebDriverWait(driver, 120)
-#     #wait_driver.until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, '#header #expandDisplayName'), DEVICE_USER))
-#
-#     wait_driver.until(EC.element_to_be_clickable((By.ID, 'closeWizard')))
-#     wizard_close_button = driver.find_element_by_id("closeWizard")
-#     wizard_close_button.click()
-#
-#     time.sleep(2)
-#     driver.get_screenshot_as_file(join(screenshot_dir, 'main.png'))
-#
-      
+def test_welcome(driver, user_domain):
+    
+    screenshots(driver, screenshot_dir, 'welcome')
+    driver.find_element_by_css_selector('.js-finish').click()
+    time.sleep(30)
+
+
+def test_main(driver, user_domain):
+
+    screenshots(driver, screenshot_dir, 'main')
+
+    
+def screenshots(driver, dir, name):
+    desktop_w = 1024
+    desktop_h = 1024
+    driver.set_window_position(0, 0)
+    driver.set_window_size(desktop_w, desktop_h)
+
+    driver.get_screenshot_as_file(join(dir, '{}.png'.format(name)))
+
+    mobile_w = 400
+    mobile_h = 2000
+    driver.set_window_position(0, 0)
+    driver.set_window_size(mobile_w, mobile_h)
+    driver.get_screenshot_as_file(join(dir, '{}-mobile.png'.format(name)))
+    
+    with open(join(dir, '{0}.html.log'.format(name)), "w") as f:
+        f.write(driver.page_source.encode("utf-8"))
+   
