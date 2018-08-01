@@ -83,6 +83,7 @@ def test_setup(driver, user_domain):
     select = Select(driver.find_element_by_name('Industry'))
     select.select_by_visible_text('Technology Provider')
 
+    screenshots(driver, screenshot_dir, 'setup-wizard-debug-size')
     select = Select(driver.find_element_by_name('Size'))
     select.select_by_visible_text('4000 or more people')
 
