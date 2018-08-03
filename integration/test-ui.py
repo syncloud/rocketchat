@@ -76,14 +76,15 @@ def test_setup(driver, user_domain):
 
     select = Select(driver.find_element_by_name('Organization_Type'))
     select.select_by_visible_text('Community')
-
+    
+    screenshots(driver, screenshot_dir, 'setup-wizard-debug-org-name')
     anme = driver.find_element_by_name('Organization_Name')
     anme.send_keys('Syncloud')
 
     select = Select(driver.find_element_by_name('Industry'))
     select.select_by_visible_text('Technology Provider')
 
-    screenshots(driver, screenshot_dir, 'setup-wizard-debug-size')
+    screenshots(driver, screenshot_dir, 'setup-wizard-size')
     select = Select(driver.find_element_by_name('Size'))
     select.select_by_visible_text('4000 or more people')
 
