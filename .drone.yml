@@ -25,6 +25,7 @@ pipeline:
       - VERSION=$(cat version)
       - NAME=$(cat name)
       - ./integration/test-docker.sh teamcity@syncloud.it password build $VERSION master ${installer} device $NAME
+    shm_size: 1024000000
 
   upload:
     image: syncloud/build-deps-${arch}
