@@ -75,6 +75,7 @@ def module_teardown(device_host, data_dir, platform_data_dir, app_dir):
     run_scp('root@{0}:{1}/config/rocketchat.env {2}'.format(device_host, data_dir, app_log_dir), password=LOGS_SSH_PASSWORD, throw=False)
 
 def test_start():
+    print(check_output('date', shell=True))
     run_ssh(device_host, 'date', password=LOGS_SSH_PASSWORD)
 
 @pytest.fixture(scope='function')
