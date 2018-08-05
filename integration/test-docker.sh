@@ -60,8 +60,6 @@ set -e
 
 sshpass -p syncloud scp -o StrictHostKeyChecking=no install-${INSTALLER}.sh root@${DEVICE_HOST}:/installer.sh
 
-sshpass -p syncloud ssh -o StrictHostKeyChecking=no root@${DEVICE_HOST} /installer.sh ${RELEASE}
-
 pip install -r ${DIR}/dev_requirements.txt
 
 #fix dns
