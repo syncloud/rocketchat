@@ -15,6 +15,7 @@ def pytest_addoption(parser):
     parser.addoption("--app-archive-path", action="store")
     parser.addoption("--app", action="store")
 
+
 @pytest.fixture(scope="session")
 def auth(request):
     config = request.config
@@ -33,10 +34,17 @@ def user_domain(request):
 def app_archive_path(request):
     return request.config.getoption("--app-archive-path")
 
+
 @pytest.fixture(scope='session')
 def installer(request):
     return request.config.getoption("--installer")
 
+
 @pytest.fixture(scope='session')
 def device_host(request):
     return request.config.getoption("--device-host")
+
+
+@pytest.fixture(scope='session')
+def release(request):
+    return request.config.getoption("--release")

@@ -74,9 +74,6 @@ def module_teardown(device_host, data_dir, platform_data_dir, app_dir):
     
     run_scp('root@{0}:{1}/config/rocketchat.env {2}'.format(device_host, data_dir, app_log_dir), password=LOGS_SSH_PASSWORD, throw=False)
 
-def test_start():
-    print(check_output('date', shell=True))
-    run_ssh(device_host, 'date', password=LOGS_SSH_PASSWORD)
 
 @pytest.fixture(scope='function')
 def syncloud_session(device_host):
@@ -101,9 +98,15 @@ def rocketcaht_session_domain(user_domain, device_host):
 #
 
 
-def test_start(module_setup):
+def test_start(module_setup, device_host):
     shutil.rmtree(LOG_DIR, ignore_errors=True)
     os.mkdir(LOG_DIR)
+    print(check_output('date', shell=True))
+    run_ssh(device_host, 'date', password=LOGS_SSH_PASSWORD)
+
+
+def test_install_platform(device_host, release):
+    run_ssh(device_host, '/installer.sh {0}'.format(release), password=LOGS_SSH_PASSWORD)
 
 
 def test_activate_device(auth, device_host):
