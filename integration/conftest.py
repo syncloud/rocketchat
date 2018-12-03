@@ -11,6 +11,11 @@ def pytest_addoption(parser):
 
 
 @pytest.fixture(scope='session')
+def app(request):
+    return request.config.getoption("--app")
+
+
+@pytest.fixture(scope='session')
 def app_archive_path(request):
     return request.config.getoption("--app-archive-path")
 
