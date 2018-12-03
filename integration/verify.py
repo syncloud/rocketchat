@@ -26,23 +26,23 @@ LOG_DIR = join(DIR, 'log')
 TMP_DIR = '/tmp/syncloud'
 
 @pytest.fixture(scope="session")
-def platform_data_dir(installer):
-    return get_data_dir(installer, 'platform')
+def platform_data_dir():
+    return get_data_dir('platform')
 
     
 @pytest.fixture(scope="session")
-def data_dir(installer):
-    return get_data_dir(installer, 'rocketchat')
+def data_dir():
+    return get_data_dir('rocketchat')
 
 
 @pytest.fixture(scope="session")
-def app_dir(installer):
-    return get_app_dir(installer, 'rocketchat')
+def app_dir():
+    return get_app_dir('rocketchat')
     
 
 @pytest.fixture(scope="session")
-def service_prefix(installer):
-    return get_service_prefix(installer)
+def service_prefix():
+    return get_service_prefix()
 
 
 @pytest.fixture(scope="session")
@@ -83,14 +83,14 @@ def syncloud_session(device_host):
 
 
 @pytest.fixture(scope='function')
-def rocketcaht_session_domain(user_domain, device_host):
+def rocketcaht_session_domain(app_domain, device_host):
     session = requests.session()
-    response = session.get('https://{0}'.format(user_domain), allow_redirects=True, verify=False)
+    response = session.get('https://{0}'.format(app_domain), allow_redirects=True, verify=False)
     print(response.text)
     # soup = BeautifulSoup(response.text, "html.parser")
     # requesttoken = soup.find_all('input', {'name': 'requesttoken'})[0]['value']
     # response = session.post('http://{0}/index.php/login'.format(device_host),
-    #                         headers={"Host": user_domain},
+    #                         headers={"Host": app_domain},
     #                         data={'user': DEVICE_USER, 'password': DEVICE_PASSWORD, 'requesttoken': requesttoken},
     #                         allow_redirects=False)
     # assert response.status_code == 303, response.text
@@ -105,16 +105,16 @@ def test_start(module_setup, device_host):
     run_ssh(device_host, 'date', password=LOGS_SSH_PASSWORD)
 
 
-def test_install_platform(device_host, release):
-    run_ssh(device_host, '/installer.sh {0}'.format(release), password=LOGS_SSH_PASSWORD)
-
-
 def test_activate_device(auth, device_host):
     email, password, domain, release = auth
 
     response = requests.post('http://{0}:81/rest/activate'.format(device_host),
-                             data={'main_domain': SYNCLOUD_INFO, 'redirect_email': email, 'redirect_password': password,
-                                   'user_domain': domain, 'device_username': DEVICE_USER, 'device_password': DEVICE_PASSWORD})
+                             data={'main_domain': SYNCLOUD_INFO,
+                                   'redirect_email': email,
+                                   'redirect_password': password,
+                                   'user_domain': domain,
+                                   'device_username': DEVICE_USER,
+                                   'device_password': DEVICE_PASSWORD})
     assert response.status_code == 200, response.text
     global LOGS_SSH_PASSWORD
     LOGS_SSH_PASSWORD = DEVICE_PASSWORD
@@ -126,9 +126,9 @@ def test_activate_device(auth, device_host):
 #     assert response.status_code == 200
 
 
-def test_install(app_archive_path, device_host, installer, user_domain):
-    local_install(device_host, DEVICE_PASSWORD, app_archive_path, installer)
-    wait_for_rest(requests.session(), user_domain, '/', 200, 500)
+def test_install(app_archive_path, device_host, app_domain):
+    local_install(device_host, DEVICE_PASSWORD, app_archive_path)
+    wait_for_rest(requests.session(), app_domain, '/', 200, 500)
 
 
 def test_mongo_config(device_host, app_dir, data_dir):
@@ -141,5 +141,5 @@ def test_remove(syncloud_session, device_host):
     assert response.status_code == 200, response.text
 
 
-#def test_reinstall(app_archive_path, device_host, installer):
-#    local_install(device_host, DEVICE_PASSWORD, app_archive_path, installer)
+#def test_reinstall(app_archive_path, device_host):
+#    local_install(device_host, DEVICE_PASSWORD, app_archive_path)

@@ -11,8 +11,7 @@ DOMAIN=$1
 DEVICE_HOST=$2
 PACKAGE=$3
 TEST_SUITE=$4
-
-APP=rocketchat
+APP=$5
 
 APP_ARCHIVE_PATH=$(realpath "$PACKAGE")
 
@@ -24,4 +23,4 @@ echo "$device_ip $DOMAIN.syncloud.info" >> /etc/hosts
 echo "$device_ip $APP.$DOMAIN.syncloud.info" >> /etc/hosts
 
 cd $DIR
-xvfb-run -l --server-args="-screen 0, 1024x4096x24" py.test -x -s ${TEST_SUITE} --domain=$DOMAIN --app-archive-path=${APP_ARCHIVE_PATH} --device-host=${DEVICE_HOST}
+xvfb-run -l --server-args="-screen 0, 1024x4096x24" py.test -x -s ${TEST_SUITE} --domain=$DOMAIN --app-archive-path=${APP_ARCHIVE_PATH} --device-host=${DEVICE_HOST} --app=$APP

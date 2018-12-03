@@ -46,16 +46,16 @@ def driver():
     return driver
 
 
-def test_index(driver, user_domain):
+def test_index(driver, app_domain):
 
-    driver.get("https://{0}".format(user_domain))
+    driver.get("https://{0}".format(app_domain))
     time.sleep(10)
     print(driver.execute_script('return window.JSErrorCollector_errors ? window.JSErrorCollector_errors.pump() : []'))
     screenshots(driver, screenshot_dir, 'index')
     print(driver.page_source.encode('utf-8'))
 
 
-def test_login(driver, user_domain):
+def test_login(driver, app_domain):
 
     wait_driver = WebDriverWait(driver, 120)
     wait_driver.until(EC.element_to_be_clickable((By.ID, 'emailOrUsername')))
@@ -72,7 +72,7 @@ def test_login(driver, user_domain):
     screenshots(driver, screenshot_dir, 'setup')
      
      
-def test_setup(driver, user_domain):
+def test_setup(driver, app_domain):
 
     screenshots(driver, screenshot_dir, 'setup-wizard-debug-Organization_Type')
     select = Select(driver.find_element_by_name('Organization_Type'))
@@ -128,18 +128,23 @@ def test_setup(driver, user_domain):
     time.sleep(10)
 
 
-def test_welcome(driver, user_domain):
+def test_welcome(driver, app_domain):
     
     screenshots(driver, screenshot_dir, 'welcome')
     driver.find_element_by_css_selector('.js-finish').click()
     time.sleep(30)
 
 
-def test_main(driver, user_domain):
+def test_main(driver, app_domain):
 
     screenshots(driver, screenshot_dir, 'main')
 
-    
+
+def test_profile(driver, app_domain):
+    driver.get("https://{0}/account/profile".format(app_domain))
+
+    screenshots(driver, screenshot_dir, 'profile')
+
 def screenshots(driver, dir, name):
     desktop_w = 1024
     desktop_h = 1024
