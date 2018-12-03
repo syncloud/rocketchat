@@ -128,15 +128,14 @@ def test_setup(driver, app_domain):
     time.sleep(10)
 
 
-def test_welcome(driver, app_domain):
+def test_welcome(driver):
     
     screenshots(driver, screenshot_dir, 'welcome')
     driver.find_element_by_css_selector('.js-finish').click()
     time.sleep(30)
 
 
-def test_main(driver, app_domain):
-
+def test_main(driver):
     screenshots(driver, screenshot_dir, 'main')
 
 
@@ -148,13 +147,13 @@ def test_profile(driver, app_domain):
     file = driver.find_element_by_css_selector('input[type="file"]')
     driver.execute_script("arguments[0].removeAttribute('style')", file)
     time.sleep(2)
-    screenshots(driver, 'profile-hack')
+    screenshots(driver, screenshot_dir, 'profile-hack')
 
     file.send_keys(join(DIR, 'images', 'profile.jpeg'))
 
     time.sleep(10)
 
-    screenshots(driver, 'profile-new-picture')
+    screenshots(driver, screenshot_dir, 'profile-new-picture')
 
 
 def screenshots(driver, dir, name):
