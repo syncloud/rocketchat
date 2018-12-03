@@ -18,11 +18,6 @@ ARCH=$(uname -m)
 SNAP_ARCH=$(dpkg --print-architecture)
 VERSION=$2
 
-rm -rf ${DIR}/lib
-mkdir ${DIR}/lib
-
-coin --to lib py https://pypi.python.org/packages/23/b2/0fa8a4de78475159ea686cf9b3416d1d03d822cadf16fb8866ae35887c0d/syncloud-lib-38.tar.gz#md5=88610aa15d0306c198081a5310726504
-
 DOWNLOAD_URL=http://artifact.syncloud.org/3rdparty
 
 rm -rf ${DIR}/build
@@ -60,7 +55,6 @@ done
 cd ${DIR}
 cp -r ${DIR}/bin ${BUILD_DIR}
 cp -r ${DIR}/config ${BUILD_DIR}/config.templates
-cp -r ${DIR}/lib ${BUILD_DIR}
 cp -r ${DIR}/hooks ${BUILD_DIR}
 
 ls -la ${BUILD_DIR}

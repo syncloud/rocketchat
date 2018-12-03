@@ -41,15 +41,15 @@ pipeline:
     commands:
       - VERSION=$(cat version)
       - NAME=$(cat name)
-      - ./upload.sh $DRONE_BRANCH $VERSION ${installer}
+      - ./upload.sh $DRONE_BRANCH $VERSION
 
   ci-artifact:
     image: syncloud/build-deps-${arch}
     secrets: [ARTIFACT_SSH_KEY]
     commands:
       - NAME=$(cat name)
-      - ./upload-artifact.sh $NAME integration/log $DRONE_BUILD_NUMBER-${installer}-$(dpkg --print-architecture)
-      - ./upload-artifact.sh $NAME integration/screenshot $DRONE_BUILD_NUMBER-${installer}-$(dpkg --print-architecture)
+      - ./upload-artifact.sh $NAME integration/log $DRONE_BUILD_NUMBER-$(dpkg --print-architecture)
+      - ./upload-artifact.sh $NAME integration/screenshot $DRONE_BUILD_NUMBER-$(dpkg --print-architecture)
     when:
       status: [ failure, success ] 
 
@@ -64,5 +64,3 @@ matrix:
   arch:
     - arm
     - amd64
-  installer:
-    - snapd

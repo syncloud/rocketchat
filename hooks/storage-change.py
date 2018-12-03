@@ -1,4 +1,4 @@
-from rocketchat_hooks import RocketChatInstaller
+import subprocess
+from os.path import join, dirname
 
-imstaller = RocketChatInstaller()
-imstaller.prepare_storage()
+subprocess.check_output(join(dirname(__file__), 'storage-change'), shell=True)
