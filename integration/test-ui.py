@@ -146,9 +146,9 @@ def test_profile(driver, app_domain):
     screenshots(driver, screenshot_dir, 'profile')
 
     file = driver.find_element_by_css_selector('input[type="file"]')
-    # mobile_driver.execute_script("arguments[0].removeAttribute('style')", file)
-    # time.sleep(2)
-    # screenshots(driver, 'profile-mobile-file-style')
+    driver.execute_script("arguments[0].removeAttribute('style')", file)
+    time.sleep(2)
+    screenshots(driver, 'profile-hack')
 
     file.send_keys(join(DIR, 'images', 'profile.jpeg'))
 
