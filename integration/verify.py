@@ -108,7 +108,7 @@ def test_start(module_setup, device_host):
     run_ssh(device_host, 'date', password=LOGS_SSH_PASSWORD)
 
 
-def test_activate_device(main_domain, device_host):
+def test_activate_device(main_domain, device_host, domain):
 
     response = requests.post('http://{0}:81/rest/activate'.format(device_host),
                              data={'main_domain': main_domain,
