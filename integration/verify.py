@@ -24,6 +24,9 @@ LOGS_SSH_PASSWORD = DEFAULT_DEVICE_PASSWORD
 DIR = dirname(__file__)
 LOG_DIR = join(DIR, 'log')
 TMP_DIR = '/tmp/syncloud'
+REDIRECT_USER = "teamcity@syncloud.it"
+REDIRECT_PASSWORD = "password"
+
 
 @pytest.fixture(scope="session")
 def platform_data_dir():
@@ -105,13 +108,12 @@ def test_start(module_setup, device_host):
     run_ssh(device_host, 'date', password=LOGS_SSH_PASSWORD)
 
 
-def test_activate_device(auth, device_host):
-    email, password, domain, release = auth
+def test_activate_device(main_domain, device_host):
 
     response = requests.post('http://{0}:81/rest/activate'.format(device_host),
-                             data={'main_domain': SYNCLOUD_INFO,
-                                   'redirect_email': email,
-                                   'redirect_password': password,
+                             data={'main_domain': main_domain,
+                                   'redirect_email': REDIRECT_USER,
+                                   'redirect_password': REDIRECT_PASSWORD,
                                    'user_domain': domain,
                                    'device_username': DEVICE_USER,
                                    'device_password': DEVICE_PASSWORD})
