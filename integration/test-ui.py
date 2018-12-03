@@ -145,10 +145,6 @@ def test_profile(driver, app_domain):
     screenshots(driver, screenshot_dir, 'profile')
 
     profile_file = driver.find_element_by_css_selector('input[type="file"]')
-    # driver.execute_script("arguments[0].removeAttribute('style')", file)
-    # time.sleep(2)
-    # screenshots(driver, screenshot_dir, 'profile-hack')
-
     profile_file.send_keys(join(DIR, 'images', 'profile.jpeg'))
 
     time.sleep(10)
@@ -156,6 +152,12 @@ def test_profile(driver, app_domain):
     screenshots(driver, screenshot_dir, 'profile-new-picture')
 
 
+def test_channel(driver, app_domain):
+    driver.get("https://{0}/channel/general".format(app_domain))
+    time.sleep(10)
+    screenshots(driver, screenshot_dir, 'channel')
+
+    
 def screenshots(driver, dir, name):
     desktop_w = 1024
     desktop_h = 1024
