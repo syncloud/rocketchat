@@ -142,7 +142,7 @@ def test_main(driver, app_domain):
 
 def test_profile(driver, app_domain):
     driver.get("https://{0}/account/profile".format(app_domain))
-
+    time.sleep(10)
     screenshots(driver, screenshot_dir, 'profile')
 
     file = driver.find_element_by_css_selector('input[type="file"]')
