@@ -144,12 +144,12 @@ def test_profile(driver, app_domain):
     time.sleep(10)
     screenshots(driver, screenshot_dir, 'profile')
 
-    file = driver.find_element_by_css_selector('input[type="file"]')
-    driver.execute_script("arguments[0].removeAttribute('style')", file)
-    time.sleep(2)
-    screenshots(driver, screenshot_dir, 'profile-hack')
+    profile_file = driver.find_element_by_css_selector('input[type="file"]')
+    # driver.execute_script("arguments[0].removeAttribute('style')", file)
+    # time.sleep(2)
+    # screenshots(driver, screenshot_dir, 'profile-hack')
 
-    file.send_keys(join(DIR, 'images', 'profile.jpeg'))
+    profile_file.send_keys(join(DIR, 'images', 'profile.jpeg'))
 
     time.sleep(10)
 
