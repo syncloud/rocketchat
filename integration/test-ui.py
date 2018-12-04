@@ -146,6 +146,12 @@ def test_profile(driver, app_domain):
 
     profile_file = driver.find_element_by_css_selector('input[type="file"]')
     profile_file.send_keys(join(DIR, 'images', 'profile.jpeg'))
+     
+    username = driver.find_element_by_id('realname')
+    username.send_keys('Syncloud user')
+
+    save = driver.find_element_by_name('send')
+    save.click()
 
     time.sleep(10)
 
