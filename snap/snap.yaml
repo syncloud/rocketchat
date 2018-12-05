@@ -25,7 +25,7 @@ apps:
     - network
     - network-bind
     restart-condition: always
-    pre-start-command: bin/service.nginx.sh pre-start
+    #pre-start-command: bin/service.nginx.sh pre-start
     post-start-command: bin/service.nginx.sh post-start
     stop-command: bin/service.nginx.sh stop
     reload-command: bin/service.nginx.sh reload

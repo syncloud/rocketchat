@@ -58,7 +58,6 @@ def module_teardown(device_host, data_dir, platform_data_dir, app_dir):
     os.mkdir(platform_log_dir)
     run_scp('root@{0}:{1}/log/* {2}'.format(device_host, platform_data_dir, platform_log_dir), password=LOGS_SSH_PASSWORD, throw=False)
     
-    run_scp('root@{0}:/var/log/sam.log {1}'.format(device_host, platform_log_dir), password=LOGS_SSH_PASSWORD, throw=False)
     run_ssh(device_host, 'mkdir {0}'.format(TMP_DIR), password=LOGS_SSH_PASSWORD)
     run_ssh(device_host, 'top -bn 1 -w 500 -c > {0}/top.log'.format(TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)
     run_ssh(device_host, 'ps auxfw > {0}/ps.log'.format(TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)
@@ -70,7 +69,7 @@ def module_teardown(device_host, data_dir, platform_data_dir, app_dir):
     run_ssh(device_host, 'ls -la /snap > {0}/snap.ls.log'.format(TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)    
     run_ssh(device_host, 'ls -la /snap/rocketchat > {0}/snap.rocketchat.ls.log'.format(TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)    
 
-    app_log_dir  = join(LOG_DIR, 'rocketcaht_log')
+    app_log_dir  = join(LOG_DIR, 'log')
     os.mkdir(app_log_dir )
     run_scp('root@{0}:{1}/log/*.log {2}'.format(device_host, data_dir, app_log_dir), password=LOGS_SSH_PASSWORD, throw=False)
     run_scp('root@{0}:{1}/*.log {2}'.format(device_host, TMP_DIR, app_log_dir), password=LOGS_SSH_PASSWORD, throw=False)
