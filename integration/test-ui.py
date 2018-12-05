@@ -149,6 +149,8 @@ def test_profile(driver, app_domain):
      
     username = driver.find_element_by_id('realname')
     username.send_keys('Syncloud user')
+    
+    screenshots(driver, screenshot_dir, 'profile-new-name')
 
     save = driver.find_element_by_name('send')
     save.click()
