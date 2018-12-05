@@ -41,10 +41,10 @@ wget https://nodejs.org/dist/v${NODE_VERSION}/${NODE_ARCHIVE}.tar.gz \
 tar xzf ${NODE_ARCHIVE}.tar.gz
 mv ${NODE_ARCHIVE} ${BUILD_DIR}/nodejs
 
-mv ${BUILD}/${NAME}/bin/npm ${BUILD}/nodejs/bin/npm.js
-cp ${DIR}/npm/npm ${BUILD}/nodejs/bin/npm
+mv ${BUILD_DIR}/nodejs/bin/npm ${BUILD_DIR}/nodejs/bin/npm.js
+cp ${DIR}/npm/npm ${BUILD_DIR}/nodejs/bin/npm
 
-${BUILD}/nodejs/bin/npm help
+${BUILD_DIR}/nodejs/bin/npm help
 
 ${BUILD_DIR}/python/bin/pip install -r ${DIR}/requirements.txt
 
