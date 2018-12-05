@@ -15,7 +15,7 @@ pre-start)
     timeout 100 /bin/bash -c 'until [ -S '$MONGO_SOCKET_FILE' ]; do echo "waiting for ${MONGO_SOCKET_FILE}"; sleep 1; done'
     ;;
 start)
-    exec ${DIR}/nodejs/bin/node ${DIR}/bundle/main.js
+    exec ${DIR}/nodejs/bin/node ${DIR}/bundle/main.js 2>&1 | logger
     ;;
 *)
     echo "not valid command"
