@@ -12,12 +12,12 @@ export TMPDIR=/tmp
 export TMP=/tmp
 
 NAME=$1
-ROCKETCHAT_VERSION=0.66.3
+ROCKETCHAT_VERSION=0.72.1
 COIN_CACHE_DIR=${DIR}/coin.cache
 ARCH=$(uname -m)
 SNAP_ARCH=$(dpkg --print-architecture)
 VERSION=$2
-
+NODE_VERSION=8.11.4
 DOWNLOAD_URL=http://artifact.syncloud.org/3rdparty
 
 rm -rf ${DIR}/build
@@ -26,11 +26,25 @@ mkdir -p ${BUILD_DIR}
 
 cd ${DIR}/build
 
-coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/nodejs-${ARCH}.tar.gz
 coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/nginx-${ARCH}.tar.gz
 coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/mongodb-${ARCH}.tar.gz
 coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/phantomjs-${ARCH}.tar.gz
 coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/python-${ARCH}.tar.gz
+
+NODE_ARCH=${ARCH}
+if [ ${ARCH} == "x86_64" ]; then
+    NODE_ARCH=x64
+fi
+NODE_ARCHIVE=node-v${NODE_VERSION}-linux-${NODE_ARCH}
+wget https://nodejs.org/dist/v${NODE_VERSION}/${NODE_ARCHIVE}.tar.gz \
+    --progress dot:giga
+tar xzf ${NODE_ARCHIVE}.tar.gz
+mv ${NODE_ARCHIVE} ${BUILD_DIR}/nodejs
+
+mv ${BUILD}/${NAME}/bin/npm ${BUILD}/nodejs/bin/npm.js
+cp ${DIR}/npm/npm ${BUILD}/nodejs/bin/npm
+
+${BUILD}/nodejs/bin/npm help
 
 ${BUILD_DIR}/python/bin/pip install -r ${DIR}/requirements.txt
 
