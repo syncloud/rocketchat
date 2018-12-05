@@ -153,6 +153,8 @@ def test_profile(driver, app_domain):
     email = driver.find_element_by_name('email')
     email.click()
    
+    time.sleep(2)
+    
     screenshots(driver, screenshot_dir, 'profile-new-name')
 
     save = driver.find_element_by_name('send')
