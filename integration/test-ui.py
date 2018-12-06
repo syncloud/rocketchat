@@ -151,7 +151,8 @@ def test_profile(driver, app_domain):
     username.send_keys('Syncloud user')
     
     email = driver.find_element_by_name('email')
-    email.click()
+    email.clear()
+    email.send_keys('test@gmail.com')
    
     time.sleep(2)
     
