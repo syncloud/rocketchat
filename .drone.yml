@@ -45,7 +45,8 @@ pipeline:
       - VERSION=$(cat version)
       - NAME=$(cat name)
       - PACKAGE=$(cat package.name)
-      - ./upload.sh $NAME $DRONE_BRANCH $VERSION $PACKAGE
+      - pip2 install -r dev_requirements.txt
+      - syncloud-upload.sh $NAME $DRONE_BRANCH $VERSION $PACKAGE
 
   ci-artifact:
     image: syncloud/build-deps-${arch}
