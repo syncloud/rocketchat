@@ -15,8 +15,6 @@ APP=$5
 
 APP_ARCHIVE_PATH=$(realpath "$PACKAGE")
 
-pip2 install -r ${DIR}/dev_requirements.txt
-
 #fix dns
 device_ip=$(getent hosts ${DEVICE_HOST} | awk '{ print $1 }')
 echo "$device_ip $DOMAIN.syncloud.info" >> /etc/hosts

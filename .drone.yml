@@ -23,13 +23,16 @@ pipeline:
     image: syncloud/build-deps-${arch}
     commands:
       - VERSION=$(cat version)
+      - pip2 install -r dev_requirements.txt
       - ./integration/test-docker.sh build-$(uname -m)-$DRONE_BRANCH device $(cat package.name) verify.py $(cat name)
 
   test-ui:
     image: syncloud/build-deps-${arch}
     commands:
       - VERSION=$(cat version)
-      - ./integration/test-docker.sh build-$(uname -m)-$DRONE_BRANCH device $(cat package.name) test-ui.py $(cat name)
+      - PACKAGE=$(cat package.name)
+      - pip2 install -r dev_requirements.txt
+      - ./integration/test-docker.sh build-$(uname -m)-$DRONE_BRANCH device $PACKAGE test-ui.py $(cat name)
     shm_size: 1024000000
     when:
       platform: linux/amd64
@@ -41,15 +44,17 @@ pipeline:
     commands:
       - VERSION=$(cat version)
       - NAME=$(cat name)
-      - ./upload.sh $NAME $DRONE_BRANCH $VERSION
+      - PACKAGE=$(cat package.name)
+      - ./upload.sh $NAME $DRONE_BRANCH $VERSION $PACKAGE
 
   ci-artifact:
     image: syncloud/build-deps-${arch}
     secrets: [ARTIFACT_SSH_KEY]
     commands:
       - NAME=$(cat name)
-      - ./upload-artifact.sh $NAME integration/log $DRONE_BUILD_NUMBER-$(dpkg --print-architecture)
-      - ./upload-artifact.sh $NAME integration/screenshot $DRONE_BUILD_NUMBER-$(dpkg --print-architecture)
+      - pip2 install -r dev_requirements.txt
+      - syncloud-upload-artifact.sh $NAME integration/log $DRONE_BUILD_NUMBER-$(dpkg --print-architecture)
+      - syncloud-upload-artifact.sh $NAME integration/screenshot $DRONE_BUILD_NUMBER-$(dpkg --print-architecture)
     when:
       status: [ failure, success ] 
 

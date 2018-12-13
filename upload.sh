@@ -5,10 +5,8 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 app=$1
 branch=$2
 build_number=$3
+FILE_NAME=$4
 bucket=apps.syncloud.org
-
-ARCH=$(dpkg-architecture -q DEB_HOST_ARCH)
-FILE_NAME=${app}_${build_number}_${ARCH}.snap
 
 if [ "${branch}" == "master" ] || [ "${branch}" == "stable" ] ; then
 
@@ -22,4 +20,3 @@ if [ "${branch}" == "master" ] || [ "${branch}" == "stable" ] ; then
   s3cmd put ${app}.version s3://${bucket}/releases/${branch}/${app}.version
 
 fi
-
