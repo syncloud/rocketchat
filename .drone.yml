@@ -41,7 +41,7 @@ pipeline:
     commands:
       - VERSION=$(cat version)
       - NAME=$(cat name)
-      - ./upload.sh $DRONE_BRANCH $VERSION
+      - ./upload.sh $NAME $DRONE_BRANCH $VERSION
 
   ci-artifact:
     image: syncloud/build-deps-${arch}
