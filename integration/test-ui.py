@@ -11,6 +11,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
+from syncloudlib.integration.hosts import add_host_alias
+
 
 DIR = dirname(__file__)
 LOG_DIR = join(DIR, 'log')
@@ -63,7 +65,9 @@ def mobile_driver():
     driver.set_window_size(400, 2000)
     return driver
     
-
+def teat_start(app, device_host):
+    add_host_alias(app, device_host)
+    
 def test_index(driver, app_domain):
 
     driver.get("https://{0}".format(app_domain))

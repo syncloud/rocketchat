@@ -12,6 +12,7 @@ from syncloudlib.integration.installer import local_install, wait_for_sam, wait_
     get_data_dir, get_app_dir, get_service_prefix, get_ssh_env_vars
 from syncloudlib.integration.loop import loop_device_cleanup
 from syncloudlib.integration.ssh import run_scp, run_ssh
+from syncloudlib.integration.hosts import add_host_alias
 
 import requests
 
@@ -100,9 +101,10 @@ def rocketcaht_session_domain(app_domain, device_host):
 #
 
 
-def test_start(module_setup, device_host):
+def test_start(module_setup, device_host, app):
     shutil.rmtree(LOG_DIR, ignore_errors=True)
     os.mkdir(LOG_DIR)
+    add_host_alias(app, device_host)
     print(check_output('date', shell=True))
     run_ssh(device_host, 'date', password=LOGS_SSH_PASSWORD)
 
