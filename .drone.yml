@@ -11,6 +11,7 @@ pipeline:
     commands:
       - echo $(date +%y%m%d) > version
       - echo "rocketchat" > name
+      - echo build-$(uname -m)-$DRONE_BRANCH > domain
       
   build:
     image: syncloud/build-deps-${arch}
@@ -22,17 +23,17 @@ pipeline:
   test:
     image: syncloud/build-deps-${arch}
     commands:
-      - VERSION=$(cat version)
       - pip2 install -r dev_requirements.txt
-      - ./integration/test-docker.sh build-$(uname -m)-$DRONE_BRANCH device $(cat package.name) verify.py $(cat name)
+      - APP_ARCHIVE_PATH=$(realpath $(cat package.name))
+      - cd integratipn
+      - py.test -x -s verify.py --domain=$(cat domain) --app-archive-path=${APP_ARCHIVE_PATH} --device-host=device --app=$(cat name)
 
   test-ui:
     image: syncloud/build-deps-${arch}
     commands:
-      - VERSION=$(cat version)
-      - PACKAGE=$(cat package.name)
       - pip2 install -r dev_requirements.txt
-      - ./integration/test-docker.sh build-$(uname -m)-$DRONE_BRANCH device $PACKAGE test-ui.py $(cat name)
+      - cd integration
+      - xvfb-run -l --server-args="-screen 0, 1024x4096x24" py.test -x -s test-ui.py --domain=$(cat domain) --device-host=device --app=$(cat name)
     shm_size: 1024000000
     when:
       platform: linux/amd64
