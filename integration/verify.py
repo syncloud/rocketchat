@@ -13,6 +13,7 @@ from syncloudlib.integration.installer import local_install, wait_for_sam, wait_
 from syncloudlib.integration.loop import loop_device_cleanup
 from syncloudlib.integration.ssh import run_scp, run_ssh
 from syncloudlib.integration.hosts import add_host_alias
+from syncloudlib.integration import conftest
 
 import requests
 
