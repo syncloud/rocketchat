@@ -27,7 +27,7 @@ pipeline:
       - APP_ARCHIVE_PATH=$(realpath $(cat package.name))
       - DOMAIN=$(cat domain)
       - cd integration
-      - py.test -x -s verify.py --domain=$DOMAIN --app-archive-path=${APP_ARCHIVE_PATH} --device-host=device --app=$(cat name)
+      - py.test -x -s verify.py --domain=$DOMAIN --app-archive-path=$APP_ARCHIVE_PATH --device-host=device --app=$(cat name)
 
   test-ui:
     image: syncloud/build-deps-${arch}
