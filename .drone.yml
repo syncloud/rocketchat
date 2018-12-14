@@ -25,7 +25,7 @@ pipeline:
     commands:
       - pip2 install -r dev_requirements.txt
       - APP_ARCHIVE_PATH=$(realpath $(cat package.name))
-      - cd integratipn
+      - cd integration
       - py.test -x -s verify.py --domain=$(cat domain) --app-archive-path=${APP_ARCHIVE_PATH} --device-host=device --app=$(cat name)
 
   test-ui:
