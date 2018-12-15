@@ -22,48 +22,6 @@ log_dir = join(LOG_DIR, 'nextcloud_log')
 screenshot_dir = join(DIR, 'screenshot')
 
 
-def new_profile(user_agent):
-    profile = webdriver.FirefoxProfile()
-    profile.add_extension('/tools/firefox/JSErrorCollector.xpi')
-    profile.set_preference('app.update.auto', False)
-    profile.set_preference('app.update.enabled', False)
-    profile.set_preference("general.useragent.override", user_agent)
-
-    return profile
-
-def new_driver(profile):
-
-    if exists(screenshot_dir):
-        shutil.rmtree(screenshot_dir)
-    os.mkdir(screenshot_dir)
-
-    firefox_path = '/tools/firefox/firefox'
-    caps = DesiredCapabilities.FIREFOX
-    caps["marionette"] = True
-    caps['acceptSslCerts'] = True
-
-    binary = FirefoxBinary(firefox_path)
-
-    return webdriver.Firefox(profile, capabilities=caps, log_path="{0}/firefox.log".format(LOG_DIR),
-                             firefox_binary=binary, executable_path='/tools/geckodriver/geckodriver')
-
-
-@pytest.fixture(scope="module")
-def driver():
-    profile = new_profile("Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0")
-    driver = new_driver(profile)
-    driver.set_window_position(0, 0)
-    driver.set_window_size(1024, 768)
-    return driver
-    
-    
-@pytest.fixture(scope="module")
-def mobile_driver():    
-    profile = new_profile("Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_0 like Mac OS X; en-us) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7A341 Safari/528.16")
-    driver = new_driver(profile)
-    driver.set_window_position(0, 0)
-    driver.set_window_size(400, 2000)
-    return driver
     
 def teat_start(app, device_host):
     add_host_alias(app, device_host)
