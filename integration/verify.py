@@ -18,15 +18,10 @@ from syncloudlib.integration import conftest
 import requests
 
 
-SYNCLOUD_INFO = 'syncloud.info'
-DEVICE_USER = 'user'
-DEVICE_PASSWORD = 'password'
 DEFAULT_DEVICE_PASSWORD = 'syncloud'
 LOGS_SSH_PASSWORD = DEFAULT_DEVICE_PASSWORD
 DIR = dirname(__file__)
 TMP_DIR = '/tmp/syncloud'
-REDIRECT_USER = "teamcity@syncloud.it"
-REDIRECT_PASSWORD = "password"
 
 
 @pytest.fixture(scope="session")
@@ -59,9 +54,9 @@ def module_teardown(device_host, data_dir, platform_data_dir, app_dir, log_dir):
 
 
 @pytest.fixture(scope='function')
-def syncloud_session(device_host):
+def syncloud_session(device_host, device_user, device_password):
     session = requests.session()
-    session.post('https://{0}/rest/login'.format(device_host), data={'name': DEVICE_USER, 'password': DEVICE_PASSWORD}, verify=False)
+    session.post('https://{0}/rest/login'.format(device_host), data={'name': device_user, 'password': device_password}, verify=False)
     return session
 
 
@@ -70,15 +65,7 @@ def rocketcaht_session_domain(app_domain, device_host):
     session = requests.session()
     response = session.get('https://{0}'.format(app_domain), allow_redirects=True, verify=False)
     print(response.text)
-    # soup = BeautifulSoup(response.text, "html.parser")
-    # requesttoken = soup.find_all('input', {'name': 'requesttoken'})[0]['value']
-    # response = session.post('http://{0}/index.php/login'.format(device_host),
-    #                         headers={"Host": app_domain},
-    #                         data={'user': DEVICE_USER, 'password': DEVICE_PASSWORD, 'requesttoken': requesttoken},
-    #                         allow_redirects=False)
-    # assert response.status_code == 303, response.text
     return session
-#
 
 
 def test_start(module_setup, device_host, app, log_dir):
@@ -89,18 +76,18 @@ def test_start(module_setup, device_host, app, log_dir):
     run_ssh(device_host, 'date', password=LOGS_SSH_PASSWORD)
 
 
-def test_activate_device(main_domain, device_host, domain):
+def test_activate_device(main_domain, device_host, domain, device_user, device_password, redirect_user, redirect_password):
 
     response = requests.post('http://{0}:81/rest/activate'.format(device_host),
                              data={'main_domain': main_domain,
-                                   'redirect_email': REDIRECT_USER,
-                                   'redirect_password': REDIRECT_PASSWORD,
+                                   'redirect_email': redirect_user,
+                                   'redirect_password': redirect_password,
                                    'user_domain': domain,
-                                   'device_username': DEVICE_USER,
-                                   'device_password': DEVICE_PASSWORD})
+                                   'device_username': device_user,
+                                   'device_password': device_password})
     assert response.status_code == 200, response.text
     global LOGS_SSH_PASSWORD
-    LOGS_SSH_PASSWORD = DEVICE_PASSWORD
+    LOGS_SSH_PASSWORD = device_password
 
 
 # def test_enable_external_access(syncloud_session, device_host):
@@ -109,14 +96,14 @@ def test_activate_device(main_domain, device_host, domain):
 #     assert response.status_code == 200
 
 
-def test_install(app_archive_path, device_host, app_domain):
-    local_install(device_host, DEVICE_PASSWORD, app_archive_path)
+def test_install(app_archive_path, device_host, app_domain, device_password):
+    local_install(device_host, device_password, app_archive_path)
     wait_for_rest(requests.session(), app_domain, '/', 200, 500)
 
 
-def test_mongo_config(device_host, app_dir, data_dir):
-    run_scp('{0}/mongodb.config.dump.js root@{1}:/'.format(DIR, device_host), password=DEVICE_PASSWORD, throw=False)
-    run_ssh(device_host, '{0}/mongodb/bin/mongo /mongodb.config.dump.js > {1}/log/mongo.config.dump.log'.format(app_dir, data_dir), password=DEVICE_PASSWORD, throw=False)
+def test_mongo_config(device_host, app_dir, data_dir, device_password):
+    run_scp('{0}/mongodb.config.dump.js root@{1}:/'.format(DIR, device_host), password=device_password, throw=False)
+    run_ssh(device_host, '{0}/mongodb/bin/mongo /mongodb.config.dump.js > {1}/log/mongo.config.dump.log'.format(app_dir, data_dir), password=device_password, throw=False)
 
 
 def test_remove(syncloud_session, device_host):
@@ -124,5 +111,5 @@ def test_remove(syncloud_session, device_host):
     assert response.status_code == 200, response.text
 
 
-#def test_reinstall(app_archive_path, device_host):
-#    local_install(device_host, DEVICE_PASSWORD, app_archive_path)
+#def test_reinstall(app_archive_path, device_host, device_password):
+#    local_install(device_host, device_password, app_archive_path)
