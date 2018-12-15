@@ -12,8 +12,6 @@ pipeline:
       - echo $(date +%y%m%d) > version
       - echo "rocketchat" > name
       - echo build-$(uname -m)-$DRONE_BRANCH > domain
-      - python2 -c "import site; print('{0}/syncloudlib/integration'.format(site.getsitepackages()[0]))" > confcutdir
- 
       
   build:
     image: syncloud/build-deps-${arch}
@@ -29,9 +27,8 @@ pipeline:
       - APP_ARCHIVE_PATH=$(realpath $(cat package.name))
       - DOMAIN=$(cat domain)
       - NAME=$(cat name)
-      - CONFCUTDIR=$(cat confcutdir)
       - cd integration
-      - py.test --confcutdir=$CONFCUTDIR -x -s verify.py --domain=$DOMAIN --app-archive-path=$APP_ARCHIVE_PATH --device-host=device --app=$NAME
+      - py.test -x -s verify.py --domain=$DOMAIN --app-archive-path=$APP_ARCHIVE_PATH --device-host=device --app=$NAME
 
   test-ui:
     image: syncloud/build-deps-${arch}
@@ -39,9 +36,8 @@ pipeline:
       - pip2 install -r dev_requirements.txt
       - DOMAIN=$(cat domain)
       - NAME=$(cat name)
-      - CONFCUTDIR=$(cat confcutdir)
       - cd integration
-      - xvfb-run -l --server-args="-screen 0, 1024x4096x24" py.test --confcutdir=$CONFCUTDIR -x -s test-ui.py --domain=$DOMAIN --device-host=device --app=$NAME
+      - xvfb-run -l --server-args="-screen 0, 1024x4096x24" py.test -x -s test-ui.py --domain=$DOMAIN --device-host=device --app=$NAME
     shm_size: 1024000000
     when:
       platform: linux/amd64
