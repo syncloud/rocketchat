@@ -3,6 +3,6 @@
 import os, sys
 sys.path.append(os.path.join(os.environ['SNAP'], 'hooks'))
 
-from rocketchat_hooks import RocketChatInstaller
+import installer
 
-RocketChatInstaller().install()
+installer.Installer().install()

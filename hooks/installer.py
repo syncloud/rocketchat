@@ -16,7 +16,7 @@ MONGODB_PORT = 27017
 REST_URL = "http://localhost:{0}/api/v1".format(PORT)
 
 
-class RocketChatInstaller:
+class Installer:
     def __init__(self):
         if not logger.factory_instance:
             logger.init(logging.DEBUG, True)
