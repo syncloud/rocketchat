@@ -90,12 +90,6 @@ def test_activate_device(main_domain, device_host, domain, device_user, device_p
     LOGS_SSH_PASSWORD = device_password
 
 
-# def test_enable_external_access(syncloud_session, device_host):
-#     response = syncloud_session.get('http://{0}/server/rest/settings/set_protocol'.format(device_host), params={'protocol': 'https'})
-#     assert '"success": true' in response.text
-#     assert response.status_code == 200
-
-
 def test_install(app_archive_path, device_host, app_domain, device_password):
     local_install(device_host, device_password, app_archive_path)
     wait_for_rest(requests.session(), app_domain, '/', 200, 500)

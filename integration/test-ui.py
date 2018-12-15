@@ -15,14 +15,8 @@ from syncloudlib.integration.hosts import add_host_alias
 
 
 DIR = dirname(__file__)
-
-DEVICE_USER = 'user'
-DEVICE_PASSWORD = 'password'
-
 screenshot_dir = join(DIR, 'screenshot')
 
-
-    
 def test_start(app, device_host):
     if exists(screenshot_dir):
         shutil.rmtree(screenshot_dir)
@@ -39,15 +33,15 @@ def test_index(driver, app_domain):
     print(driver.page_source.encode('utf-8'))
 
 
-def test_login(driver, app_domain):
+def test_login(driver, app_domain, device_user, device_password):
 
     wait_driver = WebDriverWait(driver, 120)
     wait_driver.until(EC.element_to_be_clickable((By.ID, 'emailOrUsername')))
 
     user = driver.find_element_by_id("emailOrUsername")
-    user.send_keys(DEVICE_USER)
+    user.send_keys(device_user)
     password = driver.find_element_by_id("pass")
-    password.send_keys(DEVICE_PASSWORD)
+    password.send_keys(device_password)
     screenshots(driver, 'login')
 
     password.send_keys(Keys.RETURN)
@@ -145,6 +139,12 @@ def test_profile(driver, app_domain):
     save = driver.find_element_by_name('send')
     save.click()
 
+    confirm_password = driver.find_element_by_css_selector('input[name="name"][type="password"]')
+    password.send_keys(device_password)
+    
+    confirm_save = driver.find_element_by_css_selector('input[value="Save"]')
+    confirm_save.click()
+    
     time.sleep(10)
 
     screenshots(driver, 'profile-new-picture')
