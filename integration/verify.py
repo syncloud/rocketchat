@@ -24,19 +24,18 @@ DEVICE_PASSWORD = 'password'
 DEFAULT_DEVICE_PASSWORD = 'syncloud'
 LOGS_SSH_PASSWORD = DEFAULT_DEVICE_PASSWORD
 DIR = dirname(__file__)
-LOG_DIR = join(DIR, 'log')
 TMP_DIR = '/tmp/syncloud'
 REDIRECT_USER = "teamcity@syncloud.it"
 REDIRECT_PASSWORD = "password"
 
 
 @pytest.fixture(scope="session")
-def module_setup(request, device_host, data_dir, platform_data_dir, app_dir):
-    request.addfinalizer(lambda: module_teardown(device_host, data_dir, platform_data_dir, app_dir))
+def module_setup(request, device_host, data_dir, platform_data_dir, app_dir, log_dir):
+    request.addfinalizer(lambda: module_teardown(device_host, data_dir, platform_data_dir, app_dir, log_dir))
 
 
-def module_teardown(device_host, data_dir, platform_data_dir, app_dir):
-    platform_log_dir = join(LOG_DIR, 'platform_log')
+def module_teardown(device_host, data_dir, platform_data_dir, app_dir, log_dir):
+    platform_log_dir = join(log_dir, 'platform_log')
     os.mkdir(platform_log_dir)
     run_scp('root@{0}:{1}/log/* {2}'.format(device_host, platform_data_dir, platform_log_dir), password=LOGS_SSH_PASSWORD, throw=False)
     
@@ -51,7 +50,7 @@ def module_teardown(device_host, data_dir, platform_data_dir, app_dir):
     run_ssh(device_host, 'ls -la /snap > {0}/snap.ls.log'.format(TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)    
     run_ssh(device_host, 'ls -la /snap/rocketchat > {0}/snap.rocketchat.ls.log'.format(TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)    
 
-    app_log_dir  = join(LOG_DIR, 'log')
+    app_log_dir  = join(log_dir, 'log')
     os.mkdir(app_log_dir )
     run_scp('root@{0}:{1}/log/*.log {2}'.format(device_host, data_dir, app_log_dir), password=LOGS_SSH_PASSWORD, throw=False)
     run_scp('root@{0}:{1}/*.log {2}'.format(device_host, TMP_DIR, app_log_dir), password=LOGS_SSH_PASSWORD, throw=False)
@@ -82,9 +81,9 @@ def rocketcaht_session_domain(app_domain, device_host):
 #
 
 
-def test_start(module_setup, device_host, app):
-    shutil.rmtree(LOG_DIR, ignore_errors=True)
-    os.mkdir(LOG_DIR)
+def test_start(module_setup, device_host, app, log_dir):
+    shutil.rmtree(log_dir, ignore_errors=True)
+    os.mkdir(log_dir)
     add_host_alias(app, device_host)
     print(check_output('date', shell=True))
     run_ssh(device_host, 'date', password=LOGS_SSH_PASSWORD)

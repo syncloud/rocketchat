@@ -15,15 +15,15 @@ from syncloudlib.integration.hosts import add_host_alias
 
 
 DIR = dirname(__file__)
-LOG_DIR = join(DIR, 'log')
+
 DEVICE_USER = 'user'
 DEVICE_PASSWORD = 'password'
-log_dir = join(LOG_DIR, 'nextcloud_log')
+
 screenshot_dir = join(DIR, 'screenshot')
 
 
     
-def teat_start(app, device_host):
+def test_start(app, device_host):
     if exists(screenshot_dir):
         shutil.rmtree(screenshot_dir)
     os.mkdir(screenshot_dir)
