@@ -24,6 +24,10 @@ screenshot_dir = join(DIR, 'screenshot')
 
     
 def teat_start(app, device_host):
+    if exists(screenshot_dir):
+        shutil.rmtree(screenshot_dir)
+    os.mkdir(screenshot_dir)
+
     add_host_alias(app, device_host)
     
 def test_index(driver, app_domain):
