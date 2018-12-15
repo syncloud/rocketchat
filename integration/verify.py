@@ -31,26 +31,6 @@ REDIRECT_PASSWORD = "password"
 
 
 @pytest.fixture(scope="session")
-def platform_data_dir():
-    return get_data_dir('platform')
-
-    
-@pytest.fixture(scope="session")
-def data_dir():
-    return get_data_dir('rocketchat')
-
-
-@pytest.fixture(scope="session")
-def app_dir():
-    return get_app_dir('rocketchat')
-    
-
-@pytest.fixture(scope="session")
-def service_prefix():
-    return get_service_prefix()
-
-
-@pytest.fixture(scope="session")
 def module_setup(request, device_host, data_dir, platform_data_dir, app_dir):
     request.addfinalizer(lambda: module_teardown(device_host, data_dir, platform_data_dir, app_dir))
 
