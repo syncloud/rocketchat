@@ -12,6 +12,7 @@ from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 from syncloudlib.integration.hosts import add_host_alias
+from syncloudlib.integration.screenshots import screenshots
 
 
 DIR = dirname(__file__)
@@ -29,7 +30,7 @@ def test_index(driver, app_domain):
     driver.get("https://{0}".format(app_domain))
     time.sleep(10)
     print(driver.execute_script('return window.JSErrorCollector_errors ? window.JSErrorCollector_errors.pump() : []'))
-    screenshots(driver, 'index')
+    screenshots(driver, screenshot_dir, 'index')
     print(driver.page_source.encode('utf-8'))
 
 
@@ -42,65 +43,65 @@ def test_login(driver, app_domain, device_user, device_password):
     user.send_keys(device_user)
     password = driver.find_element_by_id("pass")
     password.send_keys(device_password)
-    screenshots(driver, 'login')
+    screenshots(driver, screenshot_dir, 'login')
 
     password.send_keys(Keys.RETURN)
-    screenshots(driver, 'login_progress')
+    screenshots(driver, screenshot_dir, 'login_progress')
     time.sleep(20)
-    screenshots(driver, 'setup')
+    screenshots(driver, screenshot_dir, 'setup')
      
      
 def test_setup(driver, app_domain):
 
-    screenshots(driver, 'setup-wizard-debug-Organization_Type')
+    screenshots(driver, screenshot_dir, 'setup-wizard-debug-Organization_Type')
     select = Select(driver.find_element_by_name('Organization_Type'))
     select.select_by_visible_text('Community')
     
     time.sleep(2)
-    screenshots(driver, 'setup-wizard-debug-Organization_Name')
+    screenshots(driver, screenshot_dir, 'setup-wizard-debug-Organization_Name')
     anme = driver.find_element_by_name('Organization_Name')
     anme.send_keys('Syncloud')
 
     time.sleep(2)
-    screenshots(driver, 'setup-wizard-debug-Industry')
+    screenshots(driver, screenshot_dir, 'setup-wizard-debug-Industry')
     select = Select(driver.find_element_by_name('Industry'))
     select.select_by_visible_text('Technology Provider')
 
     time.sleep(2)
-    screenshots(driver, 'setup-wizard-Size')
+    screenshots(driver, screenshot_dir, 'setup-wizard-Size')
     select = Select(driver.find_element_by_name('Size'))
     select.select_by_visible_text('4000 or more people')
 
     time.sleep(2)
-    screenshots(driver, 'setup-wizard-debug-Country')
+    screenshots(driver, screenshot_dir, 'setup-wizard-debug-Country')
     select = Select(driver.find_element_by_name('Country'))
     select.select_by_visible_text('United Kingdom')
 
     time.sleep(2)
-    screenshots(driver, 'setup-wizard-debug-Website')
+    screenshots(driver, screenshot_dir, 'setup-wizard-debug-Website')
     website = driver.find_element_by_name('Website')
     website.send_keys('syncloud.org')
 
     time.sleep(2)
-    screenshots(driver, 'setup-wizard-step-1')
+    screenshots(driver, screenshot_dir, 'setup-wizard-step-1')
     driver.find_element_by_css_selector('.setup-wizard-forms__footer-next').click()
     time.sleep(10)
 
-    screenshots(driver, 'setup-wizard-debug-site-name')
+    screenshots(driver, screenshot_dir, 'setup-wizard-debug-site-name')
     site = driver.find_element_by_name('Site_Name')
     site.send_keys('Syncloud')
 
     time.sleep(2)
-    screenshots(driver, 'setup-wizard-debug-Server_Type')
+    screenshots(driver, screenshot_dir, 'setup-wizard-debug-Server_Type')
     select = Select(driver.find_element_by_name('Server_Type'))
     select.select_by_visible_text('Private Team')
     
-    screenshots(driver, 'setup-wizard-step-2')
+    screenshots(driver, screenshot_dir, 'setup-wizard-step-2')
 
     driver.find_element_by_css_selector('.setup-wizard-forms__footer-next').click()
     time.sleep(10)
 
-    screenshots(driver, 'setup-wizard-step-3')
+    screenshots(driver, screenshot_dir, 'setup-wizard-step-3')
     driver.find_element_by_css_selector('.setup-wizard-forms__content-register-radio-text').click()
     driver.find_element_by_css_selector('.setup-wizard-forms__footer-next').click()
     time.sleep(10)
@@ -108,19 +109,19 @@ def test_setup(driver, app_domain):
 
 def test_welcome(driver):
     
-    screenshots(driver, 'welcome')
+    screenshots(driver, screenshot_dir, 'welcome')
     driver.find_element_by_css_selector('.js-finish').click()
     time.sleep(30)
 
 
 def test_main(driver):
-    screenshots(driver, 'main')
+    screenshots(driver, screenshot_dir, 'main')
 
 
 def test_profile(driver, app_domain, device_password):
     driver.get("https://{0}/account/profile".format(app_domain))
     time.sleep(10)
-    screenshots(driver, 'profile')
+    screenshots(driver, screenshot_dir, 'profile')
 
     profile_file = driver.find_element_by_css_selector('input[type="file"]')
     profile_file.send_keys(join(DIR, 'images', 'profile.jpeg'))
@@ -134,7 +135,7 @@ def test_profile(driver, app_domain, device_password):
    
     time.sleep(2)
     
-    screenshots(driver, 'profile-new-name')
+    screenshots(driver, screenshot_dir, 'profile-new-name')
 
     save = driver.find_element_by_name('send')
     save.click()
@@ -147,25 +148,12 @@ def test_profile(driver, app_domain, device_password):
     
     time.sleep(10)
 
-    screenshots(driver, 'profile-new-picture')
+    screenshots(driver, screenshot_dir, 'profile-new-picture')
 
 
 def test_channel(driver, app_domain):
     driver.get("https://{0}/channel/general".format(app_domain))
     time.sleep(10)
-    screenshots(driver, 'channel')
+    screenshots(driver, screenshot_dir, 'channel')
 
     
-def screenshots(driver, name):
- 
-    driver.get_screenshot_as_file(join(screenshot_dir, '{0}.png'.format(name)))
-  
-    with open(join(screenshot_dir, '{0}.html.log'.format(name)), "w") as f:
-        f.write(driver.page_source.encode("utf-8"))
-   
-    with open(join(screenshot_dir, '{0}.js.log'.format(name)), "w") as f:
-        try:
-            f.write(str(driver.execute_script('return window.JSErrorCollector_errors ? window.JSErrorCollector_errors.pump() : []')))
-        except WebDriverException, e:
-            print("unable to get js errors: {0}".format(e))
-   
