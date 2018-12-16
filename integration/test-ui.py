@@ -140,7 +140,7 @@ def test_profile(driver, app_domain):
     save.click()
 
     confirm_password = driver.find_element_by_css_selector('input[name="name"][type="password"]')
-    password.send_keys(device_password)
+    confirm_password.send_keys(device_password)
     
     confirm_save = driver.find_element_by_css_selector('input[value="Save"]')
     confirm_save.click()
