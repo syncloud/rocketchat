@@ -117,7 +117,7 @@ def test_main(driver):
     screenshots(driver, 'main')
 
 
-def test_profile(driver, app_domain):
+def test_profile(driver, app_domain, device_password):
     driver.get("https://{0}/account/profile".format(app_domain))
     time.sleep(10)
     screenshots(driver, 'profile')
