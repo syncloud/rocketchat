@@ -1,5 +1,5 @@
 #!/snap/rocketchat/current/python/bin/python
 
-from rocketchat_hooks import RocketChatInstaller
+from installer import Installer
 
-RocketChatInstaller().prepare_storage()
+Installer().prepare_storage()

@@ -99,11 +99,14 @@ def test_mongo_config(device_host, app_dir, data_dir, device_password):
     run_scp('{0}/mongodb.config.dump.js root@{1}:/'.format(DIR, device_host), password=device_password, throw=False)
     run_ssh(device_host, '{0}/mongodb/bin/mongo /mongodb.config.dump.js > {1}/log/mongo.config.dump.log'.format(app_dir, data_dir), password=device_password, throw=False)
 
+def test_storage_change(device_host, app_dir, data_dir, device_password):
+    run_ssh(device_host, 'SNAP_COMMON={1} {0}/hooks/storage-change > {1}/log/storage-change.log'.format(app_dir, data_dir), password=device_password, throw=False)
+
 
 def test_remove(syncloud_session, device_host):
     response = syncloud_session.get('https://{0}/rest/remove?app_id=rocketcaht'.format(device_host), allow_redirects=False, verify=False)
     assert response.status_code == 200, response.text
 
 
-#def test_reinstall(app_archive_path, device_host, device_password):
-#    local_install(device_host, device_password, app_archive_path)
+def test_reinstall(app_archive_path, device_host, device_password):
+    local_install(device_host, device_password, app_archive_path)
