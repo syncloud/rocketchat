@@ -5,8 +5,8 @@ from os import path
 from os.path import join
 
 import requests
-from syncloud_app import logger
-from syncloudlib import fs, linux, gen
+
+from syncloudlib import fs, linux, gen, logger
 from syncloudlib.application import paths, urls, storage
 
 APP_NAME = 'rocketchat'
