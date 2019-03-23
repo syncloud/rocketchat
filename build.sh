@@ -12,7 +12,7 @@ export TMPDIR=/tmp
 export TMP=/tmp
 
 NAME=$1
-ROCKETCHAT_VERSION=0.71.1
+ROCKETCHAT_VERSION=0.74.3
 COIN_CACHE_DIR=${DIR}/coin.cache
 ARCH=$(uname -m)
 SNAP_ARCH=$(dpkg --print-architecture)
