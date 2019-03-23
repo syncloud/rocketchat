@@ -9,7 +9,7 @@ pipeline:
   version:
     image: syncloud/build-deps-${arch}
     commands:
-      - echo $(date +%y%m%d) > version
+      - echo $(date +%y%m%d)$DRONE_BUILD_NUMBER > version
       - echo "rocketchat" > name
       - echo build-$(uname -m)-$DRONE_BRANCH > domain
       
