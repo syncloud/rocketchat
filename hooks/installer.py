@@ -1,44 +1,33 @@
-import sys
-from os import listdir, environ, path
-from os.path import dirname, join, abspath, isdir
-
-app_path = abspath(join(dirname(__file__), '..'))
-
-lib_path = join(app_path, 'lib')
-libs = [join(lib_path, item) for item in listdir(lib_path) if isdir(join(lib_path, item))]
-map(lambda l: sys.path.insert(0, l), libs)
-
-from os.path import join
-import requests
-import uuid
-from syncloud_app import logger
 import json
-from syncloud_platform.application import api
-from syncloud_platform.gaplib import fs, linux, gen
-from syncloudlib.application import paths, urls, storage
+import logging
+import uuid
+from os import path
+from os.path import join
 
+import requests
+
+from syncloudlib import fs, linux, gen, logger
+from syncloudlib.application import paths, urls, storage
 
 APP_NAME = 'rocketchat'
 USER_NAME = 'rocketchat'
-SYSTEMD_ROCKETCHAT = 'rocketchat-server'
-SYSTEMD_NGINX = 'rocketchat-nginx'
-SYSTEMD_MONGODB = 'rocketchat-mongodb'
 PORT = 3000
 MONGODB_PORT = 27017
 REST_URL = "http://localhost:{0}/api/v1".format(PORT)
 
 
-class RocketChatInstaller():
+class Installer:
     def __init__(self):
+        if not logger.factory_instance:
+            logger.init(logging.DEBUG, True)
+
         self.log = logger.get_logger('rocketchat')
         self.app_dir = paths.get_app_dir(APP_NAME)
         self.app_data_dir = paths.get_data_dir(APP_NAME)
         self.app_url = urls.get_app_url(APP_NAME)
-        #self.app = api.get_app_setup(APP_NAME)
         self.install_file = join(self.app_data_dir, 'installed')
 
-    
-    def pre_start(self):
+    def install(self):
     
         linux.useradd(USER_NAME)
 
@@ -62,20 +51,9 @@ class RocketChatInstaller():
        
         fs.chownpath(self.app_data_dir, USER_NAME, recursive=True)
         
-        self.prepare_storage()
-        
-   
-    def start(self):
-        app = api.get_app_setup(APP_NAME)
-    
-        fs.chownpath(self.app_dir, USER_NAME, recursive=True)
-  
-        app.add_service(SYSTEMD_MONGODB)
-        app.add_service(SYSTEMD_ROCKETCHAT)
-        app.add_service(SYSTEMD_NGINX)
+        prepare_storage()
 
-
-    def post_start(self):
+    def configure(self):
         if path.isfile(self.install_file):
             self.log.info('already configured')
             return
@@ -102,28 +80,30 @@ class RocketChatInstaller():
             self.log.info(result['status'])
             raise Exception('unable to login under install user')
      
-        authToken = result['data']['authToken']
-        userId = result['data']['userId']
+        auth_token = result['data']['authToken']
+        user_id = result['data']['userId']
         self.log.info('install account token extracted')
   
-        self.update_setting('LDAP_Enable', True, authToken, userId)
-        self.update_setting('LDAP_Host', 'localhost', authToken, userId)
-        self.update_setting('LDAP_BaseDN', 'dc=syncloud,dc=org', authToken, userId)
-        self.update_setting('LDAP_Authentication', True, authToken, userId)
-        self.update_setting('LDAP_Authentication_UserDN', 'dc=syncloud,dc=org', authToken, userId)
-        self.update_setting('LDAP_Authentication_Password', 'syncloud', authToken, userId)
-        self.update_setting('LDAP_User_Search_Filter', '(objectclass=inetOrgPerson)', authToken, userId)
-        self.update_setting('LDAP_User_Search_Field', 'cn', authToken, userId)
-        self.update_setting('LDAP_Username_Field', 'cn', authToken, userId)
-        self.update_setting('Accounts_RegistrationForm', 'Disabled', authToken, userId)
-        self.update_setting('LDAP_Internal_Log_Level', 'debug', authToken, userId)
-        self.update_setting('FileUpload_Storage_Type', 'FileSystem', authToken, userId)
+        self.update_setting('LDAP_Enable', True, auth_token, user_id)
+        self.update_setting('LDAP_Host', 'localhost', auth_token, user_id)
+        self.update_setting('LDAP_BaseDN', 'dc=syncloud,dc=org', auth_token, user_id)
+        self.update_setting('LDAP_Authentication', True, auth_token, user_id)
+        self.update_setting('LDAP_Authentication_UserDN', 'dc=syncloud,dc=org', auth_token, user_id)
+        self.update_setting('LDAP_Authentication_Password', 'syncloud', auth_token, user_id)
+        self.update_setting('LDAP_User_Search_Filter', '(objectclass=inetOrgPerson)', auth_token, user_id)
+        self.update_setting('LDAP_User_Search_Field', 'cn', auth_token, user_id)
+        self.update_setting('LDAP_Username_Field', 'cn', auth_token, user_id)
+        self.update_setting('Accounts_RegistrationForm', 'Disabled', auth_token, user_id)
+        self.update_setting('LDAP_Internal_Log_Level', 'debug', auth_token, user_id)
+        self.update_setting('FileUpload_Storage_Type', 'FileSystem', auth_token, user_id)
         
         app_storage_dir = storage.init_storage(APP_NAME, USER_NAME)
         
-        self.update_setting('FileUpload_FileSystemPath', app_storage_dir, authToken, userId)
+        self.update_setting('FileUpload_FileSystemPath', app_storage_dir, auth_token, user_id)
         
-        response = requests.post("{0}/users.delete".format(REST_URL), headers={"X-Auth-Token": authToken, "X-User-Id": userId}, json={"userId": userId})
+        response = requests.post("{0}/users.delete".format(REST_URL),
+                                 headers={"X-Auth-Token": auth_token, "X-User-Id": user_id},
+                                 json={"userId": user_id})
         result = json.loads(response.text)
         if not result['success']:
             self.log.error(response.text.encode("utf-8"))
@@ -131,7 +111,6 @@ class RocketChatInstaller():
      
         with open(self.install_file, 'w') as f:
             f.write('installed\n')
-
 
     def update_setting(self, name, value, auth_token, user_id):
  
@@ -144,15 +123,7 @@ class RocketChatInstaller():
             self.log.info('response: {0}'.format(response.text.encode("utf-8")))
             raise Exception('unable to update settings')
 
-    def prepare_storage(self):
-        app_storage_dir = storage.init_storage(APP_NAME, USER_NAME)
-        return app_storage_dir
-        
-    def remove(self):
-        app = api.get_app_setup(APP_NAME)
 
-        app.remove_service(SYSTEMD_NGINX)
-        app.remove_service(SYSTEMD_ROCKETCHAT)
-        app.remove_service(SYSTEMD_MONGODB)
-
-        fs.removepath(self.app_dir)
+def prepare_storage():
+    app_storage_dir = storage.init_storage(APP_NAME, USER_NAME)
+    return app_storage_dir

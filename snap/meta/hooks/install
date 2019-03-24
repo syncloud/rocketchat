@@ -1,14 +1,9 @@
-#!/snap/platform/current/python/bin/python
+#!/snap/rocketchat/current/python/bin/python
 
 from os.path import join
 import os, sys
 sys.path.append(join(os.environ['SNAP'], 'hooks'))
 
-from rocketchat_hooks import RocketChatInstaller
-import logging
-from syncloud_app import logger
+import installer
 
-logger.init(logging.DEBUG, console=True, line_format='%(message)s')
-
-imstaller = RocketChatInstaller()
-imstaller.pre_start()
+installer.Installer().install()
