@@ -15,7 +15,6 @@ PORT = 3000
 MONGODB_PORT = 27017
 REST_URL = "http://localhost:{0}/api/v1".format(PORT)
 
-
 class Installer:
     def __init__(self):
         if not logger.factory_instance:
@@ -34,6 +33,7 @@ class Installer:
         fs.makepath(join(self.app_data_dir, 'log'))
         fs.makepath(join(self.app_data_dir, 'nginx'))
         fs.makepath(join(self.app_data_dir, 'mongodb'))
+        mongodb_socket_file = '{0}/mongodb-{1}.sock'.format(app_data_dir, MONGODB_PORT).replace('/', '2%F')
 
         variables = {
             'app_dir': self.app_dir,
@@ -41,7 +41,8 @@ class Installer:
             'url': self.app_url,
             'web_secret': unicode(uuid.uuid4().hex),
             'port': PORT,
-            'mongodb_port': MONGODB_PORT
+            'mongodb_port': MONGODB_PORT,
+            'mongodb_socket_file': mongodb_socket_file
         }
 
         templates_path = join(self.app_dir, 'config.templates')
