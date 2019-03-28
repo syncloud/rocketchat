@@ -33,8 +33,9 @@ class Installer:
         fs.makepath(join(self.app_data_dir, 'log'))
         fs.makepath(join(self.app_data_dir, 'nginx'))
         fs.makepath(join(self.app_data_dir, 'mongodb'))
-        mongodb_socket_file = '{0}/mongodb.sock'.format(self.app_data_dir)
+        mongodb_socket_file = '{0}/mongodb-{1}.sock'.format(self.app_data_dir, MONGODB_PORT)
         mongodb_socket_file_escaped = mongodb_socket_file.replace('/', '2%F')
+        
         variables = {
             'app_dir': self.app_dir,
             'app_data_dir': self.app_data_dir,
