@@ -11,7 +11,7 @@ fi
 
 case $1 in
 start)
-    exec ${DIR}/mongodb/bin/mongod --quiet --config ${SNAP_COMMON}/config/mongodb.conf --smallfiles 
+    exec ${DIR}/mongodb/bin/mongod --quiet --config ${SNAP_COMMON}/config/mongodb.conf
     ;;
 *)
     echo "not valid command"
