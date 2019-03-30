@@ -88,14 +88,16 @@ cp $DIR/npm/phantomjs/install.js .
 sed -i "s/exports.version.*/exports.version = '1.9.20'/g" lib/phantomjs.js
 ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --production -g
 
-cd ${BUILD_DIR}
+cd ..
+
 #remove platform specific pre compiled libraries
 rm -rf ${BUILD_DIR}/bundle/programs/server/npm/node_modules/sharp/vendor
-mkdir -p ${BUILD_DIR}/lib
-cp --remove-destination /usr/lib/$(dpkg-architecture -q DEB_HOST_GNU_TYPE)/libstdc++.so* ${BUILD_DIR}/lib
 
 export USER=$(whoami)
 ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --verbose --production
+
+mkdir -p ${BUILD_DIR}/lib
+cp --remove-destination /usr/lib/$(dpkg-architecture -q DEB_HOST_GNU_TYPE)/libstdc++.so* ${BUILD_DIR}/lib
 
 mkdir ${DIR}/build/${NAME}/META
 echo ${NAME} >> ${DIR}/build/${NAME}/META/app
