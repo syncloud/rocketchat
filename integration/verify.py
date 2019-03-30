@@ -8,7 +8,7 @@ from subprocess import check_output
 import pytest
 import shutil
 
-from syncloudlib.integration.installer import local_install, wait_for_sam, wait_for_rest, local_remove, \
+from syncloudlib.integration.installer import local_install, wait_for_rest, local_remove, \
     get_data_dir, get_app_dir, get_service_prefix, get_ssh_env_vars
 from syncloudlib.integration.loop import loop_device_cleanup
 from syncloudlib.integration.ssh import run_scp, run_ssh
