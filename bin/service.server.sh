@@ -9,6 +9,8 @@ fi
 
 . $SNAP_COMMON/config/rocketchat.env
 
+export LD_LIBRARY_PATH=${DIR}/lib
+
 case $1 in
 pre-start)
     timeout 300 /bin/bash -c 'until echo > /dev/tcp/localhost/'$MONGO_PORT'; do sleep 1; done'
