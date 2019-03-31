@@ -98,8 +98,10 @@ rm -rf ${BUILD_DIR}/bundle/programs/server/npm/node_modules/sharp/vendor
 
 ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --production
 
+ldd ${BUILD_DIR}/bundle/programs/server/npm/node_modules/sharp/vendor/lib/libvips-cpp.so
+
 mkdir -p ${BUILD_DIR}/lib
-#strings /usr/lib/$(dpkg-architecture -q DEB_HOST_GNU_TYPE)/libstdc++.so.6 | grep ABI
+strings /usr/lib/$(dpkg-architecture -q DEB_HOST_GNU_TYPE)/libstdc++.so.6 | grep ABI
 #cp --remove-destination /usr/lib/$(dpkg-architecture -q DEB_HOST_GNU_TYPE)/libstdc++.so.6* ${BUILD_DIR}/lib
 
 mkdir ${DIR}/build/${NAME}/META
