@@ -85,7 +85,7 @@ cd ${DIR}/build
 wget https://github.com/libvips/libvips/releases/download/v${LIBVIPS_VERSION}/vips-${LIBVIPS_VERSION}.tar.gz
 tar xf vips-${LIBVIPS_VERSION}.tar.gz
 cd vips-${LIBVIPS_VERSION}
-./cinfigure --prefix=${BUILD_DIR}
+./configure --prefix=${BUILD_DIR}
 make
 make install
 
