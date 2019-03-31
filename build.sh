@@ -79,8 +79,9 @@ cat ${BUILD_DIR}/bundle/README
 ls -la ${BUILD_DIR}/bundle/programs
 ls -la ${BUILD_DIR}/bundle/programs/server
 export USER=$(whoami)
+apt update -y
+apt install -y libvips-dev
 cd ${BUILD_DIR}/bundle/programs/server
-${BUILD_DIR}/nodejs/bin/npm install sharp --build-from-source
 
 git clone git://github.com/Medium/phantomjs.git npm-phantomjs
 cd npm-phantomjs
