@@ -18,6 +18,7 @@ ARCH=$(uname -m)
 SNAP_ARCH=$(dpkg --print-architecture)
 VERSION=$2
 NODE_VERSION=8.11.3
+LIBVIPS_VERSION=8.7.0
 DOWNLOAD_URL=http://artifact.syncloud.org/3rdparty
 
 rm -rf ${DIR}/build
@@ -32,7 +33,7 @@ coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/phantomjs-${ARCH}.tar.gz
 coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/python-${ARCH}.tar.gz
 
 NODE_ARCH=${ARCH}
-if [ ${ARCH} == "x86_64" ]; then
+if [[ ${ARCH} == "x86_64" ]]; then
     NODE_ARCH=x64
 fi
 NODE_ARCHIVE=node-v${NODE_VERSION}-linux-${NODE_ARCH}
@@ -79,10 +80,25 @@ cat ${BUILD_DIR}/bundle/README
 ls -la ${BUILD_DIR}/bundle/programs
 ls -la ${BUILD_DIR}/bundle/programs/server
 export USER=$(whoami)
-apt update -y
-apt install -y libvips-dev
-cd ${BUILD_DIR}/bundle/programs/server
 
+cd ${DIR}/build
+wget https://github.com/libvips/libvips/releases/download/v${LIBVIPS_VERSION}/vips-${LIBVIPS_VERSION}.tar.gz
+tar xf vips-${LIBVIPS_VERSION}.tar.gz
+cd vips-${LIBVIPS_VERSION}
+./cinfigure --prefix=${BUILD_DIR}
+make
+make install
+
+cd ${BUILD_DIR}/bundle/programs/server
+PKG_CONFIG_PATH=${BUILD_DIR}/lib/pkgconfig ${BUILD_DIR}/nodejs/bin/npm install sharp
+#find ${BUILD_DIR}/bundle/programs/server/npm/node_modules/sharp/vendor
+#remove platform specific pre compiled libraries
+export LD_LIBRARY_PATH=${BUILD_DIR}/lib
+ldd ${BUILD_DIR}/bundle/programs/server/npm/node_modules/sharp/vendor/lib/libvips-cpp.so
+#rm -rf ${BUILD_DIR}/bundle/programs/server/npm/node_modules/sharp/vendor
+#strings /usr/lib/$(dpkg-architecture -q DEB_HOST_GNU_TYPE)/libstdc++.so.6 | grep ABI
+
+cd ${BUILD_DIR}/bundle/programs/server
 git clone git://github.com/Medium/phantomjs.git npm-phantomjs
 cd npm-phantomjs
 git checkout v1.9.20
@@ -90,19 +106,8 @@ cp $DIR/npm/phantomjs/install.js .
 sed -i "s/exports.version.*/exports.version = '1.9.20'/g" lib/phantomjs.js
 ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --production -g
 
-cd ..
-
-#find ${BUILD_DIR}/bundle/programs/server/npm/node_modules/sharp/vendor
-#remove platform specific pre compiled libraries
-rm -rf ${BUILD_DIR}/bundle/programs/server/npm/node_modules/sharp/vendor
-
+cd ${BUILD_DIR}/bundle/programs/server
 ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --production
-
-ldd ${BUILD_DIR}/bundle/programs/server/npm/node_modules/sharp/vendor/lib/libvips-cpp.so
-
-mkdir -p ${BUILD_DIR}/lib
-strings /usr/lib/$(dpkg-architecture -q DEB_HOST_GNU_TYPE)/libstdc++.so.6 | grep ABI
-#cp --remove-destination /usr/lib/$(dpkg-architecture -q DEB_HOST_GNU_TYPE)/libstdc++.so.6* ${BUILD_DIR}/lib
 
 mkdir ${DIR}/build/${NAME}/META
 echo ${NAME} >> ${DIR}/build/${NAME}/META/app
