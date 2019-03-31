@@ -37,8 +37,7 @@ def module_teardown(device_host, data_dir, platform_data_dir, app_dir, log_dir):
     run_ssh(device_host, 'ls -la /snap/rocketchat > {0}/snap.rocketchat.ls.log'.format(TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)    
     run_ssh(device_host, 'ls -la {0} > {1}/data.dir.ls.log'.format(data_dir, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)    
     run_ssh(device_host, 'df -h > {0}/df.log'.format(TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)    
-    run_ssh(device_host, 'strings /usr/lib/$(dpkg-architecture -q DEB_HOST_GNU_TYPE)/libstdc++.so.6 | grep ABI > {0}/libstdc++.so.6.log'.format(TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)
-
+    
     app_log_dir  = join(log_dir, 'log')
     os.mkdir(app_log_dir )
     run_scp('root@{0}:{1}/log/*.log {2}'.format(device_host, data_dir, app_log_dir), password=LOGS_SSH_PASSWORD, throw=False)

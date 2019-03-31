@@ -90,8 +90,10 @@ ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --production -g
 
 cd ..
 
+find ${BUILD_DIR}/bundle/programs/server/npm/node_modules/sharp/vendor
+npm install sharp --build-from-source
 #remove platform specific pre compiled libraries
-rm -rf ${BUILD_DIR}/bundle/programs/server/npm/node_modules/sharp/vendor
+#rm -rf ${BUILD_DIR}/bundle/programs/server/npm/node_modules/sharp/vendor
 
 export USER=$(whoami)
 ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --production
