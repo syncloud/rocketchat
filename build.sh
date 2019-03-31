@@ -80,6 +80,7 @@ ls -la ${BUILD_DIR}/bundle/programs
 ls -la ${BUILD_DIR}/bundle/programs/server
 
 cd ${BUILD_DIR}/bundle/programs/server
+${BUILD_DIR}/nodejs/bin/npm install sharp --build-from-source
 
 git clone git://github.com/Medium/phantomjs.git npm-phantomjs
 cd npm-phantomjs
@@ -91,7 +92,6 @@ ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --production -g
 cd ..
 
 find ${BUILD_DIR}/bundle/programs/server/npm/node_modules/sharp/vendor
-npm install sharp --build-from-source
 #remove platform specific pre compiled libraries
 #rm -rf ${BUILD_DIR}/bundle/programs/server/npm/node_modules/sharp/vendor
 
