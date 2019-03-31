@@ -90,7 +90,7 @@ make
 make install
 
 cd ${BUILD_DIR}/bundle/programs/server
-PKG_CONFIG_PATH=${BUILD_DIR}/lib/pkgconfig ${BUILD_DIR}/nodejs/bin/npm install sharp
+PKG_CONFIG_PATH=${BUILD_DIR}/lib/pkgconfig ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm sharp
 #find ${BUILD_DIR}/bundle/programs/server/npm/node_modules/sharp/vendor
 #remove platform specific pre compiled libraries
 export LD_LIBRARY_PATH=${BUILD_DIR}/lib
