@@ -78,7 +78,7 @@ ls -la ${BUILD_DIR}/bundle
 cat ${BUILD_DIR}/bundle/README
 ls -la ${BUILD_DIR}/bundle/programs
 ls -la ${BUILD_DIR}/bundle/programs/server
-
+export USER=$(whoami)
 cd ${BUILD_DIR}/bundle/programs/server
 ${BUILD_DIR}/nodejs/bin/npm install sharp --build-from-source
 
@@ -95,7 +95,6 @@ find ${BUILD_DIR}/bundle/programs/server/npm/node_modules/sharp/vendor
 #remove platform specific pre compiled libraries
 #rm -rf ${BUILD_DIR}/bundle/programs/server/npm/node_modules/sharp/vendor
 
-export USER=$(whoami)
 ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --production
 
 mkdir -p ${BUILD_DIR}/lib
