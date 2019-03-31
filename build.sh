@@ -92,7 +92,7 @@ ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --production -g
 
 cd ..
 
-find ${BUILD_DIR}/bundle/programs/server/npm/node_modules/sharp/vendor
+#find ${BUILD_DIR}/bundle/programs/server/npm/node_modules/sharp/vendor
 #remove platform specific pre compiled libraries
 #rm -rf ${BUILD_DIR}/bundle/programs/server/npm/node_modules/sharp/vendor
 
