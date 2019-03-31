@@ -94,13 +94,13 @@ cd ..
 
 #find ${BUILD_DIR}/bundle/programs/server/npm/node_modules/sharp/vendor
 #remove platform specific pre compiled libraries
-#rm -rf ${BUILD_DIR}/bundle/programs/server/npm/node_modules/sharp/vendor
+rm -rf ${BUILD_DIR}/bundle/programs/server/npm/node_modules/sharp/vendor
 
 ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --production
 
 mkdir -p ${BUILD_DIR}/lib
-strings /usr/lib/$(dpkg-architecture -q DEB_HOST_GNU_TYPE)/libstdc++.so.6 | grep ABI
-cp --remove-destination /usr/lib/$(dpkg-architecture -q DEB_HOST_GNU_TYPE)/libstdc++.so.6* ${BUILD_DIR}/lib
+#strings /usr/lib/$(dpkg-architecture -q DEB_HOST_GNU_TYPE)/libstdc++.so.6 | grep ABI
+#cp --remove-destination /usr/lib/$(dpkg-architecture -q DEB_HOST_GNU_TYPE)/libstdc++.so.6* ${BUILD_DIR}/lib
 
 mkdir ${DIR}/build/${NAME}/META
 echo ${NAME} >> ${DIR}/build/${NAME}/META/app
