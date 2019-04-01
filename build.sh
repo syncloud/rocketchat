@@ -81,7 +81,7 @@ ls -la ${BUILD_DIR}/bundle/programs/server
 export USER=$(whoami)
 
 cd ${BUILD_DIR}/bundle/programs/server
-SHARP_DIST_BASE_URL="http://artifact.syncloud.org/3rdparty" ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm sharp
+SHARP_DIST_BASE_URL="http://artifact.syncloud.org/3rdparty/" ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm sharp
 #find ${BUILD_DIR}/bundle/programs/server/npm/node_modules/sharp/vendor
 #remove platform specific pre compiled libraries
 export LD_LIBRARY_PATH=${BUILD_DIR}/lib
