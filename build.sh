@@ -18,7 +18,6 @@ ARCH=$(uname -m)
 SNAP_ARCH=$(dpkg --print-architecture)
 VERSION=$2
 NODE_VERSION=8.11.3
-LIBVIPS_VERSION=8.7.0
 DOWNLOAD_URL=http://artifact.syncloud.org/3rdparty
 
 rm -rf ${DIR}/build
@@ -81,16 +80,8 @@ ls -la ${BUILD_DIR}/bundle/programs
 ls -la ${BUILD_DIR}/bundle/programs/server
 export USER=$(whoami)
 
-cd ${DIR}/build
-wget https://github.com/libvips/libvips/releases/download/v${LIBVIPS_VERSION}/vips-${LIBVIPS_VERSION}.tar.gz
-tar xf vips-${LIBVIPS_VERSION}.tar.gz
-cd vips-${LIBVIPS_VERSION}
-./configure --prefix=${BUILD_DIR}
-make
-make install
-
 cd ${BUILD_DIR}/bundle/programs/server
-PKG_CONFIG_PATH=${BUILD_DIR}/lib/pkgconfig ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm sharp
+SHARP_DIST_BASE_URL="http://artifact.syncloud.org/3rdparty" ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm sharp
 #find ${BUILD_DIR}/bundle/programs/server/npm/node_modules/sharp/vendor
 #remove platform specific pre compiled libraries
 export LD_LIBRARY_PATH=${BUILD_DIR}/lib
