@@ -86,7 +86,8 @@ cd npm-phantomjs
 git checkout v1.9.20
 cp $DIR/npm/phantomjs/install.js .
 sed -i "s/exports.version.*/exports.version = '1.9.20'/g" lib/phantomjs.js
-SHARP_DIST_BASE_URL="http://artifact.syncloud.org/3rdparty/" ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --production -g
+SHARP_DIST_BASE_URL="http://artifact.syncloud.org/3rdparty/" ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --production -g --build-from-source
+${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --production -g
 
 cd ${BUILD_DIR}/bundle/programs/server
 ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --production
