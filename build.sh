@@ -82,12 +82,6 @@ export USER=$(whoami)
 
 cd ${BUILD_DIR}/bundle/programs/server
 SHARP_DIST_BASE_URL="http://artifact.syncloud.org/3rdparty/" ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm sharp
-#find ${BUILD_DIR}/bundle/programs/server/npm/node_modules/sharp/vendor
-#remove platform specific pre compiled libraries
-export LD_LIBRARY_PATH=${BUILD_DIR}/lib
-ldd ${BUILD_DIR}/bundle/programs/server/npm/node_modules/sharp/vendor/lib/libvips-cpp.so
-#rm -rf ${BUILD_DIR}/bundle/programs/server/npm/node_modules/sharp/vendor
-#strings /usr/lib/$(dpkg-architecture -q DEB_HOST_GNU_TYPE)/libstdc++.so.6 | grep ABI
 
 cd ${BUILD_DIR}/bundle/programs/server
 git clone git://github.com/Medium/phantomjs.git npm-phantomjs
