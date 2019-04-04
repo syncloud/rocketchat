@@ -89,7 +89,7 @@ sed -i "s/exports.version.*/exports.version = '1.9.20'/g" lib/phantomjs.js
 ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --production -g
 
 cd ${BUILD_DIR}/bundle/programs/server
-SHARP_DIST_BASE_URL="http://artifact.syncloud.org/3rdparty/" ${BUILD_DIR}/nodejs/bin/npm install sharp@0.21.0 --unsafe-perm
+SHARP_DIST_BASE_URL="http://artifact.syncloud.org/3rdparty/" ${BUILD_DIR}/nodejs/bin/npm install sharp@0.21.0 --unsafe-perm --production -g
 ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --production
 
 mkdir ${DIR}/build/${NAME}/META
