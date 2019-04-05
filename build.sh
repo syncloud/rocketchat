@@ -90,6 +90,7 @@ ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --production -g
 
 cd ${BUILD_DIR}/bundle/programs/server
 SHARP_DIST_BASE_URL="http://artifact.syncloud.org/3rdparty/" ${BUILD_DIR}/nodejs/bin/npm install sharp@0.21.0 --unsafe-perm --production -g
+sed -i '/"sharp": "^0.21.0"/d' package.json
 ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --production
 
 mkdir ${DIR}/build/${NAME}/META
