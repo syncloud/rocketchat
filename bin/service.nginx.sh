@@ -11,7 +11,7 @@ fi
 
 case $1 in
 pre-start)
-    timeout 1200 /bin/bash -c 'until echo > /dev/tcp/localhost/'$PORT'; do sleep 1; done'
+    timeout 2000 /bin/bash -c 'until echo > /dev/tcp/localhost/'$PORT'; do sleep 1; done'
     /bin/rm -f ${SNAP_COMMON}/web.socket
     exec ${DIR}/nginx/sbin/nginx -t -c ${SNAP_COMMON}/config/nginx.conf -p ${DIR}/nginx -g 'error_log '${SNAP_COMMON}'/log/nginx_error.log warn;'
     ;;
