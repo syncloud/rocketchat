@@ -1,22 +1,13 @@
-import json
 import os
-import sys
-from os import listdir
-from os.path import dirname, join, exists, abspath, isdir
-import time
-from subprocess import check_output
-import pytest
 import shutil
+from os.path import dirname, join
+from subprocess import check_output
 
-from syncloudlib.integration.installer import local_install, wait_for_sam, wait_for_rest, local_remove, \
-    get_data_dir, get_app_dir, get_service_prefix, get_ssh_env_vars
-from syncloudlib.integration.loop import loop_device_cleanup
-from syncloudlib.integration.ssh import run_scp, run_ssh
-from syncloudlib.integration.hosts import add_host_alias
-from syncloudlib.integration import conftest
-
+import pytest
 import requests
-
+from syncloudlib.integration.hosts import add_host_alias
+from syncloudlib.integration.installer import local_install, wait_for_rest
+from syncloudlib.integration.ssh import run_scp, run_ssh
 
 DEFAULT_DEVICE_PASSWORD = 'syncloud'
 LOGS_SSH_PASSWORD = DEFAULT_DEVICE_PASSWORD
@@ -44,7 +35,9 @@ def module_teardown(device_host, data_dir, platform_data_dir, app_dir, log_dir):
     run_ssh(device_host, 'cp /var/log/messages {0}/messages.log'.format(TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)    
     run_ssh(device_host, 'ls -la /snap > {0}/snap.ls.log'.format(TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)    
     run_ssh(device_host, 'ls -la /snap/rocketchat > {0}/snap.rocketchat.ls.log'.format(TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)    
-
+    run_ssh(device_host, 'ls -la {0} > {1}/data.dir.ls.log'.format(data_dir, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)    
+    run_ssh(device_host, 'df -h > {0}/df.log'.format(TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)    
+    
     app_log_dir  = join(log_dir, 'log')
     os.mkdir(app_log_dir )
     run_scp('root@{0}:{1}/log/*.log {2}'.format(device_host, data_dir, app_log_dir), password=LOGS_SSH_PASSWORD, throw=False)

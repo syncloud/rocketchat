@@ -12,7 +12,7 @@ export TMPDIR=/tmp
 export TMP=/tmp
 
 NAME=$1
-ROCKETCHAT_VERSION=0.71.1
+ROCKETCHAT_VERSION=0.74.3
 COIN_CACHE_DIR=${DIR}/coin.cache
 ARCH=$(uname -m)
 SNAP_ARCH=$(dpkg --print-architecture)
@@ -32,7 +32,7 @@ coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/phantomjs-${ARCH}.tar.gz
 coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/python-${ARCH}.tar.gz
 
 NODE_ARCH=${ARCH}
-if [ ${ARCH} == "x86_64" ]; then
+if [[ ${ARCH} == "x86_64" ]]; then
     NODE_ARCH=x64
 fi
 NODE_ARCHIVE=node-v${NODE_VERSION}-linux-${NODE_ARCH}
@@ -78,9 +78,9 @@ ls -la ${BUILD_DIR}/bundle
 cat ${BUILD_DIR}/bundle/README
 ls -la ${BUILD_DIR}/bundle/programs
 ls -la ${BUILD_DIR}/bundle/programs/server
+export USER=$(whoami)
 
 cd ${BUILD_DIR}/bundle/programs/server
-
 git clone git://github.com/Medium/phantomjs.git npm-phantomjs
 cd npm-phantomjs
 git checkout v1.9.20
@@ -88,13 +88,11 @@ cp $DIR/npm/phantomjs/install.js .
 sed -i "s/exports.version.*/exports.version = '1.9.20'/g" lib/phantomjs.js
 ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --production -g
 
-cd ..
-
-#remove platform specific pre compiled libraries
-rm -rf ${BUILD_DIR}/bundle/programs/server/npm/node_modules/sharp/vendor
-
-export USER=$(whoami)
-${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --verbose --production
+cd ${BUILD_DIR}/bundle/programs/server
+#SHARP_DIST_BASE_URL="http://artifact.syncloud.org/3rdparty/" ${BUILD_DIR}/nodejs/bin/npm install sharp@0.21.0 --unsafe-perm --production -g
+#sed -i '/"sharp": "^0.21.0"/d' package.json
+rm -rf npm/node_modules/sharp/vendor
+SHARP_DIST_BASE_URL="http://artifact.syncloud.org/3rdparty/" ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --production
 
 mkdir ${DIR}/build/${NAME}/META
 echo ${NAME} >> ${DIR}/build/${NAME}/META/app
