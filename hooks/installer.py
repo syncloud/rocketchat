@@ -69,7 +69,7 @@ class Installer:
 
 
     def _upgrade(self):
-        self.log.info(upgrade')
+        self.log.info('upgrade')
 
     def _install(self):
         self.log.info(innstall')
