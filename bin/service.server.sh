@@ -18,6 +18,7 @@ pre-start)
     ;;
 start)
     echo "MONGO_URL: $MONGO_URL" | logger -t rocketchat
+    echo "MONGO_OPLOG_URL: $MONGO_OPLOG_URL" | logger -t rocketchat
     exec ${DIR}/nodejs/bin/node ${DIR}/bundle/main.js 2>&1
     ;;
 *)
