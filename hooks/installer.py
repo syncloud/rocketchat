@@ -64,8 +64,8 @@ class Installer:
             self._install()
         
         self.log.info('configure')
-        mongo_configure_cmd = '{0}/mongodb/bin/mongo {1}/config/mongo.configure.js'.format(self.app_dir, self.app_data_dir)
-        self.log.info(check_output(mongo_configure_cmd, shell=True))
+        #mongo_configure_cmd = '{0}/mongodb/bin/mongo {1}/config/mongo.configure.js'.format(self.app_dir, self.app_data_dir)
+        #self.log.info(check_output(mongo_configure_cmd, shell=True))
 
 
     def _upgrade(self):
