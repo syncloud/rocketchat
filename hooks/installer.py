@@ -55,7 +55,7 @@ class Installer:
        
         fs.chownpath(self.app_data_dir, USER_NAME, recursive=True)
         
-        prepare_storage()
+        self.prepare_storage()
 
     def configure(self):
         if path.isfile(self.install_file):
@@ -139,6 +139,6 @@ class Installer:
             raise Exception('unable to update settings')
 
 
-def prepare_storage():
-    app_storage_dir = storage.init_storage(APP_NAME, USER_NAME)
-    return app_storage_dir
+    def prepare_storage(self):
+        app_storage_dir = storage.init_storage(APP_NAME, USER_NAME)
+        return app_storage_dir
