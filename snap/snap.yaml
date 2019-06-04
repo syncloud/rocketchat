@@ -15,7 +15,6 @@ apps:
     - network
     - network-bind
     restart-condition: always
-    pre-start-commamd: bin/service.server.sh pre-start
     start-timeout: 2000s
     after: [mongodb]
   nginx:
