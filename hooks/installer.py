@@ -3,6 +3,7 @@ import logging
 import uuid
 from os import path
 from os.path import join
+from subprocess import check_output
 
 import requests
 
@@ -54,13 +55,24 @@ class Installer:
        
         fs.chownpath(self.app_data_dir, USER_NAME, recursive=True)
         
-        prepare_storage()
+        self.prepare_storage()
 
     def configure(self):
         if path.isfile(self.install_file):
-            self.log.info('already configured')
-            return
-            
+            self._upgrade()
+        else:
+            self._install()
+        
+        self.log.info('configure')
+        #mongo_configure_cmd = '{0}/mongodb/bin/mongo {1}/config/mongo.configure.js'.format(self.app_dir, self.app_data_dir)
+        #self.log.info(check_output(mongo_configure_cmd, shell=True))
+
+
+    def _upgrade(self):
+        self.log.info('upgrade')
+
+    def _install(self):
+        self.log.info('install')
         password = unicode(uuid.uuid4().hex)
         response = requests.post("{0}/users.register".format(REST_URL),
                                  json={
@@ -127,6 +139,6 @@ class Installer:
             raise Exception('unable to update settings')
 
 
-def prepare_storage():
-    app_storage_dir = storage.init_storage(APP_NAME, USER_NAME)
-    return app_storage_dir
+    def prepare_storage(self):
+        app_storage_dir = storage.init_storage(APP_NAME, USER_NAME)
+        return app_storage_dir

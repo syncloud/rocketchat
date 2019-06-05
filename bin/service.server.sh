@@ -12,13 +12,13 @@ fi
 export LD_LIBRARY_PATH=${DIR}/lib
 
 case $1 in
-pre-start)
-    timeout 1200 /bin/bash -c 'until echo > /dev/tcp/localhost/'$MONGO_PORT'; do echo "waiting for ${MONGO_PORT}"; sleep 1; done'
-    timeout 1200 /bin/bash -c 'until [ -S '$MONGO_SOCKET_FILE' ]; do echo "waiting for ${MONGO_SOCKET_FILE}"; sleep 1; done'
-    ;;
 start)
+    bash -c "for i in \$(seq 1 30); do ${DIR}/mongodb/bin/mongo localhost/rocketchat ${SNAP_COMMON}/config/mongo.configure.js && s=\$? && break || s=\$?; echo \"Tried \$i times. Waiting 5 secs...\"; sleep 5; done; (exit \$s)"
+
     echo "MONGO_URL: $MONGO_URL" | logger -t rocketchat
-    exec ${DIR}/nodejs/bin/node ${DIR}/bundle/main.js 2>&1
+    echo "MONGO_OPLOG_URL: $MONGO_OPLOG_URL" | logger -t rocketchat
+    #exec ${DIR}/nodejs/bin/node ${DIR}/bundle/main.js 2>&1
+    bash -c "for i in \$(seq 1 30); do ${DIR}/nodejs/bin/node ${DIR}/bundle/main.js && s=\$? && break || s=\$?; echo \"Tried \$i times. Waiting 5 secs...\"; sleep 5; done; (exit \$s)"
     ;;
 *)
     echo "not valid command"
