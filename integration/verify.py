@@ -85,7 +85,7 @@ def test_activate_device(main_domain, device_host, domain, device_user, device_p
 
 def test_install(app_archive_path, device_host, app_domain, device_password):
     local_install(device_host, device_password, app_archive_path)
-    wait_for_rest(requests.session(), app_domain + '/', 200, 500)
+    wait_for_rest(requests.session(), 'https://{0}/'.format(app_domain), 200, 500)
 
 
 def test_mongo_config(device_host, app_dir, data_dir, device_password):
