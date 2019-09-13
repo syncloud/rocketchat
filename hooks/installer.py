@@ -9,6 +9,7 @@ import requests
 
 from syncloudlib import fs, linux, gen, logger
 from syncloudlib.application import paths, urls, storage
+from syncloudlib.http import wait_for_rest
 
 APP_NAME = 'rocketchat'
 USER_NAME = 'rocketchat'
@@ -58,6 +59,8 @@ class Installer:
         self.prepare_storage()
 
     def configure(self):
+        wait_for_rest(requests.session(), REST_URL, 200)
+
         if path.isfile(self.install_file):
             self._upgrade()
         else:
