@@ -26,10 +26,21 @@ mkdir -p ${BUILD_DIR}
 
 cd ${DIR}/build
 
-coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/nginx-${ARCH}.tar.gz
-coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/mongodb-${ARCH}.tar.gz
-coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/phantomjs-${ARCH}.tar.gz
-coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/python-${ARCH}.tar.gz
+wget --progress=dot:giga ${DOWNLOAD_URL}/nginx-${ARCH}.tar.gz
+tar xf nginx-${ARCH}.tar.gz
+mv nginx ${BUILD_DIR}/
+
+wget --progress=dot:giga ${DOWNLOAD_URL}/mongodb-4-${ARCH}.tar.gz
+tar xf mongodb-4-${ARCH}.tar.gz
+mv mongodb-4 ${BUILD_DIR}/
+
+wget --progress=dot:giga ${DOWNLOAD_URL}/mongodb-4-${ARCH}.tar.gz
+tar xf mongodb-4-${ARCH}.tar.gz
+mv mongodb-4 ${BUILD_DIR}/
+
+wget --progress=dot:giga ${DOWNLOAD_URL}/python-${ARCH}.tar.gz
+tar xf python-${ARCH}.tar.gz
+mv python ${BUILD_DIR}/
 
 NODE_ARCH=${ARCH}
 if [[ ${ARCH} == "x86_64" ]]; then
@@ -52,9 +63,9 @@ ${BUILD_DIR}/mongodb/bin/mongod --version
 
 rm -rf ${BUILD_DIR}/lib/node_modules
 
-export PATH=${BUILD_DIR}/phantomjs/bin:$PATH
-export LD_LIBRARY_PATH=${BUILD_DIR}/phantomjs/lib
-echo "version: \"$(phantomjs --version)\""
+#export PATH=${BUILD_DIR}/phantomjs/bin:$PATH
+#export LD_LIBRARY_PATH=${BUILD_DIR}/phantomjs/lib
+#echo "version: \"$(phantomjs --version)\""
 
 cd ${DIR}/build
 wget https://cdn-download.rocket.chat/build/rocket.chat-${ROCKETCHAT_VERSION}.tgz -O ${DIR}/build/rocketchat.tar.gz --progress dot:giga
@@ -80,19 +91,19 @@ ls -la ${BUILD_DIR}/bundle/programs
 ls -la ${BUILD_DIR}/bundle/programs/server
 export USER=$(whoami)
 
-cd ${BUILD_DIR}/bundle/programs/server
-git clone git://github.com/Medium/phantomjs.git npm-phantomjs
-cd npm-phantomjs
-git checkout v1.9.20
-cp $DIR/npm/phantomjs/install.js .
-sed -i "s/exports.version.*/exports.version = '1.9.20'/g" lib/phantomjs.js
+#cd ${BUILD_DIR}/bundle/programs/server
+#git clone git://github.com/Medium/phantomjs.git npm-phantomjs
+#cd npm-phantomjs
+#git checkout v1.9.20
+#cp $DIR/npm/phantomjs/install.js .
+#sed -i "s/exports.version.*/exports.version = '1.9.20'/g" lib/phantomjs.js
 ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --production -g
 
-cd ${BUILD_DIR}/bundle/programs/server
+#cd ${BUILD_DIR}/bundle/programs/server
 #SHARP_DIST_BASE_URL="http://artifact.syncloud.org/3rdparty/" ${BUILD_DIR}/nodejs/bin/npm install sharp@0.21.0 --unsafe-perm --production -g
 #sed -i '/"sharp": "^0.21.0"/d' package.json
-rm -rf npm/node_modules/sharp/vendor
-SHARP_DIST_BASE_URL="http://artifact.syncloud.org/3rdparty/" ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --production
+#rm -rf npm/node_modules/sharp/vendor
+#SHARP_DIST_BASE_URL="http://artifact.syncloud.org/3rdparty/" ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --production
 
 mkdir ${DIR}/build/${NAME}/META
 echo ${NAME} >> ${DIR}/build/${NAME}/META/app
