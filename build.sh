@@ -18,7 +18,7 @@ ARCH=$(uname -m)
 SNAP_ARCH=$(dpkg --print-architecture)
 VERSION=$2
 NODE_VERSION=8.11.3
-DOWNLOAD_URL=http://artifact.syncloud.org/3rdparty
+DOWNLOAD_URL=https://github.com/syncloud/3rdparty/releases/download/1
 
 rm -rf ${DIR}/build
 BUILD_DIR=${DIR}/build/${NAME}
