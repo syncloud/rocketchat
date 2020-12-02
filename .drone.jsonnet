@@ -130,6 +130,5 @@ local build(arch) = {
 };
 
 [
-    build("arm"),
     build("amd64")
 ]
