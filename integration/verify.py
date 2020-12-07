@@ -8,6 +8,7 @@ import requests
 from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.installer import local_install
 from syncloudlib.integration.ssh import run_scp, run_ssh
+from syncloudlib.integration.hosts import add_host_alias_by_ip
 from syncloudlib.http import wait_for_rest
 DEFAULT_DEVICE_PASSWORD = 'syncloud'
 LOGS_SSH_PASSWORD = DEFAULT_DEVICE_PASSWORD
