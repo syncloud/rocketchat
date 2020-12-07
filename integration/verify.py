@@ -55,7 +55,7 @@ def test_install(app_archive_path, device_host, app_domain, device_password):
 
 
 def test_mongo_config(device, app_dir, data_dir):
-    device.scp_to_devce('{0}/mongodb.config.dump.js'.format(DIR), '/')
+    device.scp_to_device('{0}/mongodb.config.dump.js'.format(DIR), '/')
     device.run_ssh(
         '{0}/mongodb/bin/mongo /mongodb.config.dump.js > {1}/log/mongo.config.dump.log'.format(app_dir, data_dir),
         throw=False)
