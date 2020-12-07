@@ -3,7 +3,6 @@ import logging
 import uuid
 from os import path
 from os.path import join
-from subprocess import check_output
 
 import requests
 
@@ -16,6 +15,7 @@ USER_NAME = 'rocketchat'
 PORT = 3000
 MONGODB_PORT = 27017
 REST_URL = "http://localhost:{0}/api/v1".format(PORT)
+
 
 class Installer:
     def __init__(self):
@@ -67,9 +67,9 @@ class Installer:
             self._install()
         
         self.log.info('configure')
-        #mongo_configure_cmd = '{0}/mongodb/bin/mongo {1}/config/mongo.configure.js'.format(self.app_dir, self.app_data_dir)
-        #self.log.info(check_output(mongo_configure_cmd, shell=True))
-
+        # mongo_configure_cmd = '{0}/mongodb/bin/mongo {1}/config/mongo.configure.js'
+        # .format(self.app_dir, self.app_data_dir)
+        # self.log.info(check_output(mongo_configure_cmd, shell=True))
 
     def _upgrade(self):
         self.log.info('upgrade')
@@ -140,7 +140,6 @@ class Installer:
             self.log.info('cannot update setting: {0}'.format(name))
             self.log.info('response: {0}'.format(response.text.encode("utf-8")))
             raise Exception('unable to update settings')
-
 
     def prepare_storage(self):
         app_storage_dir = storage.init_storage(APP_NAME, USER_NAME)

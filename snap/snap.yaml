@@ -28,6 +28,10 @@ apps:
     reload-command: bin/service.nginx.sh reload
     start-timeout: 2000s
     after: [server]
+
+  storage-change:
+    command: hooks/storage-change
+
 confinement: strict
 description: Rocket.Chat
 grade: stable
