@@ -57,13 +57,10 @@ def rocketcaht_session_domain(app_domain, device_host):
     return session
 
 
-def test_start(module_setup, device, device_host, app, log_dir):
-    shutil.rmtree(log_dir, ignore_errors=True)
-    os.mkdir(log_dir)
-    add_host_alias(app, device_host)
-    print(check_output('date', shell=True))
-    run_ssh(device_host, 'date')
-
+def test_start(module_setup, device, app, domain, device_host, data_dir):
+    device.run_ssh('date', retries=100, throw=True)
+    add_host_alias_by_ip(app, domain, device_host)
+    
 
 def test_activate_device(device):
     response = device.activate()
@@ -91,3 +88,4 @@ def test_remove(device_session, device_host):
 
 def test_reinstall(app_archive_path, device_host, device_password):
     local_install(device_host, device_password, app_archive_path)
+
