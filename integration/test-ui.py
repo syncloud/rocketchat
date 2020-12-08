@@ -59,65 +59,7 @@ def test_login(driver, app_domain, device_user, device_password, ui_mode, screen
 
     password.send_keys(Keys.RETURN)
     screenshots(driver, screenshot_dir, 'login_progress-' + ui_mode)
-    time.sleep(20)
-    screenshots(driver, screenshot_dir, 'setup-' + ui_mode)
      
-     
-def test_setup(driver, ui_mode, screenshot_dir):
-
-    screenshots(driver, screenshot_dir, 'setup-wizard-debug-Organization_Type-' + ui_mode)
-    select = Select(driver.find_element_by_name('Organization_Type'))
-    select.select_by_visible_text('Community')
-    
-    time.sleep(2)
-    screenshots(driver, screenshot_dir, 'setup-wizard-debug-Organization_Name-' + ui_mode)
-    anme = driver.find_element_by_name('Organization_Name')
-    anme.send_keys('Syncloud')
-
-    time.sleep(2)
-    screenshots(driver, screenshot_dir, 'setup-wizard-debug-Industry-' + ui_mode)
-    select = Select(driver.find_element_by_name('Industry'))
-    select.select_by_visible_text('Technology Provider')
-
-    time.sleep(2)
-    screenshots(driver, screenshot_dir, 'setup-wizard-Size-' + ui_mode)
-    select = Select(driver.find_element_by_name('Size'))
-    select.select_by_visible_text('4000 or more people')
-
-    time.sleep(2)
-    screenshots(driver, screenshot_dir, 'setup-wizard-debug-Country-' + ui_mode)
-    select = Select(driver.find_element_by_name('Country'))
-    select.select_by_visible_text('United Kingdom')
-
-    time.sleep(2)
-    screenshots(driver, screenshot_dir, 'setup-wizard-debug-Website-' + ui_mode)
-    website = driver.find_element_by_name('Website')
-    website.send_keys('syncloud.org')
-
-    time.sleep(2)
-    screenshots(driver, screenshot_dir, 'setup-wizard-step-1-' + ui_mode)
-    driver.find_element_by_css_selector('.setup-wizard-forms__footer-next').click()
-    time.sleep(10)
-
-    screenshots(driver, screenshot_dir, 'setup-wizard-debug-site-name-' + ui_mode)
-    site = driver.find_element_by_name('Site_Name')
-    site.send_keys('Syncloud')
-
-    time.sleep(2)
-    screenshots(driver, screenshot_dir, 'setup-wizard-debug-Server_Type-' + ui_mode)
-    select = Select(driver.find_element_by_name('Server_Type'))
-    select.select_by_visible_text('Private Team')
-    
-    screenshots(driver, screenshot_dir, 'setup-wizard-step-2-' + ui_mode)
-
-    driver.find_element_by_css_selector('.setup-wizard-forms__footer-next').click()
-    time.sleep(10)
-
-    screenshots(driver, screenshot_dir, 'setup-wizard-step-3-' + ui_mode)
-    driver.find_element_by_css_selector('.setup-wizard-forms__content-register-radio-text').click()
-    driver.find_element_by_css_selector('.setup-wizard-forms__footer-next').click()
-    time.sleep(10)
-
 
 def test_welcome(driver, ui_mode, screenshot_dir):
     
