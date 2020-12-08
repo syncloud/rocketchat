@@ -26,15 +26,15 @@ mkdir -p ${BUILD_DIR}
 
 cd ${DIR}/build
 
-wget --progress=dot:giga ${DOWNLOAD_URL}/nginx-${ARCH}.tar.gz
+wget -c --progress=dot:giga ${DOWNLOAD_URL}/nginx-${ARCH}.tar.gz
 tar xf nginx-${ARCH}.tar.gz
 mv nginx ${BUILD_DIR}/
 
-wget --progress=dot:giga ${DOWNLOAD_URL}/mongodb-4-${ARCH}.tar.gz
+wget -c --progress=dot:giga ${DOWNLOAD_URL}/mongodb-4-${ARCH}.tar.gz
 tar xf mongodb-4-${ARCH}.tar.gz
 mv mongodb-4 ${BUILD_DIR}/mongodb
 
-wget --progress=dot:giga ${DOWNLOAD_URL}/python-${ARCH}.tar.gz
+wget -c --progress=dot:giga ${DOWNLOAD_URL}/python-${ARCH}.tar.gz
 tar xf python-${ARCH}.tar.gz
 mv python ${BUILD_DIR}/
 
