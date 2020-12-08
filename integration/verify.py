@@ -6,7 +6,7 @@ import pytest
 import requests
 from syncloudlib.http import wait_for_rest
 from syncloudlib.integration.hosts import add_host_alias_by_ip
-from syncloudlib.integration.installer import local_install
+from syncloudlib.integration.installer import local_install, wait_for_installer
 
 DIR = dirname(__file__)
 TMP_DIR = '/tmp/syncloud'
@@ -70,6 +70,7 @@ def test_remove(device_session, device_host):
     response = device_session.get('https://{0}/rest/remove?app_id=rocketchat'.format(device_host),
                                   allow_redirects=False, verify=False)
     assert response.status_code == 200, response.text
+    wait_for_installer(device_session, device_host)
 
 
 def test_reinstall(app_archive_path, device_host, device_password):
