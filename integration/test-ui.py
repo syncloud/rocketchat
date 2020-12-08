@@ -61,13 +61,6 @@ def test_login(driver, app_domain, device_user, device_password, ui_mode, screen
     screenshots(driver, screenshot_dir, 'login_progress-' + ui_mode)
      
 
-def test_welcome(driver, ui_mode, screenshot_dir):
-    
-    screenshots(driver, screenshot_dir, 'welcome-' + ui_mode)
-    driver.find_element_by_css_selector('.js-finish').click()
-    time.sleep(30)
-
-
 def test_main(driver, ui_mode, screenshot_dir):
     screenshots(driver, screenshot_dir, 'main-' + ui_mode)
 
