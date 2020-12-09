@@ -86,6 +86,9 @@ def test_profile(driver, app_domain, device_password, ui_mode, screenshot_dir):
 
     time.sleep(2)
     
+    confirm_password = driver.find_element_by_xpath("//div/label[text()='Confirm your password']/following-sibling::span/label/input")
+    confirm_password.send_keys(device_password)
+
     screenshots(driver, screenshot_dir, 'profile-new-name-' + ui_mode)
 
     save = driver.find_element_by_name('send')
@@ -93,10 +96,7 @@ def test_profile(driver, app_domain, device_password, ui_mode, screenshot_dir):
 
     screenshots(driver, screenshot_dir, 'profile-new-name-confirm-' + ui_mode)
 
-    confirm_password = driver.find_element_by_css_selector('input[name="name"][type="password"]')
-    confirm_password.send_keys(device_password)
-    
-    confirm_save = driver.find_element_by_css_selector('input[value="Save"]')
+    confirm_save = driver.find_element_by_xpath("//button[text()='Save changes']")
     confirm_save.click()
     
     time.sleep(10)
