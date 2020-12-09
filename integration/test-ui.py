@@ -91,13 +91,8 @@ def test_profile(driver, app_domain, device_password, ui_mode, screenshot_dir):
 
     screenshots(driver, screenshot_dir, 'profile-new-name-' + ui_mode)
 
-    save = driver.find_element_by_name('send')
+    save = driver.find_element_by_xpath("//button[text()='Save changes']")
     save.click()
-
-    screenshots(driver, screenshot_dir, 'profile-new-name-confirm-' + ui_mode)
-
-    confirm_save = driver.find_element_by_xpath("//button[text()='Save changes']")
-    confirm_save.click()
     
     time.sleep(10)
 
