@@ -73,19 +73,25 @@ def test_profile(driver, app_domain, device_password, ui_mode, screenshot_dir):
     profile_file = driver.find_element_by_css_selector('input[type="file"]')
     profile_file.send_keys(join(DIR, 'images', 'profile.jpeg'))
      
-    username = driver.find_element_by_id('realname')
+    username = driver.find_element_by_xpath("//div/label[text()='Name']/following-sibling::span/input")
     username.send_keys('Syncloud user')
     
-    email = driver.find_element_by_name('email')
+    email = driver.find_element_by_xpath("//div/label[text()='Email']/following-sibling::span/label/input")
     email.clear()
     email.send_keys('test@gmail.com')
-   
+
+    password = driver.find_element_by_xpath("//div/label[text()='Password']/following-sibling::span/label/input")
+    password.clear()
+    password.send_keys(device_password)
+
     time.sleep(2)
     
     screenshots(driver, screenshot_dir, 'profile-new-name-' + ui_mode)
 
     save = driver.find_element_by_name('send')
     save.click()
+
+    screenshots(driver, screenshot_dir, 'profile-new-name-confirm-' + ui_mode)
 
     confirm_password = driver.find_element_by_css_selector('input[name="name"][type="password"]')
     confirm_password.send_keys(device_password)
@@ -102,5 +108,3 @@ def test_channel(driver, app_domain, ui_mode, screenshot_dir):
     driver.get("https://{0}/channel/general".format(app_domain))
     time.sleep(10)
     screenshots(driver, screenshot_dir, 'channel-' + ui_mode)
-
-    
