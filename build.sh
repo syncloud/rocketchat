@@ -55,7 +55,7 @@ ${BUILD_DIR}/nodejs/bin/npm help
 
 ${BUILD_DIR}/python/bin/pip install -r ${DIR}/requirements.txt
 
-${BUILD_DIR}/mongodb/bin/mongod --version
+${BUILD_DIR}/mongodb/bin/mongod.sh --version
 
 rm -rf ${BUILD_DIR}/lib/node_modules
 
