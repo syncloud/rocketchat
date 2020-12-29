@@ -13,7 +13,7 @@ export LD_LIBRARY_PATH=${DIR}/mongodb/lib
 
 case $1 in
 start)
-    bash -c "for i in \$(seq 1 30); do ${DIR}/mongodb/bin/mongo localhost/rocketchat ${SNAP_COMMON}/config/mongo.configure.js && s=\$? && break || s=\$?; echo \"Tried \$i times. Waiting 5 secs...\"; sleep 5; done; (exit \$s)"
+    bash -c "for i in \$(seq 1 30); do ${DIR}/mongodb/bin/mongo.sh localhost/rocketchat ${SNAP_COMMON}/config/mongo.configure.js && s=\$? && break || s=\$?; echo \"Tried \$i times. Waiting 5 secs...\"; sleep 5; done; (exit \$s)"
 
     echo "MONGO_URL: $MONGO_URL" | logger -t rocketchat
     echo "MONGO_OPLOG_URL: $MONGO_OPLOG_URL" | logger -t rocketchat
