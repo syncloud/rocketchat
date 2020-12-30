@@ -80,14 +80,14 @@ def test_profile(driver, app_domain, device_password, ui_mode, screenshot_dir):
     email.clear()
     email.send_keys('test@gmail.com')
 
-    password = driver.find_element_by_xpath("//div/label[text()='Password']/following-sibling::span/label/input")
-    password.clear()
-    password.send_keys(device_password)
+#    password = driver.find_element_by_xpath("//div/label[text()='Password']/following-sibling::span/label/input")
+#    password.clear()
+#    password.send_keys(device_password)
 
-    time.sleep(2)
+#    time.sleep(2)
     
-    confirm_password = driver.find_element_by_xpath("//div/label[text()='Confirm your password']/following-sibling::span/label/input")
-    confirm_password.send_keys(device_password)
+#    confirm_password = driver.find_element_by_xpath("//div/label[text()='Confirm your password']/following-sibling::span/label/input")
+#    confirm_password.send_keys(device_password)
 
     screenshots(driver, screenshot_dir, 'profile-new-name-' + ui_mode)
 
