@@ -9,8 +9,6 @@ fi
 
 . $SNAP_COMMON/config/rocketchat.env
 
-export LD_LIBRARY_PATH=${DIR}/mongodb/lib
-
 case $1 in
 start)
     started=0
