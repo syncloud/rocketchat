@@ -59,7 +59,7 @@ class Installer:
         self.prepare_storage()
 
     def configure(self):
-        wait_for_rest(requests.session(), REST_URL, 200)
+        wait_for_rest(requests.session(), REST_URL, 200, 100)
 
         if path.isfile(self.install_file):
             self._upgrade()
