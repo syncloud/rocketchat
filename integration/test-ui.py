@@ -63,7 +63,7 @@ def test_profile(driver, app_domain, device_password, ui_mode, screenshot_dir):
     driver.get("https://{0}/account/profile".format(app_domain))
     screenshots(driver, screenshot_dir, 'profile-' + ui_mode)
     profile_file = 'input[type="file"]'
-    wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.CSS, profile_file)))
+    wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.CSS_SELECTOR, profile_file)))
     profile_file = driver.find_element_by_css_selector(profile_file)
     profile_file.send_keys(join(DIR, 'images', 'profile.jpeg'))
      
