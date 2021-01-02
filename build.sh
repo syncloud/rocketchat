@@ -17,6 +17,7 @@ COIN_CACHE_DIR=${DIR}/coin.cache
 ARCH=$(uname -m)
 SNAP_ARCH=$(dpkg --print-architecture)
 VERSION=$2
+MONGO_VERSION=3.6
 NODE_VERSION=12.18.4
 DOWNLOAD_URL=https://github.com/syncloud/3rdparty/releases/download/1
 
@@ -30,9 +31,9 @@ wget -c --progress=dot:giga ${DOWNLOAD_URL}/nginx-${ARCH}.tar.gz
 tar xf nginx-${ARCH}.tar.gz
 mv nginx ${BUILD_DIR}/
 
-wget -c --progress=dot:giga ${DOWNLOAD_URL}/mongodb-4-${ARCH}.tar.gz
-tar xf mongodb-4-${ARCH}.tar.gz
-mv mongodb-4 ${BUILD_DIR}/mongodb
+wget -c --progress=dot:giga ${DOWNLOAD_URL}/mongodb-${MONGO_VERSION}-${ARCH}.tar.gz
+tar xf mongodb-${MONGO_VERSION}-${ARCH}.tar.gz
+mv mongodb-${MONGO_VERSION} ${BUILD_DIR}/mongodb
 
 wget -c --progress=dot:giga ${DOWNLOAD_URL}/python-${ARCH}.tar.gz
 tar xf python-${ARCH}.tar.gz
