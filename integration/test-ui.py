@@ -1,19 +1,14 @@
-import os
-from os.path import dirname, join, exists
 import time
-import pytest
+from os.path import dirname, join
 from subprocess import check_output
-from selenium import webdriver
+
+import pytest
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support.ui import Select
 from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.screenshots import screenshots
-
 
 DIR = dirname(__file__)
 TMP_DIR = '/tmp/syncloud/ui'
