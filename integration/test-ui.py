@@ -1,5 +1,4 @@
 import os
-import shutil
 from os.path import dirname, join, exists
 import time
 import pytest
@@ -33,7 +32,7 @@ def module_setup(request, device, artifact_dir, ui_mode):
     request.addfinalizer(module_teardown)
 
 
-def test_start(app, device_host):
+def test_start(app, device_host, module_setup):
     add_host_alias(app, device_host)
 
 
@@ -67,10 +66,10 @@ def test_main(driver, ui_mode, screenshot_dir):
 
 def test_profile(driver, app_domain, device_password, ui_mode, screenshot_dir):
     driver.get("https://{0}/account/profile".format(app_domain))
-    time.sleep(10)
     screenshots(driver, screenshot_dir, 'profile-' + ui_mode)
-
-    profile_file = driver.find_element_by_css_selector('input[type="file"]')
+    profile_file = 'input[type="file"]'
+    wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.CSS, profile_file)))
+    profile_file = driver.find_element_by_css_selector(profile_file)
     profile_file.send_keys(join(DIR, 'images', 'profile.jpeg'))
      
     username = driver.find_element_by_xpath("//div/label[text()='Name']/following-sibling::span/input")
@@ -103,3 +102,12 @@ def test_channel(driver, app_domain, ui_mode, screenshot_dir):
     driver.get("https://{0}/channel/general".format(app_domain))
     time.sleep(10)
     screenshots(driver, screenshot_dir, 'channel-' + ui_mode)
+
+
+def wait_or_screenshot(driver, ui_mode, screenshot_dir, method):
+    wait_driver = WebDriverWait(driver, 30)
+    try:
+        wait_driver.until(method)
+    except Exception as e:
+        screenshots(driver, screenshot_dir, 'exception-' + ui_mode)
+        raise e
