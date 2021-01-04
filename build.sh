@@ -17,7 +17,7 @@ COIN_CACHE_DIR=${DIR}/coin.cache
 ARCH=$(uname -m)
 SNAP_ARCH=$(dpkg --print-architecture)
 VERSION=$2
-MONGO_VERSION=3.6
+MONGO_VERSION=3.4
 NODE_VERSION=12.18.4
 DOWNLOAD_URL=https://github.com/syncloud/3rdparty/releases/download/1
 
