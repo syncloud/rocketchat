@@ -13,57 +13,40 @@ export TMP=/tmp
 
 NAME=$1
 ROCKETCHAT_VERSION=3.9.0
-COIN_CACHE_DIR=${DIR}/coin.cache
+#COIN_CACHE_DIR=${DIR}/coin.cache
 ARCH=$(uname -m)
-SNAP_ARCH=$(dpkg --print-architecture)
+#SNAP_ARCH=$(dpkg --print-architecture)
 VERSION=$2
-MONGO_VERSION=3.4
-NODE_VERSION=12.18.4
-DOWNLOAD_URL=https://github.com/syncloud/3rdparty/releases/download/1
+#NODE_VERSION=12.18.4
+DOWNLOAD_URL=https://github.com/syncloud/3rdparty/releases/download/
 
-rm -rf ${DIR}/build
 BUILD_DIR=${DIR}/build/${NAME}
-mkdir -p ${BUILD_DIR}
 
 cd ${DIR}/build
 
-wget -c --progress=dot:giga ${DOWNLOAD_URL}/nginx-${ARCH}.tar.gz
+wget -c --progress=dot:giga ${DOWNLOAD_URL}/nginx/nginx-${ARCH}.tar.gz
 tar xf nginx-${ARCH}.tar.gz
 mv nginx ${BUILD_DIR}/
 
-wget -c --progress=dot:giga ${DOWNLOAD_URL}/mongodb-${MONGO_VERSION}-${ARCH}.tar.gz
-tar xf mongodb-${MONGO_VERSION}-${ARCH}.tar.gz
-mv mongodb-${MONGO_VERSION} ${BUILD_DIR}/mongodb
+#NODE_ARCH=${ARCH}
+#if [[ ${ARCH} == "x86_64" ]]; then
+#    NODE_ARCH=x64
+#fi
+#NODE_ARCHIVE=node-v${NODE_VERSION}-linux-${NODE_ARCH}
+#wget https://nodejs.org/dist/v${NODE_VERSION}/${NODE_ARCHIVE}.tar.gz \
+#    --progress dot:giga
+#tar xzf ${NODE_ARCHIVE}.tar.gz
+#mv ${NODE_ARCHIVE} ${BUILD_DIR}/nodejs
 
-wget -c --progress=dot:giga ${DOWNLOAD_URL}/python-${ARCH}.tar.gz
-tar xf python-${ARCH}.tar.gz
-mv python ${BUILD_DIR}/
-
-NODE_ARCH=${ARCH}
-if [[ ${ARCH} == "x86_64" ]]; then
-    NODE_ARCH=x64
-fi
-NODE_ARCHIVE=node-v${NODE_VERSION}-linux-${NODE_ARCH}
-wget https://nodejs.org/dist/v${NODE_VERSION}/${NODE_ARCHIVE}.tar.gz \
-    --progress dot:giga
-tar xzf ${NODE_ARCHIVE}.tar.gz
-mv ${NODE_ARCHIVE} ${BUILD_DIR}/nodejs
-
-mv ${BUILD_DIR}/nodejs/bin/npm ${BUILD_DIR}/nodejs/bin/npm.js
-cp ${DIR}/npm/npm ${BUILD_DIR}/nodejs/bin/npm
+#mv ${BUILD_DIR}/nodejs/bin/npm ${BUILD_DIR}/nodejs/bin/npm.js
+#cp ${DIR}/npm/npm ${BUILD_DIR}/nodejs/bin/npm
 
 ${BUILD_DIR}/nodejs/bin/npm help
-
-${BUILD_DIR}/python/bin/pip install -r ${DIR}/requirements.txt
 
 ${BUILD_DIR}/mongodb/bin/mongod.sh --version
 ${BUILD_DIR}/mongodb/bin/mongo.sh --version
 
 rm -rf ${BUILD_DIR}/lib/node_modules
-
-#export PATH=${BUILD_DIR}/phantomjs/bin:$PATH
-#export LD_LIBRARY_PATH=${BUILD_DIR}/phantomjs/lib
-#echo "version: \"$(phantomjs --version)\""
 
 cd ${DIR}/build
 wget https://cdn-download.rocket.chat/build/rocket.chat-${ROCKETCHAT_VERSION}.tgz -O ${DIR}/build/rocketchat.tar.gz --progress dot:giga
@@ -89,19 +72,7 @@ ls -la ${BUILD_DIR}/bundle/programs
 ls -la ${BUILD_DIR}/bundle/programs/server
 export USER=$(whoami)
 
-#cd ${BUILD_DIR}/bundle/programs/server
-#git clone git://github.com/Medium/phantomjs.git npm-phantomjs
-#cd npm-phantomjs
-#git checkout v1.9.20
-#cp $DIR/npm/phantomjs/install.js .
-#sed -i "s/exports.version.*/exports.version = '1.9.20'/g" lib/phantomjs.js
-#${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --production -g
-
 cd ${BUILD_DIR}/bundle/programs/server
-#SHARP_DIST_BASE_URL="http://artifact.syncloud.org/3rdparty/" ${BUILD_DIR}/nodejs/bin/npm install sharp@0.21.0 --unsafe-perm --production -g
-#sed -i '/"sharp": "^0.21.0"/d' package.json
-#rm -rf npm/node_modules/sharp/vendor
-#SHARP_DIST_BASE_URL="http://artifact.syncloud.org/3rdparty/" ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --production
 ${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --production
 
 mkdir ${DIR}/build/${NAME}/META
