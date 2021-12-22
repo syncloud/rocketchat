@@ -19,6 +19,6 @@ rm -rf nodejs.tar
 cp ${DIR}/node.sh ${BUILD_DIR}/bin/
 cp ${DIR}/npm.sh ${BUILD_DIR}/bin/
 ${BUILD_DIR}/bin/node.sh --help
-${BUILD_DIR}/bin/npm.sh --help
+${BUILD_DIR}/bin/npm.sh --help || true
 ls -la ${BUILD_DIR}/bin
 rm -rf ${BUILD_DIR}/usr/src
