@@ -73,7 +73,7 @@ ls -la ${BUILD_DIR}/bundle/programs/server
 export USER=$(whoami)
 
 cd ${BUILD_DIR}/bundle/programs/server
-${BUILD_DIR}/nodejs/bin/npm install --unsafe-perm --production
+${BUILD_DIR}/nodejs/usr/local/bin/npm install --unsafe-perm --production
 
 mkdir ${DIR}/build/${NAME}/META
 echo ${NAME} >> ${DIR}/build/${NAME}/META/app

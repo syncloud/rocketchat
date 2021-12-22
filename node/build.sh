@@ -17,6 +17,6 @@ docker export nodejs -o nodejs.tar
 tar xf nodejs.tar
 rm -rf nodejs.tar
 cp ${DIR}/node.sh ${BUILD_DIR}/bin/
-sed 's|#!/.*|#!/snap/rocketchat/current/nodejs/bin/node.sh|g' /usr/local/bin/npm
+sed 's|#!/.*|#!/snap/rocketchat/current/nodejs/bin/node.sh|g' -i ${BUILD_DIR}/usr/local/bin/npm
 ls -la ${BUILD_DIR}/bin
 rm -rf ${BUILD_DIR}/usr/src
