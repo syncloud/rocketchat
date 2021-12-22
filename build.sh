@@ -8,9 +8,6 @@ if [[ -z "$2" ]]; then
     exit 1
 fi
 
-export TMPDIR=/tmp
-export TMP=/tmp
-
 NAME=$1
 ROCKETCHAT_VERSION=3.9.0
 #COIN_CACHE_DIR=${DIR}/coin.cache
@@ -19,10 +16,12 @@ ARCH=$(uname -m)
 VERSION=$2
 #NODE_VERSION=12.18.4
 DOWNLOAD_URL=https://github.com/syncloud/3rdparty/releases/download/
-
 BUILD_DIR=${DIR}/build/${NAME}
 
 cd ${DIR}/build
+
+apt update
+apt -y install wget squashfs-tools dpkg-dev libltdl7
 
 wget -c --progress=dot:giga ${DOWNLOAD_URL}/nginx/nginx-${ARCH}.tar.gz
 tar xf nginx-${ARCH}.tar.gz
