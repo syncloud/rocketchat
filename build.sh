@@ -10,11 +10,8 @@ fi
 
 NAME=$1
 ROCKETCHAT_VERSION=3.9.0
-#COIN_CACHE_DIR=${DIR}/coin.cache
 ARCH=$(uname -m)
-#SNAP_ARCH=$(dpkg --print-architecture)
 VERSION=$2
-#NODE_VERSION=12.18.4
 DOWNLOAD_URL=https://github.com/syncloud/3rdparty/releases/download/
 BUILD_DIR=${DIR}/build/${NAME}
 
@@ -26,24 +23,6 @@ apt -y install wget squashfs-tools dpkg-dev libltdl7
 wget -c --progress=dot:giga ${DOWNLOAD_URL}/nginx/nginx-${ARCH}.tar.gz
 tar xf nginx-${ARCH}.tar.gz
 mv nginx ${BUILD_DIR}/
-
-#NODE_ARCH=${ARCH}
-#if [[ ${ARCH} == "x86_64" ]]; then
-#    NODE_ARCH=x64
-#fi
-#NODE_ARCHIVE=node-v${NODE_VERSION}-linux-${NODE_ARCH}
-#wget https://nodejs.org/dist/v${NODE_VERSION}/${NODE_ARCHIVE}.tar.gz \
-#    --progress dot:giga
-#tar xzf ${NODE_ARCHIVE}.tar.gz
-#mv ${NODE_ARCHIVE} ${BUILD_DIR}/nodejs
-
-#mv ${BUILD_DIR}/nodejs/bin/npm ${BUILD_DIR}/nodejs/bin/npm.js
-#cp ${DIR}/npm/npm ${BUILD_DIR}/nodejs/bin/npm
-
-${BUILD_DIR}/nodejs/bin/npm help
-
-${BUILD_DIR}/mongodb/bin/mongod.sh --version
-${BUILD_DIR}/mongodb/bin/mongo.sh --version
 
 rm -rf ${BUILD_DIR}/lib/node_modules
 
