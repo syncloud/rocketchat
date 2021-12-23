@@ -1,2 +1,2 @@
-FROM mongo:5.0.5
+FROM mongo:4.4.10
 RUN rm -rf /var/lib/apt/lists/*
