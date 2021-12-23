@@ -11,6 +11,9 @@ fi
 NAME=$1
 BUILD_DIR=${DIR}/build/${NAME}
 
+apt update
+apt -y install python
+
 cd ${DIR}
 cp -r ${DIR}/bin ${BUILD_DIR}
 cp -r ${DIR}/config ${BUILD_DIR}/config.templates
