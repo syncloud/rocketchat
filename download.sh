@@ -17,7 +17,7 @@ BUILD_DIR=${DIR}/build/${NAME}
 cd ${DIR}/build
 
 apt update
-apt -y install wget
+apt -y install wget patch
 
 wget -c --progress=dot:giga ${DOWNLOAD_URL}/nginx/nginx-${ARCH}.tar.gz
 tar xf nginx-${ARCH}.tar.gz
