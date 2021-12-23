@@ -12,7 +12,7 @@ NAME=$1
 BUILD_DIR=${DIR}/build/${NAME}
 
 apt update
-apt -y install python
+apt -y install python build-essential
 
 cd ${DIR}
 cp -r ${DIR}/bin ${BUILD_DIR}
