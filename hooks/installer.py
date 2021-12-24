@@ -42,7 +42,7 @@ class Installer:
             'app_dir': self.app_dir,
             'app_data_dir': self.app_data_dir,
             'url': self.app_url,
-            'web_secret': unicode(uuid.uuid4().hex),
+            'web_secret': uuid.uuid4().hex,
             'port': PORT,
             'mongodb_port': MONGODB_PORT,
             'mongodb_socket_file': mongodb_socket_file,
