@@ -13,7 +13,7 @@ function wait_for_server() {
     echo "waiting for server"
     set +e
     for i in $(seq 1 30); do
-      echo > /dev/tcp/localhost/'$PORT'
+      echo > /dev/tcp/localhost/$PORT
       if [[ $? == 0 ]]; then
         started=1
         break
