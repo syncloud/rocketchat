@@ -4,8 +4,7 @@ from subprocess import check_output
 
 import pytest
 import requests
-from syncloudlib.http import wait_for_rest
-from syncloudlib.integration.hosts import add_host_alias_by_ip
+from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.installer import local_install, wait_for_installer
 
 DIR = dirname(__file__)
@@ -40,19 +39,18 @@ def module_setup(device, request, data_dir, platform_data_dir, app_dir, log_dir,
 
 
 def test_start(module_setup, device, app, domain, device_host):
+    add_host_alias(app, device_host, domain)
     device.run_ssh('date', retries=100, throw=True)
-    add_host_alias_by_ip(app, domain, device_host)
 
 
 def test_activate_device(device):
-    response = device.activate()
+    response = device.activate_custom()
     assert response.status_code == 200, response.text
 
 
 def test_install(app_archive_path, device_host, app_domain, device_password):
     local_install(device_host, device_password, app_archive_path)
-    wait_for_rest(requests.session(), 'https://{0}/'.format(app_domain), 200, 500)
-
+    
 
 def test_mongo_config(device, app_dir, data_dir):
     device.scp_to_device('{0}/mongodb.config.dump.js'.format(DIR), '/')
@@ -66,11 +64,9 @@ def test_storage_change(device, app_dir, data_dir):
                    throw=False)
 
 
-def test_remove(device_session, device_host):
-    response = device_session.get('https://{0}/rest/remove?app_id=rocketchat'.format(device_host),
-                                  allow_redirects=False, verify=False)
+def test_remove(device, app):
+    response = device.app_remove(app)
     assert response.status_code == 200, response.text
-    wait_for_installer(device_session, device_host)
 
 
 def test_reinstall(app_archive_path, device_host, device_password):
