@@ -32,7 +32,9 @@ class Installer:
     
         linux.useradd(USER_NAME)
 
-        fs.makepath(join(self.app_data_dir, 'log'))
+        log_dir = join(self.app_data_dir, 'log')
+        self.log.info('creating log dir: {0}'.format(log_dir))
+        fs.makepath(log_dir)
         fs.makepath(join(self.app_data_dir, 'nginx'))
         fs.makepath(join(self.app_data_dir, 'mongodb'))
         mongodb_socket_file = '{0}/mongodb-{1}.sock'.format(self.app_data_dir, MONGODB_PORT)
