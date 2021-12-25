@@ -16,6 +16,7 @@ function wait_for_server() {
     for i in $(seq 1 30); do
       echo > /dev/tcp/localhost/$PORT
       if [[ $? == 0 ]]; then
+        echo "started"
         started=1
         break
       fi
@@ -24,6 +25,7 @@ function wait_for_server() {
     done
     set -e
     if [[ $started == 0 ]]; then
+        echo "failed to start"
         exit 1
     fi
 }
