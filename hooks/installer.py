@@ -78,7 +78,7 @@ class Installer:
 
     def _install(self):
         self.log.info('install')
-        password = unicode(uuid.uuid4().hex)
+        password = uuid.uuid4().hex
         response = requests.post("{0}/users.register".format(REST_URL),
                                  json={
                                      "username": "installer",
