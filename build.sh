@@ -29,4 +29,5 @@ ls -la ${BUILD_DIR}/bundle/programs/server
 export USER=$(whoami)
 
 cd ${BUILD_DIR}/bundle/programs/server
+#npm install sharp
 npm install --unsafe-perm --production
