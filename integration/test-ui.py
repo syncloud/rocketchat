@@ -52,7 +52,7 @@ def test_main(selenium):
 
 def test_profile(selenium, app_domain):
     selenium.driver.get("https://{0}/account/profile".format(app_domain))
-    app_domain.screenshot('profile')
+    selenium.screenshot('profile')
     profile_file = 'input[type="file"]'
     # wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.CSS_SELECTOR, profile_file)))
     profile_file = selenium.find_by_css(profile_file)
