@@ -19,7 +19,7 @@ cd vips-*
 ./configure
 make
 make install
-ldconfig
+cp /usr/local/lib/libvips-cpp.so* $BUILD_DIR/nodejs/usr/lib/*-linux-gnu*/
 
 cd ${DIR}
 cp -r ${DIR}/bin ${BUILD_DIR}
