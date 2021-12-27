@@ -12,7 +12,15 @@ NAME=$1
 BUILD_DIR=${DIR}/build/${NAME}
 
 apt update
-apt -y install python build-essential libvips-dev
+apt -y install python build-essential pkg-config glib2.0-dev libexpat1-dev
+
+cd $DIR/build
+tar xf vips-*
+cd vips-*
+./configure
+make
+make install
+ldconfig
 
 cd ${DIR}
 cp -r ${DIR}/bin ${BUILD_DIR}
