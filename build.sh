@@ -15,7 +15,6 @@ apt update
 apt -y install python build-essential pkg-config glib2.0-dev libexpat1-dev
 
 cd $DIR/build
-tar xf vips-*
 cd vips-*
 ./configure
 make
