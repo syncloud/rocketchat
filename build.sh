@@ -12,7 +12,7 @@ NAME=$1
 BUILD_DIR=${DIR}/build/${NAME}
 
 apt update
-apt -y install python build-essential pkg-config glib2.0-dev libexpat1-dev
+apt -y install python build-essential pkg-config glib2.0-dev libexpat1-dev libtool
 
 cd $DIR/build
 cd vips-*
