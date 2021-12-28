@@ -21,7 +21,11 @@ make
 make install
 cp /usr/local/lib/libvips*.so* $BUILD_DIR/nodejs/usr/lib/*-linux-gnu*/
 cp /usr/lib/*/libgobject*.so* $BUILD_DIR/nodejs/usr/lib/*-linux-gnu*/
-cp /usr/lib/*/libglib-*.so.0 $BUILD_DIR/nodejs/usr/lib/*-linux-gnu*/
+cp /lib/*/libglib-*.so* $BUILD_DIR/nodejs/usr/lib/*-linux-gnu*/
+cp /usr/lib/*/libgio-*.so* $BUILD_DIR/nodejs/usr/lib/*-linux-gnu*/
+cp /usr/lib/*/libgmodule-*.so* $BUILD_DIR/nodejs/usr/lib/*-linux-gnu*/
+cp /usr/lib/*/libgobject-*.so* $BUILD_DIR/nodejs/usr/lib/*-linux-gnu*/
+cp /usr/lib/*/libgthread-*.so* $BUILD_DIR/nodejs/usr/lib/*-linux-gnu*/
 
 cd ${DIR}
 cp -r ${DIR}/bin ${BUILD_DIR}
