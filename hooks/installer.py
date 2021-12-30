@@ -116,6 +116,8 @@ class Installer:
         self.update_setting('LDAP_Username_Field', 'cn', auth_token, user_id)
         self.update_setting('Accounts_RegistrationForm', 'Disabled', auth_token, user_id)
         self.update_setting('Accounts_TwoFactorAuthentication_Enabled', False, auth_token, user_id)
+        self.update_setting('Show_Setup_Wizard', 'completed' auth_token, user_id)
+
         self.update_setting('FileUpload_Storage_Type', 'FileSystem', auth_token, user_id)
         
         app_storage_dir = storage.init_storage(APP_NAME, USER_NAME)
