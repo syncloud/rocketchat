@@ -12,7 +12,7 @@ TMP_DIR = '/tmp/syncloud'
 
 
 @pytest.fixture(scope="session")
-def module_setup(device, request, data_dir, platform_data_dir, app_dir, log_dir, artifact_dir):
+def module_setup(device, request, data_dir, platform_data_dir, artifact_dir):
     def module_teardown():
         platform_log_dir = join(artifact_dir, 'platform_log')
         os.mkdir(platform_log_dir)
@@ -49,9 +49,18 @@ def test_activate_device(device):
     assert response.status_code == 200, response.text
 
 
-def test_install(app_archive_path, device_host, app_domain, device_password):
+def test_install(app_archive_path, device_host, device_password):
     local_install(device_host, device_password, app_archive_path)
     
+
+def test_remove(device, app):
+    response = device.app_remove(app)
+    assert response.status_code == 200, response.text
+
+
+def test_reinstall(app_archive_path, device_host, device_password):
+    local_install(device_host, device_password, app_archive_path)
+
 
 def test_mongo_config(device, app_dir, data_dir):
     device.scp_to_device('{0}/mongodb.config.dump.js'.format(DIR), '/')
@@ -63,12 +72,3 @@ def test_mongo_config(device, app_dir, data_dir):
 def test_storage_change(device, app_dir, data_dir):
     device.run_ssh('snap run rocketchat.storage-change > {1}/log/storage-change.log'.format(app_dir, data_dir),
                    throw=False)
-
-
-def test_remove(device, app):
-    response = device.app_remove(app)
-    assert response.status_code == 200, response.text
-
-
-def test_reinstall(app_archive_path, device_host, device_password):
-    local_install(device_host, device_password, app_archive_path)
