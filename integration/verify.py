@@ -28,6 +28,7 @@ def module_setup(device, request, data_dir, platform_data_dir, app_dir, log_dir,
         device.run_ssh('ls -la /snap > {0}/snap.ls.log'.format(TMP_DIR), throw=False)
         device.run_ssh('ls -la /snap/rocketchat > {0}/snap.rocketchat.ls.log'.format(TMP_DIR), throw=False)
         device.run_ssh('ls -la {0} > {1}/data.dir.ls.log'.format(data_dir, TMP_DIR), throw=False)
+        device.run_ssh('ls -la {0}/log > {1}/data.log.dir.ls.log'.format(data_dir, TMP_DIR), throw=False)
         device.run_ssh('df -h > {0}/df.log'.format(TMP_DIR), throw=False)
 
         device.scp_from_device('{0}/config/rocketchat.env'.format(data_dir), artifact_dir)
