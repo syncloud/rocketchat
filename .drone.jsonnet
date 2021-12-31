@@ -99,7 +99,7 @@ local build(arch, test_ui) = {
               "APP_ARCHIVE_PATH=$(realpath $(cat package.name))",
               "cd integration",
               "pip install -r requirements.txt",
-              "py.test -x -s verify.py --distro=jessie --domain=jessie.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + ".jessie.com --app=" + name
+              "py.test -x -s verify.py --device-user=testuser --distro=jessie --domain=jessie.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + ".jessie.com --app=" + name
             ]
         }] else []) + [
         {
@@ -110,7 +110,7 @@ local build(arch, test_ui) = {
               "APP_ARCHIVE_PATH=$(realpath $(cat package.name))",
               "cd integration",
               "pip install -r requirements.txt",
-              "py.test -x -s verify.py --distro=buster --domain=buster.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + ".buster.com --app=" + name
+              "py.test -x -s verify.py --device-user=testuser --distro=buster --domain=buster.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + ".buster.com --app=" + name
             ]
         }] + ( if test_ui then [
         {
@@ -120,7 +120,7 @@ local build(arch, test_ui) = {
               "apt-get update && apt-get install -y sshpass openssh-client libxml2-dev libxslt-dev build-essential libz-dev curl",
               "cd integration",
               "pip install -r requirements.txt",
-              "py.test -x -s test-ui.py --distro=jessie --ui-mode=desktop --domain=jessie.com --device-host=" + name + ".jessie.com --app=" + name + " --browser=" + browser,
+              "py.test -x -s test-ui.py --device-user=testuser --distro=jessie --ui-mode=desktop --domain=jessie.com --device-host=" + name + ".jessie.com --app=" + name + " --browser=" + browser,
             ],
             volumes: [{
                 name: "shm",
@@ -134,7 +134,7 @@ local build(arch, test_ui) = {
               "apt-get update && apt-get install -y sshpass openssh-client libxml2-dev libxslt-dev build-essential libz-dev curl",
               "cd integration",
               "pip install -r requirements.txt",
-              "py.test -x -s test-ui.py --distro=jessie --ui-mode=mobile --domain=jessie.com --device-host=" + name + ".jessie.com --app=" + name + " --browser=" + browser,
+              "py.test -x -s test-ui.py --device-user=testuser --distro=jessie --ui-mode=mobile --domain=jessie.com --device-host=" + name + ".jessie.com --app=" + name + " --browser=" + browser,
             ],
             volumes: [{
                 name: "shm",
@@ -148,7 +148,7 @@ local build(arch, test_ui) = {
               "apt-get update && apt-get install -y sshpass openssh-client libxml2-dev libxslt-dev build-essential libz-dev curl",
               "cd integration",
               "pip install -r requirements.txt",
-              "py.test -x -s test-ui.py --distro=buster --ui-mode=desktop --domain=buster.com --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
+              "py.test -x -s test-ui.py --device-user=testuser --distro=buster --ui-mode=desktop --domain=buster.com --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
             ],
             volumes: [{
                 name: "shm",
@@ -162,7 +162,7 @@ local build(arch, test_ui) = {
               "apt-get update && apt-get install -y sshpass openssh-client libxml2-dev libxslt-dev build-essential libz-dev curl",
               "cd integration",
               "pip install -r requirements.txt",
-              "py.test -x -s test-ui.py --distro=buster --ui-mode=mobile --domain=buster.com --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
+              "py.test -x -s test-ui.py --device-user=testuser --distro=buster --ui-mode=mobile --domain=buster.com --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
             ],
             volumes: [{
                 name: "shm",
