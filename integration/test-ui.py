@@ -66,15 +66,6 @@ def test_profile(selenium, app_domain):
     email.clear()
     email.send_keys('test@gmail.com')
 
-#    password = driver.find_element_by_xpath("//div/label[text()='Password']/following-sibling::span/label/input")
-#    password.clear()
-#    password.send_keys(device_password)
-
-#    time.sleep(2)
-    
-#    confirm_password = driver.find_element_by_xpath("//div/label[text()='Confirm your password']/following-sibling::span/label/input")
-#    confirm_password.send_keys(device_password)
-
     selenium.screenshot('profile-new-name')
 
     save = selenium.find_by_xpath("//button[text()='Save changes']")
@@ -86,6 +77,6 @@ def test_profile(selenium, app_domain):
 
 
 def test_channel(selenium, app_domain):
-    selenium.get("https://{0}/channel/general".format(app_domain))
+    selenium.driver.get("https://{0}/channel/general".format(app_domain))
     time.sleep(10)
     selenium.screenshot('channel')
