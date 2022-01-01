@@ -181,10 +181,9 @@ local build(arch, test_ui) = {
                 }
             },
             commands: [
-              "VERSION=$(cat version)",
               "PACKAGE=$(cat package.name)",
               "pip install syncloud-lib s3cmd",
-              "syncloud-upload.sh " + name + " $DRONE_BRANCH $VERSION $PACKAGE"
+              "syncloud-upload.sh $DRONE_BRANCH $PACKAGE"
             ]
         }] + [
         {
@@ -206,6 +205,25 @@ local build(arch, test_ui) = {
             },
             when: {
               status: [ "failure", "success" ]
+            }
+        },
+        {
+            name: "promote",
+            image: "python:3.8-slim-buster",
+            environment: {
+                AWS_ACCESS_KEY_ID: {
+                    from_secret: "AWS_ACCESS_KEY_ID"
+                },
+                AWS_SECRET_ACCESS_KEY: {
+                    from_secret: "AWS_SECRET_ACCESS_KEY"
+                }
+            },
+            commands: [
+              "pip install syncloud-lib s3cmd",
+              "syncloud-promote.sh " + name + " " + arch
+            ]
+            when: {
+              event: [ "promote" ]
             }
         }
     ],
