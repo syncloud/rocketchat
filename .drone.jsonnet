@@ -221,7 +221,7 @@ local build(arch, test_ui) = {
             commands: [
               "pip install syncloud-lib s3cmd",
               "syncloud-promote.sh " + name + " " + arch
-            ]
+            ],
             when: {
               event: [ "promote" ]
             }
