@@ -47,7 +47,7 @@ def test_login(selenium, device_user, device_password):
      
 
 def test_main(selenium):
-    # selenium.find_by_xpath("//button[text()='Use this username']").click()
+    selenium.find_by_xpath("//button[@title='Search']")
     selenium.screenshot('main')
 
 
