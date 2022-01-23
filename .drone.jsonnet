@@ -1,7 +1,7 @@
 local name = "rocketchat";
 local browser = "firefox";
 
-local build(arch, test_ui) = {
+local build(arch, test_ui) = [{
     kind: "pipeline",
     type: "docker",
     name: arch,
@@ -171,7 +171,7 @@ local build(arch, test_ui) = {
         } ] else [] ) +[
         {
             name: "upload",
-            image: "python:3.8-slim-buster",
+            image: "debian:buster-slim",
             environment: {
                 AWS_ACCESS_KEY_ID: {
                     from_secret: "AWS_ACCESS_KEY_ID"
@@ -182,10 +182,12 @@ local build(arch, test_ui) = {
             },
             commands: [
               "PACKAGE=$(cat package.name)",
-              "pip install syncloud-lib s3cmd",
-              "syncloud-upload.sh $DRONE_BRANCH $PACKAGE"
+              "apt update && apt install -y wget",
+              "wget https://github.com/syncloud/snapd/releases/download/1/syncloud-release-" + arch,
+              "chmod +x syncloud-release-*",
+              "./syncloud-release-* publish -f $PACKAGE -b $DRONE_BRANCH"
             ]
-        }] + [
+        },
         {
             name: "artifact",
             image: "appleboy/drone-scp:1.6.2",
@@ -227,6 +229,12 @@ local build(arch, test_ui) = {
             }
         }
     ],
+    trigger: {
+      event: [
+        "push",
+        "pull_request"
+      ]
+    },
     services: ( if arch == "amd64" then [
         {
             name: name + ".jessie.com",
@@ -297,9 +305,41 @@ local build(arch, test_ui) = {
             }
         }
     ]
-};
+},
+{
+     kind: "pipeline",
+     type: "docker",
+     name: "promote-" + arch,
+     platform: {
+         os: "linux",
+         arch: arch
+     },
+     steps: [
+     {
+             name: "promote",
+             image: "debian:buster-slim",
+             environment: {
+                 AWS_ACCESS_KEY_ID: {
+                     from_secret: "AWS_ACCESS_KEY_ID"
+                 },
+                 AWS_SECRET_ACCESS_KEY: {
+                     from_secret: "AWS_SECRET_ACCESS_KEY"
+                 }
+             },
+             commands: [
+               "apt update && apt install -y wget",
+               "wget https://github.com/syncloud/snapd/releases/download/1/syncloud-release-" + arch + " -O release --progress=dot:giga",
+               "chmod +x release",
+               "./release promote -n " + name + " -a $(dpkg --print-architecture)"
+             ]
+       }
+      ],
+      trigger: {
+       event: [
+         "promote"
+       ]
+     }
+ }];
 
-[
-    build("amd64", true),
-    build("arm64", false)
-]
+build("amd64", true) +
+build("arm64", false)
