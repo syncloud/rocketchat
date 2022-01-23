@@ -32,7 +32,9 @@ class Installer:
     
         linux.useradd(USER_NAME)
 
-        fs.makepath(join(self.app_data_dir, 'log'))
+        log_dir = join(self.app_data_dir, 'log')
+        self.log.info('creating log dir: {0}'.format(log_dir))
+        fs.makepath(log_dir)
         fs.makepath(join(self.app_data_dir, 'nginx'))
         fs.makepath(join(self.app_data_dir, 'mongodb'))
         mongodb_socket_file = '{0}/mongodb-{1}.sock'.format(self.app_data_dir, MONGODB_PORT)
@@ -42,7 +44,7 @@ class Installer:
             'app_dir': self.app_dir,
             'app_data_dir': self.app_data_dir,
             'url': self.app_url,
-            'web_secret': unicode(uuid.uuid4().hex),
+            'web_secret': uuid.uuid4().hex,
             'port': PORT,
             'mongodb_port': MONGODB_PORT,
             'mongodb_socket_file': mongodb_socket_file,
@@ -76,7 +78,7 @@ class Installer:
 
     def _install(self):
         self.log.info('install')
-        password = unicode(uuid.uuid4().hex)
+        password = uuid.uuid4().hex
         response = requests.post("{0}/users.register".format(REST_URL),
                                  json={
                                      "username": "installer",
@@ -103,6 +105,7 @@ class Installer:
         self.log.info('install account token extracted')
   
         self.update_setting('LDAP_Enable', True, auth_token, user_id)
+        self.update_setting('LDAP_Server_Type', '', auth_token, user_id)
         self.update_setting('LDAP_Host', 'localhost', auth_token, user_id)
         self.update_setting('LDAP_BaseDN', 'dc=syncloud,dc=org', auth_token, user_id)
         self.update_setting('LDAP_Authentication', True, auth_token, user_id)
@@ -112,7 +115,9 @@ class Installer:
         self.update_setting('LDAP_User_Search_Field', 'cn', auth_token, user_id)
         self.update_setting('LDAP_Username_Field', 'cn', auth_token, user_id)
         self.update_setting('Accounts_RegistrationForm', 'Disabled', auth_token, user_id)
-        self.update_setting('LDAP_Internal_Log_Level', 'debug', auth_token, user_id)
+        self.update_setting('Accounts_TwoFactorAuthentication_Enabled', False, auth_token, user_id)
+        self.update_setting('Show_Setup_Wizard', 'completed', auth_token, user_id)
+
         self.update_setting('FileUpload_Storage_Type', 'FileSystem', auth_token, user_id)
         
         app_storage_dir = storage.init_storage(APP_NAME, USER_NAME)

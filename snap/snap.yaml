@@ -7,7 +7,6 @@ apps:
     - network-bind
     restart-condition: always
     start-timeout: 2000s
-    before: [server]
   server:
     command: bin/service.server.sh start
     daemon: simple
@@ -16,7 +15,6 @@ apps:
     - network-bind
     restart-condition: always
     start-timeout: 2000s
-    after: [mongodb]
   nginx:
     command: bin/service.nginx.sh start
     daemon: simple
@@ -27,7 +25,6 @@ apps:
     stop-command: bin/service.nginx.sh stop
     reload-command: bin/service.nginx.sh reload
     start-timeout: 2000s
-    after: [server]
 
   storage-change:
     command: hooks/storage-change

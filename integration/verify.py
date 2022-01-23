@@ -4,8 +4,7 @@ from subprocess import check_output
 
 import pytest
 import requests
-from syncloudlib.http import wait_for_rest
-from syncloudlib.integration.hosts import add_host_alias_by_ip
+from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.installer import local_install, wait_for_installer
 
 DIR = dirname(__file__)
@@ -13,9 +12,9 @@ TMP_DIR = '/tmp/syncloud'
 
 
 @pytest.fixture(scope="session")
-def module_setup(device, request, data_dir, platform_data_dir, app_dir, log_dir, artifact_dir):
+def module_setup(device, request, data_dir, platform_data_dir, artifact_dir):
     def module_teardown():
-        platform_log_dir = join(log_dir, 'platform_log')
+        platform_log_dir = join(artifact_dir, 'platform_log')
         os.mkdir(platform_log_dir)
         device.scp_from_device('{0}/log/*'.format(platform_data_dir), platform_log_dir, throw=False)
         device.run_ssh('mkdir {0}'.format(TMP_DIR))
@@ -29,6 +28,7 @@ def module_setup(device, request, data_dir, platform_data_dir, app_dir, log_dir,
         device.run_ssh('ls -la /snap > {0}/snap.ls.log'.format(TMP_DIR), throw=False)
         device.run_ssh('ls -la /snap/rocketchat > {0}/snap.rocketchat.ls.log'.format(TMP_DIR), throw=False)
         device.run_ssh('ls -la {0} > {1}/data.dir.ls.log'.format(data_dir, TMP_DIR), throw=False)
+        device.run_ssh('ls -la {0}/log > {1}/data.log.dir.ls.log'.format(data_dir, TMP_DIR), throw=False)
         device.run_ssh('df -h > {0}/df.log'.format(TMP_DIR), throw=False)
 
         device.scp_from_device('{0}/config/rocketchat.env'.format(data_dir), artifact_dir)
@@ -40,38 +40,35 @@ def module_setup(device, request, data_dir, platform_data_dir, app_dir, log_dir,
 
 
 def test_start(module_setup, device, app, domain, device_host):
+    add_host_alias(app, device_host, domain)
     device.run_ssh('date', retries=100, throw=True)
-    add_host_alias_by_ip(app, domain, device_host)
 
 
 def test_activate_device(device):
-    response = device.activate()
+    response = device.activate_custom()
     assert response.status_code == 200, response.text
 
 
-def test_install(app_archive_path, device_host, app_domain, device_password):
+def test_install(app_archive_path, device_host, device_password):
     local_install(device_host, device_password, app_archive_path)
-    wait_for_rest(requests.session(), 'https://{0}/'.format(app_domain), 200, 500)
+    
+
+def test_remove(device, app):
+    response = device.app_remove(app)
+    assert response.status_code == 200, response.text
+
+
+def test_reinstall(app_archive_path, device_host, device_password):
+    local_install(device_host, device_password, app_archive_path)
 
 
 def test_mongo_config(device, app_dir, data_dir):
     device.scp_to_device('{0}/mongodb.config.dump.js'.format(DIR), '/')
     device.run_ssh(
-        '{0}/mongodb/bin/mongo /mongodb.config.dump.js > {1}/log/mongo.config.dump.log'.format(app_dir, data_dir),
+        '{0}/mongodb/bin/mongo.sh /mongodb.config.dump.js > {1}/log/mongo.config.dump.log'.format(app_dir, data_dir),
         throw=False)
 
 
 def test_storage_change(device, app_dir, data_dir):
     device.run_ssh('snap run rocketchat.storage-change > {1}/log/storage-change.log'.format(app_dir, data_dir),
                    throw=False)
-
-
-def test_remove(device_session, device_host):
-    response = device_session.get('https://{0}/rest/remove?app_id=rocketchat'.format(device_host),
-                                  allow_redirects=False, verify=False)
-    assert response.status_code == 200, response.text
-    wait_for_installer(device_session, device_host)
-
-
-def test_reinstall(app_archive_path, device_host, device_password):
-    local_install(device_host, device_password, app_archive_path)
