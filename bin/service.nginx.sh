@@ -9,17 +9,32 @@ fi
 
 . $SNAP_COMMON/config/rocketchat.env
 
+function wait_for_server() {
+    echo "waiting for server"
+    started=0
+    set +e
+    for i in $(seq 1 30); do
+      echo > /dev/tcp/localhost/$PORT
+      if [[ $? == 0 ]]; then
+        echo "started"
+        started=1
+        break
+      fi
+      echo "Tried $i times. Waiting 5 secs..."
+      sleep 5
+    done
+    set -e
+    if [[ $started == 0 ]]; then
+        echo "failed to start"
+        exit 1
+    fi
+}
+
 case $1 in
-pre-start)
-		   timeout 1000 /bin/bash -c 'until echo > /dev/tcp/localhost/'$PORT'; do sleep 5; done'
-		   /bin/rm -f ${SNAP_COMMON}/web.socket
-		   exec ${DIR}/nginx/sbin/nginx -t -c ${SNAP_COMMON}/config/nginx.conf -p ${DIR}/nginx -g 'error_log '${SNAP_COMMON}'/log/nginx_error.log warn;'
-		   ;;
 start)
+    wait_for_server
+	  /bin/rm -f ${SNAP_COMMON}/web.socket
     exec ${DIR}/nginx/sbin/nginx -c ${SNAP_COMMON}/config/nginx.conf -p ${DIR}/nginx -g 'error_log '${SNAP_COMMON}'/log/nginx_error.log warn;'
-    ;;
-post-start)
-    timeout 5 /bin/bash -c 'until [ -S '${SNAP_COMMON}'/web.socket ]; do echo "waiting for ${SNAP_COMMON}/web.socket"; sleep 1; done'
     ;;
 reload)
     ${DIR}/nginx/sbin/nginx -c ${SNAP_COMMON}/config/nginx.conf -s reload -p ${DIR}/nginx
