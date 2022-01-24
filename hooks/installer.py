@@ -7,7 +7,7 @@ from os.path import join
 import requests
 
 from syncloudlib import fs, linux, gen, logger
-from syncloudlib.application import paths, urls, storage
+from syncloudlib.application import urls, storage
 from syncloudlib.http import wait_for_rest
 
 APP_NAME = 'rocketchat'
@@ -23,26 +23,27 @@ class Installer:
             logger.init(logging.DEBUG, True)
 
         self.log = logger.get_logger('rocketchat')
-        self.app_dir = paths.get_app_dir(APP_NAME)
-        self.app_data_dir = paths.get_data_dir(APP_NAME)
+        self.snap_dir = '/snap/rocketchat/current'
+        self.data_dir = '/var/snap/rocketchat/current'
+        self.common_dir = '/var/snap/rocketchat/common'
         self.app_url = urls.get_app_url(APP_NAME)
-        self.install_file = join(self.app_data_dir, 'installed')
+        self.install_file = join(self.data_dir, 'installed')
 
     def install(self):
     
         linux.useradd(USER_NAME)
 
-        log_dir = join(self.app_data_dir, 'log')
+        log_dir = join(self.common_dir, 'log')
         self.log.info('creating log dir: {0}'.format(log_dir))
         fs.makepath(log_dir)
-        fs.makepath(join(self.app_data_dir, 'nginx'))
-        fs.makepath(join(self.app_data_dir, 'mongodb'))
-        mongodb_socket_file = '{0}/mongodb-{1}.sock'.format(self.app_data_dir, MONGODB_PORT)
+        fs.makepath(join(self.data_dir, 'nginx'))
+        fs.makepath(join(self.data_dir, 'mongodb'))
+        mongodb_socket_file = '{0}/mongodb-{1}.sock'.format(self.data_dir, MONGODB_PORT)
         mongodb_socket_file_escaped = mongodb_socket_file.replace('/', '2%F')
         
         variables = {
-            'app_dir': self.app_dir,
-            'app_data_dir': self.app_data_dir,
+            'snap_dir': self.snap_dir,
+            'data_dir': self.data_dir,
             'url': self.app_url,
             'web_secret': uuid.uuid4().hex,
             'port': PORT,
@@ -51,12 +52,13 @@ class Installer:
             'mongodb_socket_file_escaped': mongodb_socket_file_escaped
         }
 
-        templates_path = join(self.app_dir, 'config.templates')
-        config_path = join(self.app_data_dir, 'config')
+        templates_path = join(self.app_dir, 'config')
+        config_path = join(self.data_dir, 'config')
 
         gen.generate_files(templates_path, config_path, variables)
        
-        fs.chownpath(self.app_data_dir, USER_NAME, recursive=True)
+        fs.chownpath(self.data_dir, USER_NAME, recursive=True)
+        fs.chownpath(self.common_dir, USER_NAME, recursive=True)
         
         self.prepare_storage()
 
