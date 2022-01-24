@@ -23,7 +23,7 @@ cp /usr/local/lib/libvips*.so* $BUILD_DIR/nodejs/usr/lib/*-linux-gnu*/
 
 cd ${DIR}
 cp -r ${DIR}/bin ${BUILD_DIR}
-cp -r ${DIR}/config ${BUILD_DIR}/config.templates
+cp -r ${DIR}/config ${BUILD_DIR}/config
 cp -r ${DIR}/hooks ${BUILD_DIR}
 
 ls -la ${BUILD_DIR}

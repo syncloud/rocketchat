@@ -7,14 +7,15 @@ if [[ -z "$1" ]]; then
     exit 1
 fi
 
-. $SNAP_COMMON/config/rocketchat.env
+. /var/snap/rocketchat/current/config/rocketchat.env
 
 case $1 in
 start)
-    exec ${DIR}/mongodb/bin/mongod.sh --config ${SNAP_COMMON}/config/mongodb.conf
+    exec ${DIR}/mongodb/bin/mongod.sh --config /var/snap/rocketchat/current/config/mongodb.conf
     ;;
 *)
     echo "not valid command"
     exit 1
     ;;
 esac
+
