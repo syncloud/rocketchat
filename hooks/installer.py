@@ -52,7 +52,7 @@ class Installer:
             'mongodb_socket_file_escaped': mongodb_socket_file_escaped
         }
 
-        templates_path = join(self.app_dir, 'config')
+        templates_path = join(self.snap_dir, 'config')
         config_path = join(self.data_dir, 'config')
 
         gen.generate_files(templates_path, config_path, variables)
@@ -72,7 +72,7 @@ class Installer:
         
         self.log.info('configure')
         # mongo_configure_cmd = '{0}/mongodb/bin/mongo {1}/config/mongo.configure.js'
-        # .format(self.app_dir, self.app_data_dir)
+        # .format(self.snap_dir, self.data_dir)
         # self.log.info(check_output(mongo_configure_cmd, shell=True))
 
     def _upgrade(self):
