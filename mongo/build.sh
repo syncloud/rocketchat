@@ -14,6 +14,8 @@ docker create --name=mongo mongo:syncloud
 mkdir -p ${BUILD_DIR}
 cd ${BUILD_DIR}
 docker export mongo -o mongo.tar
+docker ps -a -q --filter ancestor=mongo:syncloud --format="{{.ID}}" | xargs docker stop | xargs docker rm || true
+docker rmi mongo:syncloud || true
 tar xf mongo.tar
 rm -rf mongo.tar
 cp ${DIR}/mongod.sh ${BUILD_DIR}/bin/

@@ -14,6 +14,8 @@ docker create --name=nodejs nodejs:syncloud
 mkdir -p ${BUILD_DIR}
 cd ${BUILD_DIR}
 docker export nodejs -o nodejs.tar
+docker ps -a -q --filter ancestor=nodejs:syncloud --format="{{.ID}}" | xargs docker stop | xargs docker rm || true
+docker rmi nodejs:syncloud || true
 tar xf nodejs.tar
 rm -rf nodejs.tar
 cp ${DIR}/node.sh ${BUILD_DIR}/bin/
