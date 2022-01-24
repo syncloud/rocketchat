@@ -7,7 +7,7 @@ if [[ -z "$1" ]]; then
     exit 1
 fi
 
-. $SNAP_COMMON/config/rocketchat.env
+. /var/snap/rocketchat/current/config/rocketchat.env
 
 function wait_for_server() {
     echo "waiting for server"
@@ -33,14 +33,14 @@ function wait_for_server() {
 case $1 in
 start)
     wait_for_server
-	  /bin/rm -f ${SNAP_COMMON}/web.socket
-    exec ${DIR}/nginx/sbin/nginx -c ${SNAP_COMMON}/config/nginx.conf -p ${DIR}/nginx -g 'error_log '${SNAP_COMMON}'/log/nginx_error.log warn;'
+	  /bin/rm -f /var/snap/rocketchat/common/web.socket
+    exec ${DIR}/nginx/sbin/nginx -c /var/snap/rocketchat/current/config/nginx.conf -p ${DIR}/nginx -g 'error_log /var/snap/rocketchat/common/log/nginx_error.log warn;'
     ;;
 reload)
-    ${DIR}/nginx/sbin/nginx -c ${SNAP_COMMON}/config/nginx.conf -s reload -p ${DIR}/nginx
+    ${DIR}/nginx/sbin/nginx -c /var/snap/rocketchat/current/config/nginx.conf -s reload -p ${DIR}/nginx
     ;;
 stop)
-    ${DIR}/nginx/sbin/nginx -c ${SNAP_COMMON}/config/nginx.conf -s stop -p ${DIR}/nginx
+    ${DIR}/nginx/sbin/nginx -c /var/snap/rocketchat/current/config/nginx.conf -s stop -p ${DIR}/nginx
     ;;
 *)
     echo "not valid command"
