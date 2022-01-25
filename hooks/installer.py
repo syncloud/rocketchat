@@ -27,7 +27,7 @@ class Installer:
         self.data_dir = '/var/snap/rocketchat/current'
         self.common_dir = '/var/snap/rocketchat/common'
         self.app_url = urls.get_app_url(APP_NAME)
-        self.install_file = join(self.common_dir, 'installed')
+        self.install_file = join(self.data_dir, 'installed-v4')
 
     def install(self):
     
