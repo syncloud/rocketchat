@@ -58,7 +58,11 @@ def test_remove(device, app):
     assert response.status_code == 200, response.text
 
 
-def test_reinstall(app_archive_path, device_host, device_password):
+def test_latest_from_store(device):
+    device.run_ssh('snap install rocketchat')
+
+
+def test_upgrade(app_archive_path, device_host, device_password):
     local_install(device_host, device_password, app_archive_path)
 
 
