@@ -110,7 +110,7 @@ local build(arch, test_ui) = [{
               "APP_ARCHIVE_PATH=$(realpath $(cat package.name))",
               "cd integration",
               "pip install -r requirements.txt",
-              "py.test -x -s verify.py --device-user=testuser --distro=buster --domain=buster.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + ".buster.com --app=" + name
+              "py.test -x -s verify.py --device-user=testuser --distro=buster --domain=buster.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + ".buster.com --app=" + name + " --arch=" + arch
             ]
         }] + ( if test_ui then [
         {
