@@ -1,3 +1,4 @@
+import syncloudlib.integration.conftest
 from os.path import dirname, join
 from syncloudlib.integration.conftest import *
 
