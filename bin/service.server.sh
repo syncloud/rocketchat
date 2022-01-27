@@ -37,12 +37,12 @@ start)
     started=0
     set +e
     for i in $(seq 1 30); do
-      ${DIR}/nodejs/bin/node.sh ${DIR}/bundle/main.js;
+      ${DIR}/nodejs/bin/node.sh ${DIR}/bundle/main.js
       if [[ $? == 0 ]]; then
         started=1
         break
       fi
-      echo "Tried \$i times. Waiting 5 secs...";
+      echo "Tried $i times. Waiting 5 secs...";
       sleep 5;
     done
     set -e

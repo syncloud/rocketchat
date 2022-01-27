@@ -11,6 +11,7 @@ fi
 
 case $1 in
 start)
+    ulimit -n 64000
     exec ${DIR}/mongodb/bin/mongod.sh --config /var/snap/rocketchat/current/config/mongodb.conf
     ;;
 *)
