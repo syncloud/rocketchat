@@ -3,6 +3,7 @@ import logging
 import uuid
 from os import path
 from os.path import join
+from subprocess import check_output, CalledProcessError
 
 import requests
 
@@ -28,9 +29,18 @@ class Installer:
         self.common_dir = '/var/snap/rocketchat/common'
         self.app_url = urls.get_app_url(APP_NAME)
         self.install_file = join(self.common_dir, 'installed')
+        self.database_dump = join(self.data_dir, '/database.dump.gzip')
+
+    def pre_refresh(self):
+        self.log.info(check_output('rm -rf {0}'.format(self.database_dump), shell=True))
+        self.log.info(check_output('{0}/mongodb/bin/mongodump.sh --archive={1} --gzip'.format(self.snap_dir, self.database_dump), shell=True))
+
+    def post_refresh(self):
+        self.log.info('post refresh')
 
     def install(self):
-    
+        self.log.info('install')
+
         linux.useradd(USER_NAME)
 
         log_dir = join(self.common_dir, 'log')
@@ -63,6 +73,7 @@ class Installer:
         self.prepare_storage()
 
     def configure(self):
+        self.log.info('configure')
         wait_for_rest(requests.session(), REST_URL, 200, 100)
 
         if path.isfile(self.install_file):
@@ -70,16 +81,15 @@ class Installer:
         else:
             self._install()
         
-        self.log.info('configure')
-        # mongo_configure_cmd = '{0}/mongodb/bin/mongo {1}/config/mongo.configure.js'
-        # .format(self.snap_dir, self.data_dir)
-        # self.log.info(check_output(mongo_configure_cmd, shell=True))
 
     def _upgrade(self):
-        self.log.info('upgrade')
+        self.log.info('configure upgrade')
+        self.log.info(check_output('{0}/mongodb/bin/mongorestore.sh --drop --archive={1} --gzip --noIndexRestore'.format(self.snap_dir, self.database_dump), shell=True))
+        self.log.info(check_output('{0}/mongodb/bin/mongo.sh --eval \'db.repairDatabase()\''.format(self.snap_dir), shell=True))
+
 
     def _install(self):
-        self.log.info('install')
+        self.log.info('configure install')
         password = uuid.uuid4().hex
         response = requests.post("{0}/users.register".format(REST_URL),
                                  json={
