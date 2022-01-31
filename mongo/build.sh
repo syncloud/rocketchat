@@ -18,7 +18,6 @@ docker ps -a -q --filter ancestor=mongo:syncloud --format="{{.ID}}" | xargs dock
 docker rmi mongo:syncloud || true
 tar xf mongo.tar
 rm -rf mongo.tar
-cp ${DIR}/mongod.sh ${BUILD_DIR}/bin/
-cp ${DIR}/mongo.sh ${BUILD_DIR}/bin/
+cp ${DIR}/bin/* ${BUILD_DIR}/bin
 ls -la ${BUILD_DIR}/bin
 rm -rf ${BUILD_DIR}/usr/src
