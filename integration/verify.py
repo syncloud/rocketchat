@@ -60,9 +60,9 @@ def test_remove(device, app):
     response = device.app_remove(app)
     assert response.status_code == 200, response.text
 
-# TODO: restore this test after first stable arm64 store release
-# def test_latest_from_store(device):
-#     device.run_ssh('snap install rocketchat')
+def test_latest_from_store(device, arch):
+    if arch != "arm64":
+        device.run_ssh('snap install rocketchat')
 
 
 def test_upgrade(app_archive_path, device_host, device_password):
