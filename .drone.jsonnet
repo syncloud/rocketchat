@@ -195,9 +195,9 @@ local build(arch, test_ui) = [{
         name: "test-store",
         image: "python:3.8-slim-buster",
         commands: [
-          "apt-get update && apt-get install -y sshpass openssh-client libffi-dev",
-          "pip install -r dev_requirements.txt",
+          "apt-get update && apt-get install -y sshpass openssh-client netcat rustc file libxml2-dev libxslt-dev build-essential libz-dev curl",
           "cd integration",
+          "pip install -r requirements.txt",
           "py.test -x -s test-store.py --distro=buster --domain=buster.com --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
         ],
         when: {
