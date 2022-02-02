@@ -13,7 +13,7 @@ function wait_for_mongo() {
     echo "waiting for mongo db"
     set +e
     for i in $(seq 1 30); do
-      ${DIR}/mongodb/bin/mongo.sh localhost/rocketchat /var/snap/rocketchat/current/config/mongo.configure.js
+      ${DIR}/mongodb/bin/mongo.sh localhost/rocketchat /snap/rocketchat/current/config/mongo.configure.js
       if [[ $? == 0 ]]; then
         started=1
         break
