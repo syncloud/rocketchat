@@ -27,7 +27,7 @@ class Installer:
         self.common_dir = '/var/snap/rocketchat/common'
         self.app_url = urls.get_app_url(APP_NAME)
         self.install_file = join(self.common_dir, 'installed')
-        self.database_dump = join(self.data_dir, '/database.dump.gzip')
+        self.database_dump = join(self.data_dir, 'database.dump.gzip')
         self.rocketchat_env_file_source = join(self.snap_dir, 'config', 'rocketchat.env')
         self.rocketchat_env_file_target = join(self.data_dir, 'config', 'rocketchat.env')
 
