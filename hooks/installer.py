@@ -83,12 +83,9 @@ class Installer:
 
         try:
             self.log.info(check_output(
-                '{0}/mongodb/bin/mongorestore.sh --drop --archive={1} --gzip --noIndexRestore'.format(self.snap_dir,
-                                                                                                      self.database_dump),
+                '{0}/mongodb/bin/mongorestore.sh --drop --archive={1} --gzip'.format(self.snap_dir,
+                                                                                     self.database_dump),
                 shell=True))
-            self.log.info(
-                check_output('{0}/mongodb/bin/mongo.sh --eval \'new Mongo().getDB("rocketchat").repairDatabase()\''.format(self.snap_dir),
-                             shell=True))
         except CalledProcessError as e:
             self.log.error("upgrade error: " + e.output.decode())
             raise e
