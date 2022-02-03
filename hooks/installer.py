@@ -1,10 +1,11 @@
 import json
 import logging
-import requests
 import uuid
 from os import path
 from os.path import join
-from subprocess import check_output
+from subprocess import check_output, CalledProcessError
+
+import requests
 from syncloudlib import fs, linux, gen, logger
 from syncloudlib.application import urls, storage
 from syncloudlib.http import wait_for_rest
@@ -32,10 +33,15 @@ class Installer:
         self.rocketchat_env_file_target = join(self.data_dir, 'config', 'rocketchat.env')
 
     def pre_refresh(self):
-        self.log.info(check_output('rm -rf {0}'.format(self.database_dump), shell=True))
-        self.log.info(
-            check_output('{0}/mongodb/bin/mongodump.sh --archive={1} --gzip'.format(self.snap_dir, self.database_dump),
-                         shell=True))
+        try:
+            self.log.info(check_output('rm -rf {0}'.format(self.database_dump), shell=True))
+            self.log.info(
+                check_output(
+                    '{0}/mongodb/bin/mongodump.sh --archive={1} --gzip'.format(self.snap_dir, self.database_dump),
+                    shell=True))
+        except CalledProcessError as e:
+            self.log.error("pre_refresh error: " + e.output.decode())
+            raise e
 
     def post_refresh(self):
         self.log.info('post refresh')
@@ -75,12 +81,17 @@ class Installer:
         if not path.isfile(self.database_dump):
             raise Exception('please export database manually to {0}'.format(self.database_dump))
 
-        self.log.info(check_output(
-            '{0}/mongodb/bin/mongorestore.sh --drop --archive={1} --gzip --noIndexRestore'.format(self.snap_dir,
-                                                                                                  self.database_dump),
-            shell=True))
-        self.log.info(
-            check_output('{0}/mongodb/bin/mongo.sh --eval \'db.repairDatabase()\''.format(self.snap_dir), shell=True))
+        try:
+            self.log.info(check_output(
+                '{0}/mongodb/bin/mongorestore.sh --drop --archive={1} --gzip --noIndexRestore'.format(self.snap_dir,
+                                                                                                      self.database_dump),
+                shell=True))
+            self.log.info(
+                check_output('{0}/mongodb/bin/mongo.sh --eval \'db.repairDatabase()\''.format(self.snap_dir),
+                             shell=True))
+        except CalledProcessError as e:
+            self.log.error("upgrade error: " + e.output.decode())
+            raise e
 
     def _install(self):
         self.log.info('configure install')
