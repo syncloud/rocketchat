@@ -33,6 +33,6 @@ def test_sore(device, selenium):
     device.run_ssh('/integration/install-snapd.sh')
     device.run_ssh('timeout 10m snap refresh rocketchat --channel={0}'.format(channel))
 
-    selenium.open_app()
-    selenium.screenshot('store-upgrade')
+    #selenium.open_app()
+    #selenium.screenshot('store-upgrade')
 
