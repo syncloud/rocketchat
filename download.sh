@@ -9,7 +9,7 @@ if [[ -z "$1" ]]; then
 fi
 
 NAME=$1
-ROCKETCHAT_VERSION=4.2.2
+ROCKETCHAT_VERSION=4.1.4
 ARCH=$(uname -m)
 DOWNLOAD_URL=https://github.com/syncloud/3rdparty/releases/download/
 BUILD_DIR=${DIR}/build/${NAME}
