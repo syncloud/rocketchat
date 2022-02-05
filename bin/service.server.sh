@@ -25,15 +25,17 @@ function wait_for_mongo() {
     if [[ $started == 0 ]]; then
         exit 1
     fi
+    echo "done waiting for mongo db"
 }
 
 case $1 in
 start)
     started=0
     wait_for_mongo
-    echo "MONGO_URL: $MONGO_URL" | logger -t rocketchat
-    echo "MONGO_OPLOG_URL: $MONGO_OPLOG_URL" | logger -t rocketchat
-    #exec ${DIR}/nodejs/bin/node ${DIR}/bundle/main.js 2>&1
+    echo "MONGO_URL: $MONGO_URL"
+    echo "MONGO_OPLOG_URL: $MONGO_OPLOG_URL"
+    export EXIT_UNHANDLEDPROMISEREJECTION=1
+    echo "starting server"
     started=0
     set +e
     for i in $(seq 1 30); do
