@@ -61,16 +61,11 @@ def test_remove(device, app):
     assert response.status_code == 200, response.text
 
 
-def test_latest_from_store(device, arch):
-    if arch != "arm64":
-        device.run_ssh('snap install rocketchat')
+def test_reinstall(app_archive_path, device_host, device_password, device, arch):
+    local_install(device_host, device_password, app_archive_path)
 
 
 def test_upgrade(app_archive_path, device_host, device_password, device, arch):
-    if arch != "arm64":
-        device.run_ssh('wget https://github.com/syncloud/3rdparty/releases/download/mongo-4.4/mongodb-amd64-4.4.tar.gz')
-        device.run_ssh('tar xf mongodb-amd64-4.4.tar.gz')
-        device.run_ssh('./mongodb/bin/mongodump.sh --archive=/var/snap/rocketchat/current/database.dump.gzip --gzip')
     local_install(device_host, device_password, app_archive_path)
 
 

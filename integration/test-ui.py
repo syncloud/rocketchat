@@ -4,6 +4,7 @@ from os.path import dirname, join
 from selenium.webdriver.common.keys import Keys
 from subprocess import check_output
 from syncloudlib.integration.hosts import add_host_alias
+from ui.lib import login
 
 DIR = dirname(__file__)
 TMP_DIR = '/tmp/syncloud/ui'
@@ -26,29 +27,8 @@ def test_start(module_setup, app, domain, device_host):
     add_host_alias(app, device_host, domain)
 
 
-def test_index(selenium):
-    selenium.open_app()
-    selenium.screenshot('index')
-
-
 def test_login(selenium, device_user, device_password):
-
-    # wait_driver = WebDriverWait(driver, 120)
-    # wait_driver.until(EC.element_to_be_clickable((By.ID, 'emailOrUsername')))
-
-    user = selenium.find_by_id("emailOrUsername")
-    user.send_keys(device_user)
-    password = selenium.find_by_id("pass")
-    password.send_keys(device_password)
-    selenium.screenshot('login')
-
-    password.send_keys(Keys.RETURN)
-    selenium.screenshot('login_progress')
-     
-
-def test_main(selenium):
-    selenium.find_by_xpath("//button[@title='Search']")
-    selenium.screenshot('main')
+    login(selenium, device_user, device_password)
 
 
 def test_profile(selenium, app_domain):
