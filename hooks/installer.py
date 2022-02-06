@@ -119,7 +119,7 @@ class Installer:
         self.log.info('install account token extracted')
 
         self.update_setting('LDAP_Enable', True, auth_token, user_id)
-        self.update_setting('LDAP_Server_Type', '', auth_token, user_id)
+        #v4 self.update_setting('LDAP_Server_Type', '', auth_token, user_id)
         self.update_setting('LDAP_Host', 'localhost', auth_token, user_id)
         self.update_setting('LDAP_BaseDN', 'dc=syncloud,dc=org', auth_token, user_id)
         self.update_setting('LDAP_Authentication', True, auth_token, user_id)
@@ -129,7 +129,7 @@ class Installer:
         self.update_setting('LDAP_User_Search_Field', 'cn', auth_token, user_id)
         self.update_setting('LDAP_Username_Field', 'cn', auth_token, user_id)
         self.update_setting('Accounts_RegistrationForm', 'Disabled', auth_token, user_id)
-        self.update_setting('Accounts_TwoFactorAuthentication_Enabled', False, auth_token, user_id)
+        #v4 self.update_setting('Accounts_TwoFactorAuthentication_Enabled', False, auth_token, user_id)
         self.update_setting('Show_Setup_Wizard', 'completed', auth_token, user_id)
 
         self.update_setting('FileUpload_Storage_Type', 'FileSystem', auth_token, user_id)
