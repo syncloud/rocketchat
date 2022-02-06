@@ -1,10 +1,9 @@
 import pytest
 import time
 from os.path import dirname, join
-from selenium.webdriver.common.keys import Keys
 from subprocess import check_output
 from syncloudlib.integration.hosts import add_host_alias
-from ui.lib import login
+from integration.lib import login
 
 DIR = dirname(__file__)
 TMP_DIR = '/tmp/syncloud/ui'
