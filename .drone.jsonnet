@@ -177,10 +177,7 @@ local build(arch, test_ui) = [{
           "cd integration",
           "pip install -r requirements.txt",
           "py.test -x -s test-upgrade.py --distro=buster --domain=buster.com --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
-        ],
-        when: {
-            branch: ["stable", "master"]
-        }
+        ]
     },
     {
         name: "upload",
