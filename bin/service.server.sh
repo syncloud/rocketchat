@@ -34,7 +34,7 @@ start)
     wait_for_mongo
     echo "MONGO_URL: $MONGO_URL"
     echo "MONGO_OPLOG_URL: $MONGO_OPLOG_URL"
-    export EXIT_UNHANDLEDPROMISEREJECTION=1
+#    export EXIT_UNHANDLEDPROMISEREJECTION=1
     echo "starting server"
     started=0
     set +e
