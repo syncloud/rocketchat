@@ -247,7 +247,7 @@ local build(arch, test_ui) = [{
         }] else []) + [
         {
             name: name + ".buster.com",
-            image: "syncloud/platform-buster-" + arch + ":21.10",
+            image: "syncloud/platform-buster-" + arch + ":22.01",
             privileged: true,
             volumes: [
                 {

@@ -28,7 +28,6 @@ def test_upgrade(device, arch, selenium, device_user, device_password, device_ho
     if arch == "arm64":
         return
 
-    device.run_ssh('/integration/install-snapd.sh')
     device.run_ssh('snap remove rocketchat')
     device.run_ssh('snap install rocketchat')
 
