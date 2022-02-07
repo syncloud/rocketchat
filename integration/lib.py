@@ -12,6 +12,6 @@ def login(selenium, device_user, device_password):
     selenium.screenshot('login_progress')
 
     #v4 selenium.find_by_xpath("//button[@title='Search']")
-    selenium.find_by_xpath("//button[@aria-label='Search']")
+    selenium.find_by_xpath("//button[@data-qa='sidebar-search']")
 
     selenium.screenshot('main')
