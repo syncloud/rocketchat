@@ -61,12 +61,16 @@ def test_remove(device, app):
     assert response.status_code == 200, response.text
 
 
-def test_reinstall(app_archive_path, device_host, device_password, device, arch):
+def test_reinstall(app_archive_path, device_host, device_password):
     local_install(device_host, device_password, app_archive_path)
 
 
-def test_upgrade(app_archive_path, device_host, device_password, device, arch):
+def test_upgrade(app_archive_path, device_host, device_password):
     local_install(device_host, device_password, app_archive_path)
+
+
+def test_mongo_export_on_upgrade(device):
+    device.run_ssh('ls /var/snap/rocketchat/current/database.dump.gzip')
 
 
 def test_mongo_config(device, app_dir, data_dir):
