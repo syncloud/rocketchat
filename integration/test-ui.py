@@ -59,3 +59,7 @@ def test_channel(selenium, app_domain):
     selenium.driver.get("https://{0}/channel/general".format(app_domain))
     selenium.find_by_xpath("//div[text()='Start of conversation']")
     selenium.screenshot('channel')
+
+
+def test_teardown(driver):
+    driver.quit()
