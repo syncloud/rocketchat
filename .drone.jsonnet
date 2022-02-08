@@ -178,7 +178,11 @@ local build(arch, test_ui) = [{
           "cd integration",
           "pip install -r requirements.txt",
           "py.test -x -s test-upgrade.py --device-user=testuser --distro=buster --domain=buster.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
-        ]
+        ],
+        volumes: [{
+            name: "shm",
+            path: "/dev/shm"
+        }]
     },
     {
         name: "upload",
