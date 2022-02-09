@@ -1,4 +1,4 @@
-FROM node:12.22.1-slim
+FROM node:8.11.4-slim
 RUN apt update
 RUN apt install -y libglib2.0-0 libexpat1
 RUN rm -rf /var/lib/apt/lists/*
