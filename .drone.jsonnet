@@ -18,7 +18,14 @@ local build(arch, test_ui) = [{
         ]
     },
     {
-        name: "build node",
+        name: "download",
+        image: "debian:buster-slim",
+        commands: [
+            "./download.sh " + name
+        ]
+    },
+    {
+        name: "build",
         image: "debian:buster-slim",
         commands: [
             "./node/build.sh"
@@ -35,7 +42,7 @@ local build(arch, test_ui) = [{
         ]
     },
     {
-        name: "build mongo",
+        name: "package mongo",
         image: "debian:buster-slim",
         commands: [
             "./mongo/build.sh"
@@ -52,7 +59,7 @@ local build(arch, test_ui) = [{
         ]
     },
     {
-        name: "build python",
+        name: "package python",
         image: "debian:buster-slim",
         commands: [
             "./python/build.sh"
@@ -66,20 +73,6 @@ local build(arch, test_ui) = [{
                 name: "docker.sock",
                 path: "/var/run/docker.sock"
             }
-        ]
-    },
-    {
-        name: "download",
-        image: "debian:buster-slim",
-        commands: [
-            "./download.sh " + name
-        ]
-    },
-    {
-        name: "build",
-        image: "node:12.18.4-slim",
-        commands: [
-            "./build.sh " + name
         ]
     },
     {
