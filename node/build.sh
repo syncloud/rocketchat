@@ -8,7 +8,7 @@ apt install -y libltdl7 libnss3
 BUILD_DIR=${DIR}/../build/rocketchat/nodejs
 docker ps -a -q --filter ancestor=nodejs:syncloud --format="{{.ID}}" | xargs docker stop | xargs docker rm || true
 docker rmi nodejs:syncloud || true
-docker build -t nodejs:syncloud .
+docker build --build-arg NODE_VERSION=$1 --build-arg ROCKETCHAT_VERSION=$2 -t nodejs:syncloud .
 docker run nodejs:syncloud nodejs --help
 docker create --name=nodejs nodejs:syncloud
 mkdir -p ${BUILD_DIR}

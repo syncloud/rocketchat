@@ -1,2 +1,3 @@
-FROM mongo:4.0.28
+ARG MONGO_VERSION
+FROM mongo:$MONGO_VERSION
 RUN rm -rf /var/lib/apt/lists/*

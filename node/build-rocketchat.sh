@@ -1,8 +1,7 @@
 #!/bin/bash -ex
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-NAME=rockatchat
-ROCKETCHAT_VERSION=1.1.1
+ROCKETCHAT_VERSION=$1
 BUILD_DIR=${DIR}
 
 apt update

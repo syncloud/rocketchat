@@ -1,4 +1,7 @@
 local name = "rocketchat";
+local rocketchat_version = "1.1.1";
+local node_version = "8.11.4-slim";
+local mongo_version = "4.0.28";
 local browser = "firefox";
 
 local build(arch, test_ui) = [{
@@ -28,7 +31,7 @@ local build(arch, test_ui) = [{
         name: "build",
         image: "debian:buster-slim",
         commands: [
-            "./node/build.sh"
+            "./node/build.sh " + node_version + " " + rocketchat_version
         ],
         volumes: [
             {
@@ -45,7 +48,7 @@ local build(arch, test_ui) = [{
         name: "package mongo",
         image: "debian:buster-slim",
         commands: [
-            "./mongo/build.sh"
+            "./mongo/build.sh " + mongo_version
         ],
         volumes: [
             {
