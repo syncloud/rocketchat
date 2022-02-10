@@ -16,14 +16,14 @@ cd vips-*
 ./configure
 make
 make install
+rm -rf
 #cp /usr/local/lib/libvips*.so* $BUILD_DIR/nodejs/usr/lib/*-linux-gnu*/
 #ls -la $BUILD_DIR/nodejs/usr/lib/*-linux-gnu*/
 
 cd ${DIR}
-wget https://cdn-download.rocket.chat/build/rocket.chat-${ROCKETCHAT_VERSION}.tgz -O ${DIR}/build/rocketchat.tar.gz --progress dot:giga
+wget https://cdn-download.rocket.chat/build/rocket.chat-${ROCKETCHAT_VERSION}.tgz -O rocketchat.tar.gz --progress dot:giga
 tar xf rocketchat.tar.gz
 cd bundle
-
 for f in ${DIR}/patches/*.patch
 do
   patch -p0 < $f
