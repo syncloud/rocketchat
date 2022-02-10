@@ -4,7 +4,6 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 NAME=rockatchat
 ROCKETCHAT_VERSION=1.1.1
 BUILD_DIR=${DIR}
-mkdir $BUILD_DIR
 
 apt update
 apt -y install wget patch libglib2.0-0 python build-essential pkg-config glib2.0-dev libexpat1-dev libtool autoconf g++ build-essential
