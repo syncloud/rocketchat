@@ -19,27 +19,24 @@ make install
 #cp /usr/local/lib/libvips*.so* $BUILD_DIR/nodejs/usr/lib/*-linux-gnu*/
 #ls -la $BUILD_DIR/nodejs/usr/lib/*-linux-gnu*/
 
-cd ${DIR}/build
+cd ${DIR}
 wget https://cdn-download.rocket.chat/build/rocket.chat-${ROCKETCHAT_VERSION}.tgz -O ${DIR}/build/rocketchat.tar.gz --progress dot:giga
-tar xf rocketchat.tar.gz -C ${BUILD_DIR}
-cd ${BUILD_DIR}/bundle
+tar xf rocketchat.tar.gz
+cd bundle
 
 for f in ${DIR}/patches/*.patch
 do
   patch -p0 < $f
 done
 
+#ls -la ${BUILD_DIR}
+#ls -la ${BUILD_DIR}/bundle
+#chown -R $(whoami). ${BUILD_DIR}/bundle
+#ls -la ${BUILD_DIR}/bundle
+#cat ${BUILD_DIR}/bundle/README
+#ls -la ${BUILD_DIR}/bundle/programs
+#ls -la ${BUILD_DIR}/bundle/programs/server
+#export USER=$(whoami)
 
-ls -la ${BUILD_DIR}
-ls -la ${BUILD_DIR}/bundle
-chown -R $(whoami). ${BUILD_DIR}/bundle
-ls -la ${BUILD_DIR}/bundle
-cat ${BUILD_DIR}/bundle/README
-ls -la ${BUILD_DIR}/bundle/programs
-ls -la ${BUILD_DIR}/bundle/programs/server
-export USER=$(whoami)
-
-cd ${BUILD_DIR}/bundle/programs/server
+cd programs/server
 npm install --unsafe-perm --production
-
-mv ${DIR}/bundle ${DIR}/../rocketchat
