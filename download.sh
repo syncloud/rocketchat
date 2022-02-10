@@ -12,12 +12,13 @@ NAME=$1
 ARCH=$(uname -m)
 DOWNLOAD_URL=https://github.com/syncloud/3rdparty/releases/download/
 BUILD_DIR=${DIR}/build/${NAME}
+mkdir -p $BUILD_DIR
 
-cd ${DIR}/build
 
 apt update
 apt -y install wget
 
+cd ${DIR}/build
 wget -c --progress=dot:giga ${DOWNLOAD_URL}/nginx/nginx-${ARCH}.tar.gz
 tar xf nginx-${ARCH}.tar.gz
 mv nginx ${BUILD_DIR}/
