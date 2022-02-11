@@ -1,6 +1,6 @@
-ARG ROCKETCHAT_VERSION
 ARG NODE_VERSION
 FROM node:$NODE_VERSION
+ARG ROCKETCHAT_VERSION
 ADD ./build-rocketchat.sh /build/build-rocketchat.sh
 ADD ./patches/app.patch /build/patches/app.patch
 RUN /build/build-rocketchat.sh $ROCKETCHAT_VERSION
