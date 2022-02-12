@@ -3,6 +3,8 @@ from subprocess import check_output
 from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.installer import local_install
 from integration.lib import login
+from syncloudlib.http import wait_for_rest
+import requests
 
 TMP_DIR = '/tmp/syncloud'
 
@@ -24,7 +26,7 @@ def test_start(module_setup, app, device_host, domain, device):
     add_host_alias(app, device_host, domain)
 
 
-def test_upgrade(device, arch, selenium, device_user, device_password, device_host, app_archive_path):
+def test_upgrade(device, arch, selenium, device_user, device_password, device_host, app_archive_path, app_domain):
     if arch == "arm64":
         return
 
@@ -36,5 +38,7 @@ def test_upgrade(device, arch, selenium, device_user, device_password, device_ho
     device.run_ssh('./mongodb/bin/mongodump.sh --archive=/var/snap/rocketchat/current/database.dump.gzip --gzip')
 
     local_install(device_host, device_password, app_archive_path)
+ 
+    wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
 
     login(selenium, device_user, device_password)
