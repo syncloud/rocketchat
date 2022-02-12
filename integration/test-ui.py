@@ -38,7 +38,8 @@ def test_profile(selenium, app_domain):
     profile_file = selenium.find_by_css(profile_file)
     profile_file.send_keys(join(DIR, 'images', 'profile.jpeg'))
      
-    username = selenium.find_by_xpath("//div/label[text()='Name']/following-sibling::span/input")
+    #v3 username = selenium.find_by_xpath("//div/label[text()='Name']/following-sibling::span/input")
+    username = selenium.find_by_id("realname")
     username.send_keys('Syncloud user')
     
     email = selenium.find_by_xpath("//div/label[text()='Email']/following-sibling::span/label/input")
