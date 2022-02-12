@@ -216,8 +216,17 @@ local build(arch, test_ui) = [{
             timeout: "2m",
             command_timeout: "2m",
             target: "/home/artifact/repo/" + name + "/${DRONE_BUILD_NUMBER}-" + arch,
-            source: "artifact/*",
-                 strip_components: 1
+            source: [
+                "artifact/*",
+                "/video/*"
+            ],
+            strip_components: 1,
+            volumes: [
+               {
+                    name: "video",
+                    path: "/video"
+                }
+            ]
         },
         when: {
           status: [ "failure", "success" ]
@@ -261,14 +270,32 @@ local build(arch, test_ui) = [{
                 }
             ]
         }
-    ] + ( if test_ui then [{
+    ] + ( if test_ui then [
+        {
             name: "selenium",
             image: "selenium/standalone-" + browser + ":4.1.2-20220208",
             volumes: [{
                 name: "shm",
                 path: "/dev/shm"
             }]
-        }
+        },
+        {
+            name: "selenium-video",
+            image: "selenium/video:ffmpeg-4.3.1-20220208",
+            environment: {
+                "DISPLAY_CONTAINER_NAME": "selenium",
+            },
+            volumes: [
+                {
+                    name: "shm",
+                    path: "/dev/shm"
+                },
+               {
+                    name: "video",
+                    path: "/video"
+                }
+            ]
+        },
     ] else [] ),
     volumes: [
         {
@@ -285,6 +312,10 @@ local build(arch, test_ui) = [{
         },
         {
             name: "shm",
+            temp: {}
+        },
+        {
+            name: "video",
             temp: {}
         },
         {
