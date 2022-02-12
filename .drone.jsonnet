@@ -263,7 +263,7 @@ local build(arch, test_ui) = [{
         }
     ] + ( if test_ui then [{
             name: "selenium",
-            image: "selenium/standalone-" + browser + ":4.0.0-beta-3-prerelease-20210402",
+            image: "selenium/standalone-" + browser + ":4.1.2-20220208",
             volumes: [{
                 name: "shm",
                 path: "/dev/shm"
