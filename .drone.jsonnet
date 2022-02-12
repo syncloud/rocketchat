@@ -110,6 +110,24 @@ local build(arch, test_ui) = [{
         ]
     }] + ( if test_ui then [
     {
+        name: "selenium-video",
+        image: "selenium/video:ffmpeg-4.3.1-20220208",
+        detach: true,
+        environment: {
+            "DISPLAY_CONTAINER_NAME": "selenium",
+        },
+        volumes: [
+            {
+                name: "shm",
+                path: "/dev/shm"
+            },
+           {
+                name: "video",
+                path: "/video"
+            }
+        ]
+    },
+    {
         name: "test-ui-desktop-jessie",
         image: "python:3.8-slim-buster",
         commands: [
@@ -278,24 +296,7 @@ local build(arch, test_ui) = [{
                 name: "shm",
                 path: "/dev/shm"
             }]
-        },
-        {
-            name: "selenium-video",
-            image: "selenium/video:ffmpeg-4.3.1-20220208",
-            environment: {
-                "DISPLAY_CONTAINER_NAME": "selenium",
-            },
-            volumes: [
-                {
-                    name: "shm",
-                    path: "/dev/shm"
-                },
-               {
-                    name: "video",
-                    path: "/video"
-                }
-            ]
-        },
+        }
     ] else [] ),
     volumes: [
         {
