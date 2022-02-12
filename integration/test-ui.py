@@ -42,9 +42,9 @@ def test_profile(selenium, app_domain):
     username = selenium.find_by_id("realname")
     username.send_keys('Syncloud user')
     
-    email = selenium.find_by_xpath("//div/label[text()='Email']/following-sibling::span/label/input")
-    email.clear()
-    email.send_keys('test@gmail.com')
+    #email = selenium.find_by_xpath("//div/label[text()='Email']/following-sibling::span/label/input")
+    #email.clear()
+    #email.send_keys('test@gmail.com')
 
     selenium.screenshot('profile-new-name')
 
