@@ -286,7 +286,7 @@ local build(arch, test_ui) = [{
             image: "selenium/standalone-" + browser + ":4.1.2-20220208",
             environment: {
                 SE_NODE_SESSION_TIMEOUT: "999999"
-            }
+            },
             volumes: [{
                 name: "shm",
                 path: "/dev/shm"
