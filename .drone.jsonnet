@@ -163,11 +163,7 @@ local build(arch, test_ui) = [{
           "cd integration",
           "pip install -r requirements.txt",
           "py.test -x -s test-ui.py --device-user=testuser --distro=buster --ui-mode=desktop --domain=buster.com --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
-        ],
-        volumes: [{
-            name: "shm",
-            path: "/dev/shm"
-        }]
+        ]
     },
     {
         name: "test-ui-mobile-buster",
@@ -177,11 +173,7 @@ local build(arch, test_ui) = [{
           "cd integration",
           "pip install -r requirements.txt",
           "py.test -x -s test-ui.py --device-user=testuser --distro=buster --ui-mode=mobile --domain=buster.com --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
-        ],
-        volumes: [{
-            name: "shm",
-            path: "/dev/shm"
-        }]
+        ]
     } ] else [] ) +[
     {
         name: "test-upgrade",
@@ -194,8 +186,8 @@ local build(arch, test_ui) = [{
           "py.test -x -s test-upgrade.py --device-user=testuser --distro=buster --ui-mode=desktop --domain=buster.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
         ],
         volumes: [{
-            name: "shm",
-            path: "/dev/shm"
+            name: "video",
+            path: "/video"
         }]
     },
     {
