@@ -122,8 +122,8 @@ local build(arch, test_ui) = [{
                 path: "/dev/shm"
             },
            {
-                name: "video",
-                path: "/video"
+                name: "videos",
+                path: "/videos"
             }
         ]
     },
@@ -186,8 +186,8 @@ local build(arch, test_ui) = [{
           "py.test -x -s test-upgrade.py --device-user=testuser --distro=buster --ui-mode=desktop --domain=buster.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
         ],
         volumes: [{
-            name: "video",
-            path: "/video"
+            name: "videos",
+            path: "/videos"
         }]
     },
     {
@@ -228,13 +228,13 @@ local build(arch, test_ui) = [{
             target: "/home/artifact/repo/" + name + "/${DRONE_BUILD_NUMBER}-" + arch,
             source: [
                 "artifact/*",
-                "/video/*"
+                "/videos/*"
             ],
             strip_components: 1,
             volumes: [
                {
-                    name: "video",
-                    path: "/video"
+                    name: "videos",
+                    path: "/videos"
                 }
             ]
         },
@@ -311,7 +311,7 @@ local build(arch, test_ui) = [{
             temp: {}
         },
         {
-            name: "video",
+            name: "videos",
             temp: {}
         },
         {
