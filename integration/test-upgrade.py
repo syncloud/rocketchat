@@ -34,6 +34,9 @@ def test_upgrade(device, arch, selenium, device_user, device_password, device_ho
 
     device.run_ssh('snap remove rocketchat')
     device.run_ssh('snap install rocketchat')
+    device.run_ssh(
+        '{0}/mongodb/bin/mongo.sh /mongodb.config.dump.js > {1}/mongo.config.old.dump.log'.format(app_dir, TMP_DIR),
+        throw=False)
 
     device.run_ssh('wget https://github.com/syncloud/3rdparty/releases/download/mongo-4.4/mongodb-amd64-4.4.tar.gz')
     device.run_ssh('tar xf mongodb-amd64-4.4.tar.gz')
