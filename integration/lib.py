@@ -11,8 +11,3 @@ def login(selenium, device_user, device_password):
     password.send_keys(Keys.RETURN)
     selenium.screenshot('login_progress')
 
-    #v4 selenium.find_by_xpath("//button[@title='Search']")
-    #v3 selenium.find_by_xpath("//button[@data-qa='sidebar-search']")
-    selenium.find_by_xpath("//button[@aria-label='Search']")
-
-    selenium.screenshot('main')

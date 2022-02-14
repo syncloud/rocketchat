@@ -49,3 +49,7 @@ def test_upgrade(device, arch, selenium, device_user, device_password, device_ho
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
 
     login(selenium, device_user, device_password)
+    selenium.find_by_xpath("//span[text()='Continue']").click()
+    selenium.find_by_xpath("//button[@aria-label='Search']")
+    selenium.screenshot('refresh-main')
+
