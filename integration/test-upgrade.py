@@ -55,6 +55,7 @@ def test_upgrade(device, arch, selenium, device_user, device_password, device_ho
     selenium.find_by_xpath("//h1[text()='Register Server']")
     selenium.find_by_xpath("//span[contains(text(), 'standalone')]").click()
     selenium.find_by_xpath("//button[@type='submit']").click()
+    selenium.find_by_xpath("//button[contains(text(), 'Go to your workspace')]").click()
     selenium.find_by_xpath("//button[@aria-label='Search']")
     selenium.screenshot('refresh-main')
 
