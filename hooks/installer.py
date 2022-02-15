@@ -1,5 +1,6 @@
 import json
 import logging
+import time
 import uuid
 from os import path
 from os.path import join
@@ -153,6 +154,8 @@ class Installer:
             f.write('installed\n')
 
     def update_setting(self, name, value, auth_token, user_id):
+        # throttle api requests
+        time.sleep(1)
 
         response = requests.post("{0}/settings/{1}".format(REST_URL, name),
                                  headers={"X-Auth-Token": auth_token, "X-User-Id": user_id},
