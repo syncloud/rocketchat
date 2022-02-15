@@ -230,7 +230,7 @@ local build(arch, test_ui) = [{
                 "artifact/*",
                 "/videos/*"
             ],
-            strip_components: 1,
+            # strip_components: 1,
             volumes: [
                {
                     name: "videos",
