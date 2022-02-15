@@ -9,7 +9,7 @@ apt -y install wget patch libglib2.0-0 python build-essential pkg-config glib2.0
 
 #libvips-dev
 cd $BUILD_DIR
-wget https://github.com/libvips/libvips/releases/download/v8.12.1/vips-8.12.1.tar.gz
+wget https://github.com/libvips/libvips/releases/download/v8.12.1/vips-8.12.1.tar.gz --progress dot:giga
 tar xf vips-*
 rm vips-*.tar.gz
 cd vips-*
