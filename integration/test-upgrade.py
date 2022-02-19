@@ -4,6 +4,7 @@ from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.installer import local_install
 from integration.lib import login
 from syncloudlib.http import wait_for_rest
+from selenium.webdriver.common.keys import Keys
 import requests
 
 TMP_DIR = '/tmp/syncloud'
@@ -34,6 +35,21 @@ def test_upgrade(device, arch, selenium, device_user, device_password, device_ho
 
     device.run_ssh('snap remove rocketchat')
     device.run_ssh('snap install rocketchat')
+    
+    wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
+    login(selenium, device_user, device_password)
+    selenium.find_by_xpath("//button[@type='submit']").click()
+    selenium.find_by_xpath("//h1[text()='Server Info']")
+    selenium.find_by_xpath("//button[@type='submit']").click()
+    selenium.find_by_xpath("//h1[text()='Register Server']")
+    selenium.find_by_xpath("//span[contains(text(), 'standalone')]").click()
+    selenium.find_by_xpath("//button[@type='submit']").click()
+    selenium.find_by_xpath("//button[span[text()='Go to your workspace']]").click()
+    selenium.find_by_xpath("//button[@aria-label='Search']")
+    selenium.find_by_xpath("//textarea[@placeholder='Message']").send_keys('test message')
+    selenium.find_by_xpath("//textarea[@placeholder='Message']").send_keys(Keys.RETURN)
+    selenium.find_by_xpath("//div[@dir='auto' and contains(.,'test message')]")
+
     device.run_ssh(
         '{0}/mongodb/bin/mongo.sh /mongodb.config.dump.js > {1}/mongo.config.old.dump.log'.format(app_dir, TMP_DIR),
         throw=False)
@@ -57,6 +73,7 @@ def test_upgrade(device, arch, selenium, device_user, device_password, device_ho
     selenium.find_by_xpath("//button[@type='submit']").click()
     selenium.find_by_xpath("//button[span[text()='Go to your workspace']]").click()
     selenium.find_by_xpath("//button[@aria-label='Search']")
+    selenium.find_by_xpath("//div[@dir='auto' and contains(.,'test message')]")
     selenium.screenshot('refresh-main')
 
 
