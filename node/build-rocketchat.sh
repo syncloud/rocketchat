@@ -4,12 +4,10 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 BUILD_DIR=${DIR}
 
 apt update
-apt -y install wget patch libglib2.0-0 python build-essential pkg-config glib2.0-dev libexpat1-dev libtool autoconf g++ build-essential
+apt -y install patch libglib2.0-0 python build-essential pkg-config glib2.0-dev libexpat1-dev libtool autoconf g++ build-essential
 
 #libvips-dev
 cd $BUILD_DIR
-tar xf vips-*
-rm vips-*.tar.gz
 cd vips-*
 ./configure
 make
@@ -20,7 +18,6 @@ make install
 #ls -la $BUILD_DIR/nodejs/usr/lib/*-linux-gnu*/
 
 cd ${DIR}
-tar xf rocketchat.tar.gz
 cd bundle
 for f in ${DIR}/patches/*.patch
 do
