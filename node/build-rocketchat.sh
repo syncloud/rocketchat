@@ -1,7 +1,6 @@
 #!/bin/bash -ex
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-ROCKETCHAT_VERSION=$1
 BUILD_DIR=${DIR}
 
 apt update
@@ -9,7 +8,6 @@ apt -y install wget patch libglib2.0-0 python build-essential pkg-config glib2.0
 
 #libvips-dev
 cd $BUILD_DIR
-wget https://github.com/libvips/libvips/releases/download/v8.12.1/vips-8.12.1.tar.gz --progress dot:giga
 tar xf vips-*
 rm vips-*.tar.gz
 cd vips-*
@@ -22,7 +20,6 @@ make install
 #ls -la $BUILD_DIR/nodejs/usr/lib/*-linux-gnu*/
 
 cd ${DIR}
-wget https://cdn-download.rocket.chat/build/rocket.chat-${ROCKETCHAT_VERSION}.tgz -O rocketchat.tar.gz --progress dot:giga
 tar xf rocketchat.tar.gz
 cd bundle
 for f in ${DIR}/patches/*.patch
