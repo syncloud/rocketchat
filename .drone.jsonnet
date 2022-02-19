@@ -91,10 +91,9 @@ local build(arch, test_ui) = [{
         name: "test-integration-jessie",
         image: "python:3.8-slim-buster",
         commands: [
-          "apt-get update && apt-get install -y sshpass openssh-client netcat rustc file libxml2-dev libxslt-dev build-essential libz-dev curl",
           "APP_ARCHIVE_PATH=$(realpath $(cat package.name))",
           "cd integration",
-          "pip install -r requirements.txt",
+          "./deps.sh",
           "py.test -x -s verify.py --device-user=testuser --distro=jessie --domain=jessie.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + ".jessie.com --app=" + name
         ]
     }] else []) + [
@@ -102,10 +101,9 @@ local build(arch, test_ui) = [{
         name: "test-integration-buster",
         image: "python:3.8-slim-buster",
         commands: [
-          "apt-get update && apt-get install -y sshpass openssh-client netcat rustc file libxml2-dev libxslt-dev build-essential libz-dev curl",
           "APP_ARCHIVE_PATH=$(realpath $(cat package.name))",
           "cd integration",
-          "pip install -r requirements.txt",
+          "./deps.sh",
           "py.test -x -s verify.py --device-user=testuser --distro=buster --domain=buster.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + ".buster.com --app=" + name + " --arch=" + arch
         ]
     }] + ( if test_ui then [
@@ -131,9 +129,8 @@ local build(arch, test_ui) = [{
         name: "test-ui-desktop-jessie",
         image: "python:3.8-slim-buster",
         commands: [
-          "apt-get update && apt-get install -y sshpass openssh-client libxml2-dev libxslt-dev build-essential libz-dev curl",
           "cd integration",
-          "pip install -r requirements.txt",
+          "./deps.sh",
           "py.test -x -s test-ui.py --device-user=testuser --distro=jessie --ui-mode=desktop --domain=jessie.com --device-host=" + name + ".jessie.com --app=" + name + " --browser=" + browser,
         ],
         volumes: [{
@@ -145,9 +142,8 @@ local build(arch, test_ui) = [{
         name: "test-ui-mobile-jessie",
         image: "python:3.8-slim-buster",
         commands: [
-          "apt-get update && apt-get install -y sshpass openssh-client libxml2-dev libxslt-dev build-essential libz-dev curl",
           "cd integration",
-          "pip install -r requirements.txt",
+          "./deps.sh",
           "py.test -x -s test-ui.py --device-user=testuser --distro=jessie --ui-mode=mobile --domain=jessie.com --device-host=" + name + ".jessie.com --app=" + name + " --browser=" + browser,
         ],
         volumes: [{
@@ -169,9 +165,8 @@ local build(arch, test_ui) = [{
         name: "test-ui-mobile-buster",
         image: "python:3.8-slim-buster",
         commands: [
-          "apt-get update && apt-get install -y sshpass openssh-client libxml2-dev libxslt-dev build-essential libz-dev curl",
           "cd integration",
-          "pip install -r requirements.txt",
+          "./deps.sh",
           "py.test -x -s test-ui.py --device-user=testuser --distro=buster --ui-mode=mobile --domain=buster.com --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
         ]
     } ] else [] ) +[
@@ -179,10 +174,9 @@ local build(arch, test_ui) = [{
         name: "test-upgrade",
         image: "python:3.8-slim-buster",
         commands: [
-          "apt-get update && apt-get install -y sshpass openssh-client netcat rustc file libxml2-dev libxslt-dev build-essential libz-dev curl",
           "APP_ARCHIVE_PATH=$(realpath $(cat package.name))",
           "cd integration",
-          "pip install -r requirements.txt",
+          "./deps.sh",
           "py.test -x -s test-upgrade.py --device-user=testuser --distro=buster --ui-mode=desktop --domain=buster.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
         ],
         volumes: [{
@@ -365,4 +359,3 @@ local build(arch, test_ui) = [{
 
 build("amd64", true) +
 build("arm64", false)
-
