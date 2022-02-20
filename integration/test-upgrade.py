@@ -46,6 +46,11 @@ def test_upgrade(device, arch, selenium, device_user, device_password, device_ho
     selenium.find_by_xpath("//button[@type='submit']").click()
     selenium.find_by_xpath("//button[span[text()='Go to your workspace']]").click()
     selenium.find_by_xpath("//button[@aria-label='Search']")
+  
+    selenium.driver.get("https://{0}/channel/general".format(app_domain))
+    #v3 selenium.find_by_xpath("//div[text()='Start of conversation']")
+    selenium.find_by_xpath("//*[text()='Start of conversation']")
+ 
     selenium.find_by_xpath("//textarea[@placeholder='Message']").send_keys('test message')
     selenium.find_by_xpath("//textarea[@placeholder='Message']").send_keys(Keys.RETURN)
     selenium.find_by_xpath("//div[@dir='auto' and contains(.,'test message')]")
@@ -73,6 +78,9 @@ def test_upgrade(device, arch, selenium, device_user, device_password, device_ho
     selenium.find_by_xpath("//button[@type='submit']").click()
     selenium.find_by_xpath("//button[span[text()='Go to your workspace']]").click()
     selenium.find_by_xpath("//button[@aria-label='Search']")
+    selenium.driver.get("https://{0}/channel/general".format(app_domain))
+    #v3 selenium.find_by_xpath("//div[text()='Start of conversation']")
+    selenium.find_by_xpath("//*[text()='Start of conversation']")
     selenium.find_by_xpath("//div[@dir='auto' and contains(.,'test message')]")
     selenium.screenshot('refresh-main')
 
