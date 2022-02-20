@@ -223,6 +223,7 @@ local build(arch, test_ui) = [{
             source: [
                 "artifact/*"
             ],
+            privileged: true,
             strip_components: 1,
             volumes: [
                {
