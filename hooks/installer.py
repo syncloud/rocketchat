@@ -1,5 +1,6 @@
 import json
 import logging
+import time
 import uuid
 from os import path
 from os.path import join
@@ -39,6 +40,9 @@ class Installer:
                 check_output(
                     '{0}/mongodb/bin/mongodump.sh --archive={1} --gzip'.format(self.snap_dir, self.database_dump),
                     shell=True))
+            self.log.info(
+                check_output('{0}/mongodb/bin/mongo.sh --eval \'db.repairDatabase()\''.format(self.snap_dir),
+                             shell=True))
         except CalledProcessError as e:
             self.log.error("pre_refresh error: " + e.output.decode())
             raise e
@@ -150,6 +154,8 @@ class Installer:
             f.write('installed\n')
 
     def update_setting(self, name, value, auth_token, user_id):
+        # throttle api requests
+        time.sleep(5)
 
         response = requests.post("{0}/settings/{1}".format(REST_URL, name),
                                  headers={"X-Auth-Token": auth_token, "X-User-Id": user_id},

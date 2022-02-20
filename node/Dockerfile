@@ -1,4 +1,10 @@
-FROM node:12.22.1-slim
-RUN apt update
-RUN apt install -y libglib2.0-0 libexpat1
+ARG NODE_VERSION
+FROM node:$NODE_VERSION
+ADD ./build-rocketchat.sh /build/build-rocketchat.sh
+ADD ./vips-* /build
+ADD ./rocketchat.tar.gz /build
+ADD ./patches/app.patch /build/patches/app.patch
+RUN /build/build-rocketchat.sh
+RUN mv /build/bundle /rocketchat
+RUN rm -rf /build
 RUN rm -rf /var/lib/apt/lists/*

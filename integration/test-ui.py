@@ -1,10 +1,9 @@
 import pytest
 import time
 from os.path import dirname, join
-from selenium.webdriver.common.keys import Keys
 from subprocess import check_output
 from syncloudlib.integration.hosts import add_host_alias
-from ui.lib import login
+from integration.lib import login
 
 DIR = dirname(__file__)
 TMP_DIR = '/tmp/syncloud/ui'
@@ -29,6 +28,10 @@ def test_start(module_setup, app, domain, device_host):
 
 def test_login(selenium, device_user, device_password):
     login(selenium, device_user, device_password)
+    #v4 selenium.find_by_xpath("//button[@title='Search']")
+    #v3 selenium.find_by_xpath("//button[@data-qa='sidebar-search']")
+    selenium.find_by_xpath("//button[@aria-label='Search']")
+    selenium.screenshot('main')
 
 
 def test_profile(selenium, app_domain):
@@ -39,12 +42,13 @@ def test_profile(selenium, app_domain):
     profile_file = selenium.find_by_css(profile_file)
     profile_file.send_keys(join(DIR, 'images', 'profile.jpeg'))
      
-    username = selenium.find_by_xpath("//div/label[text()='Name']/following-sibling::span/input")
+    #v3 username = selenium.find_by_xpath("//div/label[text()='Name']/following-sibling::span/input")
+    username = selenium.find_by_id("realname")
     username.send_keys('Syncloud user')
     
-    email = selenium.find_by_xpath("//div/label[text()='Email']/following-sibling::span/label/input")
-    email.clear()
-    email.send_keys('test@gmail.com')
+    #email = selenium.find_by_xpath("//div/label[text()='Email']/following-sibling::span/label/input")
+    #email.clear()
+    #email.send_keys('test@gmail.com')
 
     selenium.screenshot('profile-new-name')
 
@@ -58,5 +62,10 @@ def test_profile(selenium, app_domain):
 
 def test_channel(selenium, app_domain):
     selenium.driver.get("https://{0}/channel/general".format(app_domain))
-    time.sleep(10)
+    #v3 selenium.find_by_xpath("//div[text()='Start of conversation']")
+    selenium.find_by_xpath("//*[text()='Start of conversation']")
     selenium.screenshot('channel')
+
+
+def test_teardown(driver):
+    driver.quit()

@@ -8,7 +8,7 @@ apt install -y libltdl7 libnss3
 BUILD_DIR=${DIR}/../build/rocketchat/mongodb
 docker ps -a -q --filter ancestor=mongo:syncloud --format="{{.ID}}" | xargs docker stop | xargs docker rm || true
 docker rmi mongo:syncloud || true
-docker build -t mongo:syncloud .
+docker build --build-arg MONGO_VERSION=$1 -t mongo:syncloud .
 docker run mongo:syncloud mongo --help
 docker create --name=mongo mongo:syncloud
 mkdir -p ${BUILD_DIR}

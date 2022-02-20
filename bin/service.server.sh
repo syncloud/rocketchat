@@ -34,12 +34,12 @@ start)
     wait_for_mongo
     echo "MONGO_URL: $MONGO_URL"
     echo "MONGO_OPLOG_URL: $MONGO_OPLOG_URL"
-    export EXIT_UNHANDLEDPROMISEREJECTION=1
+#    export EXIT_UNHANDLEDPROMISEREJECTION=1
     echo "starting server"
     started=0
     set +e
     for i in $(seq 1 30); do
-      ${DIR}/nodejs/bin/node.sh ${DIR}/bundle/main.js
+      ${DIR}/nodejs/bin/node.sh ${DIR}/nodejs/rocketchat/main.js
       if [[ $? == 0 ]]; then
         started=1
         break
