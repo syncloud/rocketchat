@@ -179,6 +179,7 @@ local build(arch, test_ui) = [{
           "./deps.sh",
           "py.test -x -s test-upgrade.py --device-user=testuser --distro=buster --ui-mode=desktop --domain=buster.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
         ],
+        privileged: true,
         volumes: [{
             name: "videos",
             path: "/videos"
