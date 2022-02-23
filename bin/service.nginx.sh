@@ -13,7 +13,7 @@ function wait_for_server() {
     echo "waiting for server"
     started=0
     set +e
-    for i in $(seq 1 30); do
+    for i in $(seq 1 60); do
       echo > /dev/tcp/localhost/$PORT
       if [[ $? == 0 ]]; then
         echo "started"
@@ -34,13 +34,13 @@ case $1 in
 start)
     wait_for_server
 	  /bin/rm -f /var/snap/rocketchat/common/web.socket
-    exec ${DIR}/nginx/sbin/nginx -c /var/snap/rocketchat/current/config/nginx.conf -p ${DIR}/nginx -g 'error_log /var/snap/rocketchat/common/log/nginx_error.log warn;'
+    exec ${DIR}/nginx/sbin/nginx -c /snap/rocketchat/current/config/nginx.conf -p ${DIR}/nginx -g 'error_log stderr warn;'
     ;;
 reload)
-    ${DIR}/nginx/sbin/nginx -c /var/snap/rocketchat/current/config/nginx.conf -s reload -p ${DIR}/nginx
+    ${DIR}/nginx/sbin/nginx -c /snap/rocketchat/current/config/nginx.conf -s reload -p ${DIR}/nginx
     ;;
 stop)
-    ${DIR}/nginx/sbin/nginx -c /var/snap/rocketchat/current/config/nginx.conf -s stop -p ${DIR}/nginx
+    ${DIR}/nginx/sbin/nginx -c /snap/rocketchat/current/config/nginx.conf -s stop -p ${DIR}/nginx
     ;;
 *)
     echo "not valid command"

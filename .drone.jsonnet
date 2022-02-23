@@ -1,4 +1,7 @@
 local name = "rocketchat";
+local rocketchat_version = "1.2.4";
+local node_version = "8.11.4-slim";
+local mongo_version = "4.0.28";
 local browser = "firefox";
 
 local build(arch, test_ui) = [{
@@ -10,227 +13,230 @@ local build(arch, test_ui) = [{
         arch: arch
     },
     steps: [
-     {
-            name: "version",
-            image: "debian:buster-slim",
-            commands: [
-                "echo $DRONE_BUILD_NUMBER > version"
-            ]
+    {
+        name: "version",
+        image: "debian:buster-slim",
+        commands: [
+            "echo $DRONE_BUILD_NUMBER > version"
+        ]
+    },
+    {
+        name: "download",
+        image: "debian:buster-slim",
+        commands: [
+            "./download.sh " + name
+        ]
+    },
+    {
+        name: "build",
+        image: "debian:buster-slim",
+        commands: [
+            "./node/build.sh " + node_version + " " + rocketchat_version
+        ],
+        volumes: [
+            {
+                name: "docker",
+                path: "/usr/bin/docker"
+            },
+            {
+               name: "docker.sock",
+               path: "/var/run/docker.sock"
+            }
+        ]
+    },
+    {
+        name: "package mongo",
+        image: "debian:buster-slim",
+        commands: [
+            "./mongo/build.sh " + mongo_version
+        ],
+        volumes: [
+            {
+                name: "docker",
+                path: "/usr/bin/docker"
+            },
+            {
+               name: "docker.sock",
+               path: "/var/run/docker.sock"
+            }
+        ]
+    },
+    {
+        name: "package python",
+        image: "debian:buster-slim",
+        commands: [
+            "./python/build.sh"
+        ],
+        volumes: [
+            {
+                name: "docker",
+                path: "/usr/bin/docker"
+            },
+            {
+                name: "docker.sock",
+                path: "/var/run/docker.sock"
+            }
+        ]
+    },
+    {
+        name: "package",
+        image: "debian:buster-slim",
+        commands: [
+            "VERSION=$(cat version)",
+            "./package.sh " + name + " $VERSION " + arch
+        ]
+    }
+    ] + ( if arch == "amd64" then [
+    {
+        name: "test-integration-jessie",
+        image: "python:3.8-slim-buster",
+        commands: [
+          "APP_ARCHIVE_PATH=$(realpath $(cat package.name))",
+          "cd integration",
+          "./deps.sh",
+          "py.test -x -s verify.py --device-user=testuser --distro=jessie --domain=jessie.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + ".jessie.com --app=" + name
+        ]
+    }] else []) + [
+    {
+        name: "test-integration-buster",
+        image: "python:3.8-slim-buster",
+        commands: [
+          "APP_ARCHIVE_PATH=$(realpath $(cat package.name))",
+          "cd integration",
+          "./deps.sh",
+          "py.test -x -s verify.py --device-user=testuser --distro=buster --domain=buster.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + ".buster.com --app=" + name + " --arch=" + arch
+        ]
+    }] + ( if test_ui then [
+    {
+        name: "selenium-video",
+        image: "selenium/video:ffmpeg-4.3.1-20220208",
+        detach: true,
+        environment: {
+            "DISPLAY_CONTAINER_NAME": "selenium",
         },
-        {
-            name: "build node",
-            image: "debian:buster-slim",
-            commands: [
-                "./node/build.sh"
-            ],
-            volumes: [
-                {
-                    name: "docker",
-                    path: "/usr/bin/docker"
-                },
-                {
-                   name: "docker.sock",
-                   path: "/var/run/docker.sock"
-                }
-            ]
+        volumes: [
+            {
+                name: "shm",
+                path: "/dev/shm"
+            },
+           {
+                name: "videos",
+                path: "/videos"
+            }
+        ]
+    },
+    {
+        name: "test-ui-desktop-jessie",
+        image: "python:3.8-slim-buster",
+        commands: [
+          "cd integration",
+          "./deps.sh",
+          "py.test -x -s test-ui.py --device-user=testuser --distro=jessie --ui-mode=desktop --domain=jessie.com --device-host=" + name + ".jessie.com --app=" + name + " --browser=" + browser,
+        ],
+        volumes: [{
+            name: "shm",
+            path: "/dev/shm"
+        }]
+    },
+    {
+        name: "test-ui-mobile-jessie",
+        image: "python:3.8-slim-buster",
+        commands: [
+          "cd integration",
+          "./deps.sh",
+          "py.test -x -s test-ui.py --device-user=testuser --distro=jessie --ui-mode=mobile --domain=jessie.com --device-host=" + name + ".jessie.com --app=" + name + " --browser=" + browser,
+        ],
+        volumes: [{
+            name: "shm",
+            path: "/dev/shm"
+        }]
+    },
+    {
+        name: "test-ui-desktop-buster",
+        image: "python:3.8-slim-buster",
+        commands: [
+          "apt-get update && apt-get install -y sshpass openssh-client libxml2-dev libxslt-dev build-essential libz-dev curl",
+          "cd integration",
+          "pip install -r requirements.txt",
+          "py.test -x -s test-ui.py --device-user=testuser --distro=buster --ui-mode=desktop --domain=buster.com --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
+        ]
+    },
+    {
+        name: "test-ui-mobile-buster",
+        image: "python:3.8-slim-buster",
+        commands: [
+          "cd integration",
+          "./deps.sh",
+          "py.test -x -s test-ui.py --device-user=testuser --distro=buster --ui-mode=mobile --domain=buster.com --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
+        ]
+    } ] else [] ) +[
+    {
+        name: "test-upgrade",
+        image: "python:3.8-slim-buster",
+        commands: [
+          "APP_ARCHIVE_PATH=$(realpath $(cat package.name))",
+          "cd integration",
+          "./deps.sh",
+          "py.test -x -s test-upgrade.py --device-user=testuser --distro=buster --ui-mode=desktop --domain=buster.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
+        ],
+        privileged: true,
+        volumes: [{
+            name: "videos",
+            path: "/videos"
+        }]
+    },
+    {
+        name: "upload",
+        image: "debian:buster-slim",
+        environment: {
+            AWS_ACCESS_KEY_ID: {
+                from_secret: "AWS_ACCESS_KEY_ID"
+            },
+            AWS_SECRET_ACCESS_KEY: {
+                from_secret: "AWS_SECRET_ACCESS_KEY"
+            }
         },
-        {
-            name: "build mongo",
-            image: "debian:buster-slim",
-            commands: [
-                "./mongo/build.sh"
-            ],
-            volumes: [
-                {
-                    name: "docker",
-                    path: "/usr/bin/docker"
-                },
-                {
-                   name: "docker.sock",
-                   path: "/var/run/docker.sock"
-                }
-            ]
-        },
-       {
-            name: "build python",
-            image: "debian:buster-slim",
-            commands: [
-                "./python/build.sh"
-            ],
-            volumes: [
-                {
-                    name: "docker",
-                    path: "/usr/bin/docker"
-                },
-                {
-                    name: "docker.sock",
-                    path: "/var/run/docker.sock"
-                }
-            ]
-        },
-        {
-            name: "download",
-            image: "debian:buster-slim",
-            commands: [
-                "./download.sh " + name
-            ]
-        },
-        {
-            name: "build",
-            image: "node:12.18.4-slim",
-            commands: [
-                "./build.sh " + name
-            ]
-        },
-        {
-            name: "package",
-            image: "debian:buster-slim",
-            commands: [
-                "VERSION=$(cat version)",
-                "./package.sh " + name + " $VERSION " + arch
-            ]
+        commands: [
+          "PACKAGE=$(cat package.name)",
+          "apt update && apt install -y wget",
+          "wget https://github.com/syncloud/snapd/releases/download/1/syncloud-release-" + arch,
+          "chmod +x syncloud-release-*",
+          "./syncloud-release-* publish -f $PACKAGE -b $DRONE_BRANCH"
+         ],
+        when: {
+            branch: ["stable", "master"]
         }
-        ] + ( if arch == "amd64" then [
-        {
-            name: "test-integration-jessie",
-            image: "python:3.8-slim-buster",
-            commands: [
-              "apt-get update && apt-get install -y sshpass openssh-client netcat rustc file libxml2-dev libxslt-dev build-essential libz-dev curl",
-              "APP_ARCHIVE_PATH=$(realpath $(cat package.name))",
-              "cd integration",
-              "pip install -r requirements.txt",
-              "py.test -x -s verify.py --device-user=testuser --distro=jessie --domain=jessie.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + ".jessie.com --app=" + name
-            ]
-        }] else []) + [
-        {
-            name: "test-integration-buster",
-            image: "python:3.8-slim-buster",
-            commands: [
-              "apt-get update && apt-get install -y sshpass openssh-client netcat rustc file libxml2-dev libxslt-dev build-essential libz-dev curl",
-              "APP_ARCHIVE_PATH=$(realpath $(cat package.name))",
-              "cd integration",
-              "pip install -r requirements.txt",
-              "py.test -x -s verify.py --device-user=testuser --distro=buster --domain=buster.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + ".buster.com --app=" + name
-            ]
-        }] + ( if test_ui then [
-        {
-            name: "test-ui-desktop-jessie",
-            image: "python:3.8-slim-buster",
-            commands: [
-              "apt-get update && apt-get install -y sshpass openssh-client libxml2-dev libxslt-dev build-essential libz-dev curl",
-              "cd integration",
-              "pip install -r requirements.txt",
-              "py.test -x -s test-ui.py --device-user=testuser --distro=jessie --ui-mode=desktop --domain=jessie.com --device-host=" + name + ".jessie.com --app=" + name + " --browser=" + browser,
+    },
+    {
+        name: "artifact",
+        image: "appleboy/drone-scp:1.6.2",
+        settings: {
+            host: {
+                from_secret: "artifact_host"
+            },
+            username: "artifact",
+            key: {
+                from_secret: "artifact_key"
+            },
+            timeout: "2m",
+            command_timeout: "2m",
+            target: "/home/artifact/repo/" + name + "/${DRONE_BUILD_NUMBER}-" + arch,
+            source: [
+                "artifact/*"
             ],
-            volumes: [{
-                name: "shm",
-                path: "/dev/shm"
-            }]
-        },
-        {
-            name: "test-ui-mobile-jessie",
-            image: "python:3.8-slim-buster",
-            commands: [
-              "apt-get update && apt-get install -y sshpass openssh-client libxml2-dev libxslt-dev build-essential libz-dev curl",
-              "cd integration",
-              "pip install -r requirements.txt",
-              "py.test -x -s test-ui.py --device-user=testuser --distro=jessie --ui-mode=mobile --domain=jessie.com --device-host=" + name + ".jessie.com --app=" + name + " --browser=" + browser,
-            ],
-            volumes: [{
-                name: "shm",
-                path: "/dev/shm"
-            }]
-        },
-        {
-            name: "test-ui-desktop-buster",
-            image: "python:3.8-slim-buster",
-            commands: [
-              "apt-get update && apt-get install -y sshpass openssh-client libxml2-dev libxslt-dev build-essential libz-dev curl",
-              "cd integration",
-              "pip install -r requirements.txt",
-              "py.test -x -s test-ui.py --device-user=testuser --distro=buster --ui-mode=desktop --domain=buster.com --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
-            ],
-            volumes: [{
-                name: "shm",
-                path: "/dev/shm"
-            }]
-        },
-        {
-            name: "test-ui-mobile-buster",
-            image: "python:3.8-slim-buster",
-            commands: [
-              "apt-get update && apt-get install -y sshpass openssh-client libxml2-dev libxslt-dev build-essential libz-dev curl",
-              "cd integration",
-              "pip install -r requirements.txt",
-              "py.test -x -s test-ui.py --device-user=testuser --distro=buster --ui-mode=mobile --domain=buster.com --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
-            ],
-            volumes: [{
-                name: "shm",
-                path: "/dev/shm"
-            }]
-        } ] else [] ) +[
-        {
-            name: "upload",
-            image: "debian:buster-slim",
-            environment: {
-                AWS_ACCESS_KEY_ID: {
-                    from_secret: "AWS_ACCESS_KEY_ID"
-                },
-                AWS_SECRET_ACCESS_KEY: {
-                    from_secret: "AWS_SECRET_ACCESS_KEY"
+            privileged: true,
+            strip_components: 1,
+            volumes: [
+               {
+                    name: "videos",
+                    path: "/drone/src/artifact/videos"
                 }
-            },
-            commands: [
-              "PACKAGE=$(cat package.name)",
-              "apt update && apt install -y wget",
-              "wget https://github.com/syncloud/snapd/releases/download/1/syncloud-release-" + arch,
-              "chmod +x syncloud-release-*",
-              "./syncloud-release-* publish -f $PACKAGE -b $DRONE_BRANCH"
-             ],
-            when: {
-                branch: ["stable", "master"]
-            }
+            ]
         },
-        {
-            name: "artifact",
-            image: "appleboy/drone-scp:1.6.2",
-            settings: {
-                host: {
-                    from_secret: "artifact_host"
-                },
-                username: "artifact",
-                key: {
-                    from_secret: "artifact_key"
-                },
-                timeout: "2m",
-                command_timeout: "2m",
-                target: "/home/artifact/repo/" + name + "/${DRONE_BUILD_NUMBER}-" + arch,
-                source: "artifact/*",
-		             strip_components: 1
-            },
-            when: {
-              status: [ "failure", "success" ]
-            }
-        },
-        {
-            name: "promote",
-            image: "python:3.8-slim-buster",
-            environment: {
-                AWS_ACCESS_KEY_ID: {
-                    from_secret: "AWS_ACCESS_KEY_ID"
-                },
-                AWS_SECRET_ACCESS_KEY: {
-                    from_secret: "AWS_SECRET_ACCESS_KEY"
-                }
-            },
-            commands: [
-              "pip install syncloud-lib s3cmd",
-              "syncloud-promote.sh " + name + " " + arch
-            ],
-            when: {
-              event: [ "promote" ]
-            }
+        when: {
+          status: [ "failure", "success" ]
         }
+    }
     ],
     trigger: {
       event: [
@@ -256,7 +262,7 @@ local build(arch, test_ui) = [{
         }] else []) + [
         {
             name: name + ".buster.com",
-            image: "syncloud/platform-buster-" + arch + ":21.10",
+            image: "syncloud/platform-buster-" + arch + ":22.01",
             privileged: true,
             volumes: [
                 {
@@ -269,9 +275,13 @@ local build(arch, test_ui) = [{
                 }
             ]
         }
-    ] + ( if test_ui then [{
+    ] + ( if test_ui then [
+        {
             name: "selenium",
-            image: "selenium/standalone-" + browser + ":4.0.0-beta-3-prerelease-20210402",
+            image: "selenium/standalone-" + browser + ":4.1.2-20220208",
+            environment: {
+                SE_NODE_SESSION_TIMEOUT: "999999"
+            },
             volumes: [{
                 name: "shm",
                 path: "/dev/shm"
@@ -293,6 +303,10 @@ local build(arch, test_ui) = [{
         },
         {
             name: "shm",
+            temp: {}
+        },
+        {
+            name: "videos",
             temp: {}
         },
         {
@@ -344,5 +358,5 @@ local build(arch, test_ui) = [{
      }
  }];
 
-build("amd64", true) +
-build("arm64", false)
+build("amd64", true)
+# + build("arm64", false)

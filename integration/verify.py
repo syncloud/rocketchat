@@ -20,15 +20,18 @@ def module_setup(device, request, data_dir, platform_data_dir, artifact_dir):
         device.run_ssh('mkdir {0}'.format(TMP_DIR))
         device.run_ssh('top -bn 1 -w 500 -c > {0}/top.log'.format(TMP_DIR), throw=False)
         device.run_ssh('ps auxfw > {0}/ps.log'.format(TMP_DIR), throw=False)
-        device.run_ssh('systemctl status rocketchat-server > {0}/rocketchat.status.log'.format(TMP_DIR), throw=False)
+        device.run_ssh('systemctl status snap.rocketchat.server > {0}/rocketchat.status.log'.format(TMP_DIR), throw=False)
+        device.run_ssh('systemctl status snap.rocketchat.mongodb > {0}/mongodb.status.log'.format(TMP_DIR), throw=False)
         device.run_ssh('netstat -nlp > {0}/netstat.log'.format(TMP_DIR), throw=False)
         device.run_ssh('journalctl > {0}/journalctl.log'.format(TMP_DIR), throw=False)
         device.run_ssh('cp /var/log/syslog {0}/syslog.log'.format(TMP_DIR), throw=False)
         device.run_ssh('cp /var/log/messages {0}/messages.log'.format(TMP_DIR), throw=False)
         device.run_ssh('ls -la /snap > {0}/snap.ls.log'.format(TMP_DIR), throw=False)
         device.run_ssh('ls -la /snap/rocketchat > {0}/snap.rocketchat.ls.log'.format(TMP_DIR), throw=False)
-        device.run_ssh('ls -la {0} > {1}/data.dir.ls.log'.format(data_dir, TMP_DIR), throw=False)
+        device.run_ssh('ls -la /var/snap/rocketchat/current/> {0}/var.current.ls.log'.format(TMP_DIR), throw=False)
+        device.run_ssh('ls -la /var/snap/rocketchat/common/> {0}/var.common.ls.log'.format(TMP_DIR), throw=False)
         device.run_ssh('ls -la {0}/log > {1}/data.log.dir.ls.log'.format(data_dir, TMP_DIR), throw=False)
+        device.run_ssh('df -h > {0}/df.log'.format(TMP_DIR), throw=False)
         device.run_ssh('df -h > {0}/df.log'.format(TMP_DIR), throw=False)
 
         device.scp_from_device('{0}/config/rocketchat.env'.format(data_dir), artifact_dir)
@@ -60,6 +63,14 @@ def test_remove(device, app):
 
 def test_reinstall(app_archive_path, device_host, device_password):
     local_install(device_host, device_password, app_archive_path)
+
+
+def test_upgrade(app_archive_path, device_host, device_password):
+    local_install(device_host, device_password, app_archive_path)
+
+
+def test_mongo_export_on_upgrade(device):
+    device.run_ssh('ls /var/snap/rocketchat/current/database.dump.gzip')
 
 
 def test_mongo_config(device, app_dir, data_dir):

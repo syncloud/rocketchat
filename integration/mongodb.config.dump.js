@@ -3,5 +3,5 @@ db = conn.getDB("rocketchat");
 
 cursor = db.rocketchat_settings.find();
 while ( cursor.hasNext() ) {
-   printjson( cursor.next() );
+    printjson( cursor.next() );
 }
