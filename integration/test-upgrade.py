@@ -38,15 +38,7 @@ def test_upgrade(device, arch, selenium, device_user, device_password, device_ho
     
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
     login(selenium, device_user, device_password)
-    selenium.find_by_xpath("//button[@type='submit']").click()
-    selenium.find_by_xpath("//h1[text()='Server Info']")
-    selenium.find_by_xpath("//button[@type='submit']").click()
-    selenium.find_by_xpath("//h1[text()='Register Server']")
-    selenium.find_by_xpath("//span[contains(text(), 'standalone')]").click()
-    selenium.find_by_xpath("//button[@type='submit']").click()
-    selenium.find_by_xpath("//button[span[text()='Go to your workspace']]").click()
-    selenium.find_by_xpath("//button[@aria-label='Search']")
-  
+    
     selenium.driver.get("https://{0}/channel/general".format(app_domain))
     #v3 selenium.find_by_xpath("//div[text()='Start of conversation']")
     selenium.find_by_xpath("//*[text()='Start of conversation']")
