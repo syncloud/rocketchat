@@ -5,13 +5,18 @@ cd ${DIR}
 apt update
 apt install -y libltdl7 libnss3 wget
 
+NODE_VERSION=$1
+ROCKRETCHAT_VERSION=$2
+
 wget https://github.com/libvips/libvips/releases/download/v8.12.1/vips-8.12.1.tar.gz --progress dot:giga
-wget https://cdn-download.rocket.chat/build/rocket.chat-${2}.tgz -O rocketchat.tar.gz --progress dot:giga
+wget https://cdn-download.rocket.chat/build/rocket.chat-$ROCKRETCHAT_VERSION.tgz -O rocketchat.tar.gz --progress dot:giga
 
 BUILD_DIR=${DIR}/../build/rocketchat/nodejs
+echo $ROCKRETCHAT_VERSION > $BUILD_DIR/rocketchat.version
+
 docker ps -a -q --filter ancestor=nodejs:syncloud --format="{{.ID}}" | xargs docker stop | xargs docker rm || true
 docker rmi nodejs:syncloud || true
-docker build --build-arg NODE_VERSION=$1 -t nodejs:syncloud .
+docker build --build-arg NODE_VERSION=$NODE_VERSION -t nodejs:syncloud .
 docker run nodejs:syncloud nodejs --help
 docker create --name=nodejs nodejs:syncloud
 mkdir -p ${BUILD_DIR}
