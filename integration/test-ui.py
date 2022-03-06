@@ -28,11 +28,7 @@ def test_start(module_setup, app, domain, device_host):
 
 def test_login(selenium, device_user, device_password):
     login(selenium, device_user, device_password)
-    #v4 selenium.find_by_xpath("//button[@title='Search']")
-    #v3 selenium.find_by_xpath("//button[@data-qa='sidebar-search']")
-    selenium.find_by_xpath("//button[@aria-label='Search']")
-    selenium.screenshot('main')
-
+ 
 
 def test_profile(selenium, app_domain):
     selenium.driver.get("https://{0}/account/profile".format(app_domain))
