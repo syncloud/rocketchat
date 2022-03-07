@@ -1,6 +1,6 @@
 local name = "rocketchat";
-local rocketchat_version = "2.0.1";
-local node_version = "8.11.4-slim";
+local rocketchat_version = "2.1.3";
+local node_version = "8.15.1-slim";
 local mongo_version = "4.0.28";
 local browser = "firefox";
 
@@ -359,4 +359,5 @@ local build(arch, test_ui) = [{
  }];
 
 build("amd64", true)
-# + build("arm64", false)
++ build("arm64", false)
+)
