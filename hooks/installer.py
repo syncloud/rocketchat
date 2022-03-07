@@ -16,7 +16,7 @@ USER_NAME = 'rocketchat'
 PORT = 3000
 MONGODB_PORT = 27017
 REST_URL = "http://localhost:{0}/api/v1".format(PORT)
-
+OLD_MAJOR_VERSION = '1.3'
 
 class Installer:
     def __init__(self):
@@ -32,6 +32,8 @@ class Installer:
         self.database_dump = join(self.data_dir, 'database.dump.gzip')
         self.rocketchat_env_file_source = join(self.snap_dir, 'config', 'rocketchat.env')
         self.rocketchat_env_file_target = join(self.data_dir, 'config', 'rocketchat.env')
+        self.version_new_file = join(self.snap_dir, 'nodejs', 'rocketchat.version')
+        self.version_old_file = join(self.data_dir, 'rocketchat.version')
 
     def pre_refresh(self):
         try:
@@ -79,6 +81,15 @@ class Installer:
             self._upgrade()
         else:
             self._install()
+
+    def allowed_major_version():
+        allowed = True
+        if path.isfile(self.version_old_file):
+            old_version = open(self.version_old_file).read().strip()
+            allowed = old_version.startswith(OLD_MAJOR_VERSION + '.')
+        if allowed:
+            shutil.copy(self.version_new_file, self.version_old_file)
+        return allowed
 
     def _upgrade(self):
         self.log.info('configure upgrade')
