@@ -89,8 +89,8 @@ class Installer:
     def allowed_major_version(self):
         allowed = True
         if path.isfile(self.version_old_file):
-            old_major = major_version(open(self.version_old_file).read().strip())
-            new_major = major_version(open(self.version_new_file).read().strip())
+            old_major = self.major_version(open(self.version_old_file).read().strip())
+            new_major = self.major_version(open(self.version_new_file).read().strip())
             allowed = old_major == SUPPORTED_MAJOR_VERSION or old_major == new_major
         if allowed:
             shutil.copy(self.version_new_file, self.version_old_file)
