@@ -75,6 +75,9 @@ class Installer:
 
     def configure(self):
         self.log.info('configure')
+        if not self.allowed_major_version():
+            raise Exception('cannot skip major versions')
+
         wait_for_rest(requests.session(), REST_URL, 200, 100)
 
         if path.isfile(self.install_file):
