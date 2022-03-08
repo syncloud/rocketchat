@@ -5,7 +5,7 @@ import uuid
 from os import path
 from os.path import join
 from subprocess import check_output, CalledProcessError
-
+import shutil
 import requests
 from syncloudlib import fs, linux, gen, logger
 from syncloudlib.application import urls, storage
