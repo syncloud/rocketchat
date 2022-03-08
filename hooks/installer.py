@@ -85,7 +85,7 @@ class Installer:
         else:
             self._install()
 
-    def allowed_major_version():
+    def allowed_major_version(self):
         allowed = True
         if path.isfile(self.version_old_file):
             old_version = open(self.version_old_file).read().strip()
