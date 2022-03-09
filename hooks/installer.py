@@ -5,18 +5,19 @@ import uuid
 from os import path
 from os.path import join
 from subprocess import check_output, CalledProcessError
-
+import shutil
 import requests
 from syncloudlib import fs, linux, gen, logger
 from syncloudlib.application import urls, storage
 from syncloudlib.http import wait_for_rest
+import re
 
 APP_NAME = 'rocketchat'
 USER_NAME = 'rocketchat'
 PORT = 3000
 MONGODB_PORT = 27017
 REST_URL = "http://localhost:{0}/api/v1".format(PORT)
-OLD_MAJOR_VERSION = '1.3'
+SUPPORTED_MAJOR_VERSION = '2.0'
 
 class Installer:
     def __init__(self):
@@ -75,6 +76,9 @@ class Installer:
 
     def configure(self):
         self.log.info('configure')
+        if not self.allowed_major_version():
+            raise Exception('cannot skip major versions')
+
         wait_for_rest(requests.session(), REST_URL, 200, 100)
 
         if path.isfile(self.install_file):
@@ -82,14 +86,19 @@ class Installer:
         else:
             self._install()
 
-    def allowed_major_version():
+    def allowed_major_version(self):
         allowed = True
         if path.isfile(self.version_old_file):
-            old_version = open(self.version_old_file).read().strip()
-            allowed = old_version.startswith(OLD_MAJOR_VERSION + '.')
+            old_major = self.major_version(open(self.version_old_file).read().strip())
+            new_major = self.major_version(open(self.version_new_file).read().strip())
+            allowed = old_major == SUPPORTED_MAJOR_VERSION or old_major == new_major
         if allowed:
             shutil.copy(self.version_new_file, self.version_old_file)
         return allowed
+
+    def major_version(self, version):
+        return re.match(r'(.*?\..*?)\..*', version).group(1)
+
 
     def _upgrade(self):
         self.log.info('configure upgrade')
