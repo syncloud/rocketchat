@@ -17,7 +17,7 @@ USER_NAME = 'rocketchat'
 PORT = 3000
 MONGODB_PORT = 27017
 REST_URL = "http://localhost:{0}/api/v1".format(PORT)
-SUPPORTED_MAJOR_VERSION = '2.0'
+SUPPORTED_MAJOR_VERSION = '2.1'
 
 
 class Installer:
