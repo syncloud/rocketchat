@@ -57,7 +57,7 @@ def test_profile(selenium, app_domain):
 
 def test_channel(selenium, app_domain):
     selenium.driver.get("https://{0}/channel/general".format(app_domain))
-    selenium.find_by_xpath("//div[text()='Start of conversation']")
+    selenium.find_by_xpath("//*[text()='Start of conversation']")
     selenium.screenshot('channel')
 
 

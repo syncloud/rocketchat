@@ -59,7 +59,7 @@ def test_upgrade(device, arch, selenium, device_user, device_password, device_ho
         throw=False)
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
     selenium.driver.get("https://{0}/channel/general".format(app_domain))
-    selenium.find_by_xpath("//div[text()='Start of conversation']")
+    selenium.find_by_xpath("//*[text()='Start of conversation']")
     selenium.find_by_xpath("//div[@dir='auto' and contains(.,'test message')]")
     selenium.screenshot('refresh-channel')
 
