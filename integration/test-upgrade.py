@@ -39,7 +39,7 @@ def test_upgrade(device, arch, selenium, device_user, device_password, device_ho
     login_old(selenium, device_user, device_password)
 
     selenium.driver.get("https://{0}/channel/general".format(app_domain))
-        selenium.find_by_xpath("//*[text()='Start of conversation']")
+    selenium.find_by_xpath("//*[text()='Start of conversation']")
  
     selenium.find_by_xpath("//textarea[@placeholder='Message']").send_keys('test message')
     selenium.find_by_xpath("//textarea[@placeholder='Message']").send_keys(Keys.RETURN)
