@@ -1,6 +1,6 @@
 local name = "rocketchat";
-local rocketchat_version = "2.4.14";
-local node_version = "8.17.0-slim";
+local rocketchat_version = "3.0.13";
+local node_version = "12.14.0-slim";
 local mongo_version = "4.0.28";
 local browser = "firefox";
 
@@ -113,6 +113,7 @@ local build(arch, test_ui) = [{
         detach: true,
         environment: {
             "DISPLAY_CONTAINER_NAME": "selenium",
+            "FFMPEG_CODEC_ARGS": "-movflags faststart"
         },
         volumes: [
             {

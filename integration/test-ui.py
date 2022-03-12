@@ -3,7 +3,7 @@ import time
 from os.path import dirname, join
 from subprocess import check_output
 from syncloudlib.integration.hosts import add_host_alias
-from integration.lib import login
+from integration.lib import login_2
 
 DIR = dirname(__file__)
 TMP_DIR = '/tmp/syncloud/ui'
@@ -27,7 +27,7 @@ def test_start(module_setup, app, domain, device_host):
 
 
 def test_login(selenium, device_user, device_password):
-    login(selenium, device_user, device_password)
+    login_2(selenium, device_user, device_password)
  
 
 def test_profile(selenium, app_domain):
@@ -37,9 +37,8 @@ def test_profile(selenium, app_domain):
     # wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.CSS_SELECTOR, profile_file)))
     profile_file = selenium.find_by_css(profile_file)
     profile_file.send_keys(join(DIR, 'images', 'profile.jpeg'))
-     
-    #v3 username = selenium.find_by_xpath("//div/label[text()='Name']/following-sibling::span/input")
     username = selenium.find_by_id("realname")
+    # v3 username = selenium.find_by_xpath("//div/label[text()='Name']/following-sibling::span/input")
     username.send_keys('Syncloud user')
     
     #email = selenium.find_by_xpath("//div/label[text()='Email']/following-sibling::span/label/input")
@@ -58,7 +57,6 @@ def test_profile(selenium, app_domain):
 
 def test_channel(selenium, app_domain):
     selenium.driver.get("https://{0}/channel/general".format(app_domain))
-    #v3 selenium.find_by_xpath("//div[text()='Start of conversation']")
     selenium.find_by_xpath("//*[text()='Start of conversation']")
     selenium.screenshot('channel')
 
