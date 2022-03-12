@@ -17,7 +17,8 @@ USER_NAME = 'rocketchat'
 PORT = 3000
 MONGODB_PORT = 27017
 REST_URL = "http://localhost:{0}/api/v1".format(PORT)
-SUPPORTED_MAJOR_VERSION = '2.1'
+SUPPORTED_MAJOR_VERSION = '2.4'
+
 
 
 class Installer:
@@ -93,11 +94,11 @@ class Installer:
                 shutil.copy(self.version_new_file, self.version_old_file)
             else:
                 raise Exception('cannot skip major versions, from {0} to {1}, please install {2} first'
-                                .format(old_major, new_major, SUPPORTED_MAJOR_VERSION))
+                    .format(old_major, new_major, SUPPORTED_MAJOR_VERSION)) 
 
     def major_version(self, version):
         return re.match(r'(.*?\..*?)\..*', version).group(1)
-
+     
     def _upgrade(self):
         self.log.info('configure upgrade')
         if not path.isfile(self.database_dump):
