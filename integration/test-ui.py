@@ -37,8 +37,8 @@ def test_profile(selenium, app_domain):
     # wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.CSS_SELECTOR, profile_file)))
     profile_file = selenium.find_by_css(profile_file)
     profile_file.send_keys(join(DIR, 'images', 'profile.jpeg'))
-     
-    username = selenium.find_by_xpath("//div/label[text()='Name']/following-sibling::span/input")
+    username = selenium.find_by_id("realname")
+    # v3 username = selenium.find_by_xpath("//div/label[text()='Name']/following-sibling::span/input")
     username.send_keys('Syncloud user')
     
     #email = selenium.find_by_xpath("//div/label[text()='Email']/following-sibling::span/label/input")
