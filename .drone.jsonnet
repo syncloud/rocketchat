@@ -113,6 +113,7 @@ local build(arch, test_ui) = [{
         detach: true,
         environment: {
             "DISPLAY_CONTAINER_NAME": "selenium",
+            "FFMPEG_CODEC_ARGS": "-movflags faststart"
         },
         volumes: [
             {
