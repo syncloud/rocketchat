@@ -1,40 +1,32 @@
 --- programs/server/app/app.js
 +++ programs/server/app/app.js
-@@ -77023,12 +77023,12 @@ Meteor.methods({
-       }).count();
-       const userIsAdmin = user.roles.indexOf('admin') > -1;
- 
--      if (adminCount === 1 && userIsAdmin) {
+@@ -131121,10 +131121,10 @@
+         const userIsAdmin = ((_user$roles = user.roles) === null || _user$roles === void 0 ? void 0 : _user$roles.indexOf('admin')) > -1;
+
+         if (adminCount === 1 && userIsAdmin) {
+-          throw new Meteor.Error('error-action-not-allowed', 'Leaving the app without admins is not allowed', {
+-            method: 'removeUserFromRole',
+-            action: 'Remove_last_admin'
+-          });
++          //throw new Meteor.Error('error-action-not-allowed', 'Leaving the app without admins is not allowed', {
++          //  method: 'removeUserFromRole',
++          //  action: 'Remove_last_admin'
++          //});
+         }
+       }
+
+@@ -197842,10 +197842,10 @@
+       const userIsAdmin = ((_user$roles = user.roles) === null || _user$roles === void 0 ? void 0 : _user$roles.indexOf('admin')) > -1;
+
+       if (adminCount === 1 && userIsAdmin) {
 -        throw new Meteor.Error('error-action-not-allowed', 'Leaving the app without admins is not allowed', {
--          method: 'removeUserFromRole',
+-          method: 'deleteUser',
 -          action: 'Remove_last_admin'
 -        });
--      }
-+      //if (adminCount === 1 && userIsAdmin) {
-+      //  throw new Meteor.Error('error-action-not-allowed', 'Leaving the app without admins is not allowed', {
-+      //    method: 'removeUserFromRole',
-+      //    action: 'Remove_last_admin'
-+      //  });
-+      //}
-     }
- 
-     const remove = Roles.removeUserRoles(user._id, roleName, scope);
-@@ -131943,12 +131943,12 @@ Meteor.methods({
-     }).count();
-     const userIsAdmin = user.roles.indexOf('admin') > -1;
- 
--    if (adminCount === 1 && userIsAdmin) {
--      throw new Meteor.Error('error-action-not-allowed', 'Leaving the app without admins is not allowed', {
--        method: 'deleteUser',
--        action: 'Remove_last_admin'
--      });
--    }
-+    //if (adminCount === 1 && userIsAdmin) {
-+    //  throw new Meteor.Error('error-action-not-allowed', 'Leaving the app without admins is not allowed', {
-+    //    method: 'deleteUser',
-+    //    action: 'Remove_last_admin'
-+    //  });
-+    //}
- 
-     deleteUser(userId);
-     return true;
++        //throw new Meteor.Error('error-action-not-allowed', 'Leaving the app without admins is not allowed', {
++        //  method: 'deleteUser',
++        //  action: 'Remove_last_admin'
++        //});
+       }
+
+       Promise.await(deleteUser(userId, confirmRelinquish));
