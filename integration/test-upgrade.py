@@ -2,7 +2,7 @@ import pytest
 from subprocess import check_output
 from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.installer import local_install
-from integration.lib import login_2, login_3
+from integration.lib import login_3
 from syncloudlib.http import wait_for_rest
 from selenium.webdriver.common.keys import Keys
 import requests
@@ -58,6 +58,4 @@ def test_upgrade(device, arch, selenium, device_user, device_password, device_ho
     selenium.find_by_xpath("//*[text()='Start of conversation']")
     selenium.find_by_xpath("//div[@dir='auto' and contains(.,'test message')]")
     selenium.screenshot('refresh-channel')
-
-
 

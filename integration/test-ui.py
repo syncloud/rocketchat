@@ -3,7 +3,7 @@ import time
 from os.path import dirname, join
 from subprocess import check_output
 from syncloudlib.integration.hosts import add_host_alias
-from integration.lib import login_3
+from integration.lib import login_4
 
 DIR = dirname(__file__)
 TMP_DIR = '/tmp/syncloud/ui'
@@ -27,7 +27,7 @@ def test_start(module_setup, app, domain, device_host):
 
 
 def test_login(selenium, device_user, device_password):
-    login_3(selenium, device_user, device_password)
+    login_4(selenium, device_user, device_password)
  
 
 def test_profile(selenium, app_domain):
