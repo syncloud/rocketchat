@@ -34,4 +34,6 @@ done
 #export USER=$(whoami)
 
 cd programs/server
+CXX=g++-4.8 
+CC=gcc-4.8
 npm install --unsafe-perm --production

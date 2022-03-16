@@ -2,7 +2,7 @@ import pytest
 from subprocess import check_output
 from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.installer import local_install
-from integration.lib import login_2, login_3
+from integration.lib import login_3
 from syncloudlib.http import wait_for_rest
 from selenium.webdriver.common.keys import Keys
 import requests
@@ -28,9 +28,7 @@ def test_start(module_setup, app, device_host, domain, device):
     device.run_ssh('mkdir {0}'.format(TMP_DIR), throw=False)
 
 
-def test_upgrade(device, arch, selenium, device_user, device_password, device_host, app_archive_path, app_domain, app_dir):
-    if arch == "arm64":
-        return
+def test_upgrade(device, selenium, device_user, device_password, device_host, app_archive_path, app_domain, app_dir):
 
     device.run_ssh('snap remove rocketchat')
     device.run_ssh('snap install rocketchat')
@@ -58,6 +56,4 @@ def test_upgrade(device, arch, selenium, device_user, device_password, device_ho
     selenium.find_by_xpath("//*[text()='Start of conversation']")
     selenium.find_by_xpath("//div[@dir='auto' and contains(.,'test message')]")
     selenium.screenshot('refresh-channel')
-
-
 
