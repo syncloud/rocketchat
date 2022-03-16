@@ -170,7 +170,8 @@ local build(arch, test_ui) = [{
           "./deps.sh",
           "py.test -x -s test-ui.py --device-user=testuser --distro=buster --ui-mode=mobile --domain=buster.com --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
         ]
-    } ] else [] ) +[
+    } ] else [] ) +
+   ( if arch == "amd64" then [
     {
         name: "test-upgrade",
         image: "python:3.8-slim-buster",
@@ -185,7 +186,7 @@ local build(arch, test_ui) = [{
             name: "videos",
             path: "/videos"
         }]
-    },
+    } ] else [] ) + [
     {
         name: "upload",
         image: "debian:buster-slim",
