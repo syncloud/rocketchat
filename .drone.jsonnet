@@ -1,6 +1,6 @@
 local name = "rocketchat";
-local rocketchat_version = "3.18.2";
-local node_version = "12.22.1-slim";
+local rocketchat_version = "4.2.2";
+local node_version = "12.18.4-slim";
 local mongo_version = "4.0.28";
 local browser = "firefox";
 
@@ -170,7 +170,8 @@ local build(arch, test_ui) = [{
           "./deps.sh",
           "py.test -x -s test-ui.py --device-user=testuser --distro=buster --ui-mode=mobile --domain=buster.com --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
         ]
-    } ] else [] ) +[
+    } ] else [] ) +
+   ( if arch == "amd64" then [
     {
         name: "test-upgrade",
         image: "python:3.8-slim-buster",
@@ -185,7 +186,7 @@ local build(arch, test_ui) = [{
             name: "videos",
             path: "/videos"
         }]
-    },
+    } ] else [] ) + [
     {
         name: "upload",
         image: "debian:buster-slim",
@@ -359,7 +360,9 @@ local build(arch, test_ui) = [{
      }
  }];
 
-build("amd64", true)
-# + build("arm64", false)
+build("amd64", true) + build("arm64", false)
+
+
+
 
 
