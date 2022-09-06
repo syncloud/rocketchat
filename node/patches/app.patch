@@ -1,5 +1,5 @@
---- rocketchat/bundle/programs/server/app/app.js	2022-09-02 15:39:37.000000000 +0100
-+++ rocketchat/bundle/programs/server/app/app.js.new	2022-09-06 08:28:59.936038012 +0100
+--- programs/server/app/app.js	2022-09-02 15:39:37.000000000 +0100
++++ programs/server/app/app.js.new	2022-09-06 08:28:59.936038012 +0100
 @@ -838801,7 +838801,7 @@
        sources: ["app/authorization/server/methods/removeUserFromRole.ts"],
        names: [],
