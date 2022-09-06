@@ -45,9 +45,9 @@ class Installer:
                 check_output(
                     '{0}/mongodb/bin/mongodump.sh --archive={1} --gzip'.format(self.snap_dir, self.database_dump),
                     shell=True))
-            self.log.info(
-                check_output('{0}/mongodb/bin/mongo.sh --eval \'db.repairDatabase()\''.format(self.snap_dir),
-                             shell=True))
+            # self.log.info(
+            #     check_output('{0}/mongodb/bin/mongo.sh --eval \'db.repairDatabase()\''.format(self.snap_dir),
+            #                  shell=True))
         except CalledProcessError as e:
             self.log.error("pre_refresh error: " + e.output.decode())
             raise e
