@@ -3,7 +3,7 @@
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 cd ${DIR}
 apt update
-apt install -y libltdl7 libnss3 wget cargo
+apt install -y libltdl7 libnss3 wget
 export PATH="$HOME/.cargo/bin:$PATH"
 
 NODE_VERSION=$1
