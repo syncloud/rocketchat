@@ -41,7 +41,7 @@ CXX=g++-4.8
 CC=gcc-4.8
 npm install --unsafe-perm --production
 
-rustup self uninstall
+yes | rustup self uninstall
 apt -y remove patch libglib2.0-0 python build-essential pkg-config glib2.0-dev libexpat1-dev libtool autoconf g++ build-essential cmake
 apt autoclean
 apt autoremove
