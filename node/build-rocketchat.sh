@@ -43,5 +43,5 @@ npm install --unsafe-perm --production
 
 yes | rustup self uninstall
 apt -y remove patch libglib2.0-0 python build-essential pkg-config glib2.0-dev libexpat1-dev libtool autoconf g++ build-essential cmake
-apt autoclean
-apt autoremove
+apt -y autoclean
+apt -y autoremove

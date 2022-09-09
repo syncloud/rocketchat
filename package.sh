@@ -16,6 +16,7 @@ SNAP_DIR=${DIR}/build/snap
 
 apt update
 apt -y install squashfs-tools
+ls -lahS $SNAP_DIR
 
 rm -rf ${DIR}/*.snap
 mkdir ${SNAP_DIR}
