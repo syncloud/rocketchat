@@ -29,7 +29,7 @@ echo "version: $VERSION" >> ${SNAP_DIR}/meta/snap.yaml
 echo "architectures:" >> ${SNAP_DIR}/meta/snap.yaml
 echo "- ${ARCH}" >> ${SNAP_DIR}/meta/snap.yaml
 
-ls -lahS $SNAP_DIR
+du -d1 -h $SNAP_DIR | sort -h
 
 PACKAGE=${NAME}_${VERSION}_${ARCH}.snap
 echo ${PACKAGE} > ${DIR}/package.name
