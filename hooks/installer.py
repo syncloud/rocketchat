@@ -17,7 +17,7 @@ APP_NAME = 'rocketchat'
 USER_NAME = 'rocketchat'
 PORT = 3000
 MONGODB_PORT = 27017
-REST_URL = "http://localhost:{0}/api/v1".format(PORT)
+# REST_URL = "http://localhost:{0}/api/v1".format(PORT)
 SUPPORTED_MAJOR_VERSION = '3.18'
 
 
@@ -39,7 +39,7 @@ class Installer:
         self.version_new_file = join(self.snap_dir, 'nodejs', 'rocketchat.version')
         self.version_old_file = join(self.data_dir, 'rocketchat.version')
         self.socket = '{0}/web.socket'.format(self.common_dir).replace('/', '%2F')
-        self.base_url = 'http+unix://{0}'.format(self.socket)
+        self.base_url = 'http+unix://{0}/api/v1'.format(self.socket)
 
 
     def pre_refresh(self):
@@ -83,7 +83,7 @@ class Installer:
     def configure(self):
         self.log.info('configure')
         self.check_major_version()
-        wait_for_rest(requests_unixsocket.Session(), REST_URL, 200, 100)
+        wait_for_rest(requests_unixsocket.Session(), self.base_url, 200, 100)
 
         if path.isfile(self.install_file):
             self._upgrade()
@@ -121,7 +121,7 @@ class Installer:
         self.log.info('configure install')
         password = uuid.uuid4().hex
         session = requests_unixsocket.Session()
-        response = session.post("{0}/users.register".format(REST_URL),
+        response = session.post("{0}/users.register".format(self.base_url),
                                 json={
                                      "username": "installer",
                                      "email": "installer@example.com",
@@ -135,7 +135,7 @@ class Installer:
 
         self.log.info('install account has been created')
 
-        response = session.post("{0}/login".format(REST_URL), json={"username": "installer", "password": password})
+        response = session.post("{0}/login".format(self.base_url), json={"username": "installer", "password": password})
         result = json.loads(response.text)
         if not result['status'] == 'success':
             self.log.error(response.text.encode("utf-8"))
@@ -167,7 +167,7 @@ class Installer:
 
         self.update_setting('FileUpload_FileSystemPath', app_storage_dir, auth_token, user_id)
 
-        response = requests.post("{0}/users.delete".format(REST_URL),
+        response = requests.post("{0}/users.delete".format(self.base_url),
                                  headers={"X-Auth-Token": auth_token, "X-User-Id": user_id},
                                  json={"userId": user_id})
         result = json.loads(response.text)
@@ -182,7 +182,7 @@ class Installer:
         # throttle api requests
         time.sleep(5)
         session = requests_unixsocket.Session()
-        response = session.post("{0}/settings/{1}".format(REST_URL, name),
+        response = session.post("{0}/settings/{1}".format(self.base_url, name),
                                  headers={"X-Auth-Token": auth_token, "X-User-Id": user_id},
                                  json={"value": value})
         result = json.loads(response.text)
