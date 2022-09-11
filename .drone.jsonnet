@@ -1,5 +1,5 @@
 local name = "rocketchat";
-local rocketchat_version = "5.1.0";
+local rocketchat_version = "5.1.1";
 local node_version = "14.19.3";
 local mongo_version = "5.0.11";
 local browser = "firefox";
