@@ -11,6 +11,7 @@ from syncloudlib import fs, linux, gen, logger
 from syncloudlib.application import urls, storage
 from syncloudlib.http import wait_for_rest
 import re
+import requests_unixsocket
 
 APP_NAME = 'rocketchat'
 USER_NAME = 'rocketchat'
@@ -37,6 +38,9 @@ class Installer:
         self.rocketchat_env_file_target = join(self.data_dir, 'config', 'rocketchat.env')
         self.version_new_file = join(self.snap_dir, 'nodejs', 'rocketchat.version')
         self.version_old_file = join(self.data_dir, 'rocketchat.version')
+        self.socket = '{0}/web.socket'.format(self.common_dir).replace('/', '%2F')
+        self.base_url = 'http+unix://{0}'.format(self.socket)
+
 
     def pre_refresh(self):
         try:
@@ -79,7 +83,7 @@ class Installer:
     def configure(self):
         self.log.info('configure')
         self.check_major_version()
-        wait_for_rest(requests.session(), REST_URL, 200, 100)
+        wait_for_rest(requests_unixsocket.Session(), REST_URL, 200, 100)
 
         if path.isfile(self.install_file):
             self._upgrade()
@@ -116,8 +120,9 @@ class Installer:
     def _install(self):
         self.log.info('configure install')
         password = uuid.uuid4().hex
-        response = requests.post("{0}/users.register".format(REST_URL),
-                                 json={
+        session = requests_unixsocket.Session()
+        response = session.post("{0}/users.register".format(REST_URL),
+                                json={
                                      "username": "installer",
                                      "email": "installer@example.com",
                                      "pass": password,
@@ -130,7 +135,7 @@ class Installer:
 
         self.log.info('install account has been created')
 
-        response = requests.post("{0}/login".format(REST_URL), json={"username": "installer", "password": password})
+        response = session.post("{0}/login".format(REST_URL), json={"username": "installer", "password": password})
         result = json.loads(response.text)
         if not result['status'] == 'success':
             self.log.error(response.text.encode("utf-8"))
@@ -176,8 +181,8 @@ class Installer:
     def update_setting(self, name, value, auth_token, user_id):
         # throttle api requests
         time.sleep(5)
-
-        response = requests.post("{0}/settings/{1}".format(REST_URL, name),
+        session = requests_unixsocket.Session()
+        response = session.post("{0}/settings/{1}".format(REST_URL, name),
                                  headers={"X-Auth-Token": auth_token, "X-User-Id": user_id},
                                  json={"value": value})
         result = json.loads(response.text)
