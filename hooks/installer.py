@@ -167,7 +167,7 @@ class Installer:
 
         self.update_setting('FileUpload_FileSystemPath', app_storage_dir, auth_token, user_id)
 
-        response = requests.post("{0}/users.delete".format(self.base_url),
+        response = session.post("{0}/users.delete".format(self.base_url),
                                  headers={"X-Auth-Token": auth_token, "X-User-Id": user_id},
                                  json={"userId": user_id})
         result = json.loads(response.text)
