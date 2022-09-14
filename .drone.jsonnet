@@ -2,7 +2,7 @@ local name = "rocketchat";
 local rocketchat_version = "5.1.1";
 local node_version = "14.19.3";
 local mongo_version = "5.0.11";
-local browser = "firefox";
+local browser = "chrome";
 
 local build(arch, test_ui) = [{
     kind: "pipeline",
@@ -361,3 +361,4 @@ local build(arch, test_ui) = [{
  }];
 
 build("amd64", true) + build("arm64", false)
+
