@@ -45,3 +45,4 @@ yes | rustup self uninstall
 apt -y remove patch libglib2.0-0 python build-essential pkg-config glib2.0-dev libexpat1-dev libtool autoconf g++ build-essential cmake
 apt -y autoclean
 apt -y autoremove
+rm -rf npm/node_modules/@rocket.chat/forked-matrix-sdk-crypto-nodejs/target
