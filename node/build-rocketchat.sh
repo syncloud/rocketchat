@@ -10,11 +10,11 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh  -s -- -y
 source "$HOME/.cargo/env"
 
 #libvips-dev
-cd $BUILD_DIR
-cd vips-*
-./configure
-make
-make install
+#cd $BUILD_DIR
+#cd vips-*
+#./configure
+#make
+#make install
 
 #rm -rf
 #cp /usr/local/lib/libvips*.so* $BUILD_DIR/nodejs/usr/lib/*-linux-gnu*/
