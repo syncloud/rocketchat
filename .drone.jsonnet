@@ -2,7 +2,7 @@ local name = "rocketchat";
 local rocketchat_version = "5.1.1";
 local node_version = "14.19.3";
 local mongo_version = "5.0.11";
-local browser = "chrome";
+local browser = "firefox";
 
 local build(arch, test_ui) = [{
     kind: "pipeline",
@@ -249,7 +249,7 @@ local build(arch, test_ui) = [{
     ] + ( if test_ui then [
         {
             name: "selenium",
-            image: "selenium/standalone-" + browser + ":4.1.2-20220208",
+            image: "selenium/standalone-" + browser + ":4.4.0-20220831",
             environment: {
                 SE_NODE_SESSION_TIMEOUT: "999999"
             },
