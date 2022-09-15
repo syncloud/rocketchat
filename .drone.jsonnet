@@ -112,15 +112,15 @@ local build(arch, test_ui) = [{
         image: "selenium/video:ffmpeg-4.3.1-20220208",
         detach: true,
         environment: {
-            "DISPLAY_CONTAINER_NAME": "selenium",
-            "PRESET": "-preset ultrafast -movflags faststart"
+           DISPLAY_CONTAINER_NAME: "selenium",
+	   FILE_NAME: "video.mkv"
         },
         volumes: [
             {
                 name: "shm",
                 path: "/dev/shm"
             },
-           {
+            {
                 name: "videos",
                 path: "/videos"
             }
@@ -192,14 +192,15 @@ local build(arch, test_ui) = [{
             command_timeout: "2m",
             target: "/home/artifact/repo/" + name + "/${DRONE_BUILD_NUMBER}-" + arch,
             source: [
-                "artifact/*"
+                "artifact/*",
+                "/videos/*"
             ],
             privileged: true,
             strip_components: 1,
             volumes: [
                {
                     name: "videos",
-                    path: "/drone/src/artifact/videos"
+                    path: "/videos"
                 }
             ]
         },
