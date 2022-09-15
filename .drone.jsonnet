@@ -133,7 +133,12 @@ local build(arch, test_ui) = [{
               "cd integration",
               "./deps.sh",
               "py.test -x -s test-ui.py --device-user=testuser --distro="+distro+" --ui-mode=" + mode + " --domain="+distro+".com --device-host=" + name + "."+distro+".com --app=" + name + " --browser=" + browser,
-            ]
+            ],
+            privileged: true,
+            volumes: [{
+                name: "videos",
+                path: "/videos"
+            }]
         } 
           for distro in ["buster", "jessie"] 
 	  for mode in ["desktop", "mobile"]
