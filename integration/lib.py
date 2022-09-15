@@ -24,7 +24,7 @@ def login_4(selenium, device_user, device_password):
     selenium.screenshot('login')
     password.send_keys(Keys.RETURN)
     selenium.screenshot('login_progress')
-    time.sleep(60)
+    time.sleep(120)
     selenium.screenshot('login-wait')
     selenium.find_by_xpath("//button[@title='Search']")
     selenium.screenshot('main')
