@@ -21,3 +21,4 @@ rm -rf python.tar
 cp ${DIR}/python ${BUILD_DIR}/bin/
 ls -la ${BUILD_DIR}/bin
 rm -rf ${BUILD_DIR}/usr/src
+find ${BUILD_DIR}/usr/lib -name "*.a" -exec rm {} \;
