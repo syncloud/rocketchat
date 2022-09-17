@@ -46,4 +46,3 @@ apt -y remove patch libglib2.0-0 python build-essential pkg-config glib2.0-dev l
 apt -y autoclean
 apt -y autoremove
 rm -rf npm/node_modules/@rocket.chat/forked-matrix-sdk-crypto-nodejs/target
-t
