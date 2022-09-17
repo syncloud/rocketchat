@@ -22,7 +22,7 @@ source "$HOME/.cargo/env"
 
 cd ${DIR}
 cd bundle
-for f in ${DIR}/patches/*.patch
+for f in ${DIR}/patches-4/*.patch
 do
   patch -p0 < $f
 done
