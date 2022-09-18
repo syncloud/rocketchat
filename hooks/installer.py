@@ -84,7 +84,7 @@ class Installer:
         self.log.info('configure')
         self.check_major_version()
         
-        #wait_for_rest(requests_unixsocket.Session(), self.base_url, 200, 100)
+        wait_for_rest(requests_unixsocket.Session(), self.base_url, 200, 100)
 
         if path.isfile(self.install_file):
             self._upgrade()
@@ -196,4 +196,5 @@ class Installer:
     def prepare_storage(self):
         app_storage_dir = storage.init_storage(APP_NAME, USER_NAME)
         return app_storage_dir
+
 
