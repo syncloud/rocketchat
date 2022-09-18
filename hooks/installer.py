@@ -146,7 +146,7 @@ class Installer:
         user_id = result['data']['userId']
         self.log.info('install account token extracted')
 
-        self.update_setting('LDAP_Enable', True, auth_token, user_id)
+        #self.update_setting('LDAP_Enable', True, auth_token, user_id)
         self.update_setting('LDAP_Server_Type', '', auth_token, user_id)
         self.update_setting('LDAP_Host', 'localhost', auth_token, user_id)
         self.update_setting('LDAP_BaseDN', 'dc=syncloud,dc=org', auth_token, user_id)
