@@ -83,12 +83,14 @@ class Installer:
     def configure(self):
         self.log.info('configure')
         self.check_major_version()
-        wait_for_rest(requests_unixsocket.Session(), self.base_url, 200, 100)
+        
+        #wait_for_rest(requests_unixsocket.Session(), self.base_url, 200, 100)
 
         if path.isfile(self.install_file):
             self._upgrade()
         else:
-            self._install()
+            storage.init_storage(APP_NAME, USER_NAME)
+            #self._install()
 
     def check_major_version(self):
         if path.isfile(self.version_old_file):
@@ -146,7 +148,7 @@ class Installer:
         user_id = result['data']['userId']
         self.log.info('install account token extracted')
 
-        #self.update_setting('LDAP_Enable', True, auth_token, user_id)
+        self.update_setting('LDAP_Enable', True, auth_token, user_id)
         self.update_setting('LDAP_Server_Type', '', auth_token, user_id)
         self.update_setting('LDAP_Host', 'localhost', auth_token, user_id)
         self.update_setting('LDAP_BaseDN', 'dc=syncloud,dc=org', auth_token, user_id)
@@ -194,3 +196,4 @@ class Installer:
     def prepare_storage(self):
         app_storage_dir = storage.init_storage(APP_NAME, USER_NAME)
         return app_storage_dir
+

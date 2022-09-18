@@ -34,12 +34,13 @@ def test_login(selenium, device_user, device_password):
 def test_profile(selenium, app_domain):
     selenium.driver.get("https://{0}/account/profile".format(app_domain))
     selenium.screenshot('profile')
-    profile_file = 'input[type="file"]'
-    # wait_or_screenshot(driver, ui_mode, screenshot_dir, EC.presence_of_element_located((By.CSS_SELECTOR, profile_file)))
-    profile_file = selenium.find_by_css(profile_file)
-    profile_file.send_keys(join(DIR, 'images', 'profile.jpeg'))
     username = selenium.find_by_xpath("//div/label[text()='Name']/following-sibling::span/input")
     username.send_keys('Syncloud user')
+    
+    profile_file = 'input[type="file"]'
+    selenium.driver.execute_script("document.querySelector('{0}').style.display='block';".format(profile_file))
+    profile_file = selenium.find_by_css(profile_file)
+    profile_file.send_keys(join(DIR, 'images', 'profile.jpeg'))
     
     #email = selenium.find_by_xpath("//div/label[text()='Email']/following-sibling::span/label/input")
     #email.clear()

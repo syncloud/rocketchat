@@ -22,10 +22,10 @@ source "$HOME/.cargo/env"
 
 cd ${DIR}
 cd bundle
-for f in ${DIR}/patches/*.patch
-do
-  patch -p0 < $f
-done
+#for f in ${DIR}/patches/*.patch
+#do
+#  patch -p0 < $f
+#done
 
 #ls -la ${BUILD_DIR}
 #ls -la ${BUILD_DIR}/bundle
