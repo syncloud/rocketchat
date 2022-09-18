@@ -19,14 +19,12 @@ PORT = 3000
 MONGODB_PORT = 27017
 # REST_URL = "http://localhost:{0}/api/v1".format(PORT)
 SUPPORTED_MAJOR_VERSION = '3.18'
+logger.init(logging.DEBUG, console=True, line_format='%(message)s')
 
 
 
 class Installer:
     def __init__(self):
-        if not logger.factory_instance:
-            logger.init(logging.DEBUG, True)
-
         self.log = logger.get_logger('rocketchat')
         self.snap_dir = '/snap/rocketchat/current'
         self.data_dir = '/var/snap/rocketchat/current'
@@ -123,4 +121,3 @@ class Installer:
     def prepare_storage(self):
         app_storage_dir = storage.init_storage(APP_NAME, USER_NAME)
         return app_storage_dir
-
