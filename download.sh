@@ -14,7 +14,6 @@ DOWNLOAD_URL=https://github.com/syncloud/3rdparty/releases/download/
 BUILD_DIR=${DIR}/build/${NAME}
 mkdir -p $BUILD_DIR
 
-
 apt update
 apt -y install wget
 
