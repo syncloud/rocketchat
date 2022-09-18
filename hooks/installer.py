@@ -18,7 +18,7 @@ USER_NAME = 'rocketchat'
 PORT = 3000
 MONGODB_PORT = 27017
 # REST_URL = "http://localhost:{0}/api/v1".format(PORT)
-SUPPORTED_MAJOR_VERSION = '3.18'
+SUPPORTED_MAJOR_VERSION = '4.2'
 logger.init(logging.DEBUG, console=True, line_format='%(message)s')
 
 
@@ -32,6 +32,7 @@ class Installer:
         self.app_url = urls.get_app_url(APP_NAME)
         self.install_file = join(self.common_dir, 'installed')
         self.database_dump = join(self.data_dir, 'database.dump.gzip')
+        self.database_dir = join(self.data_dir, 'mongodb')
         self.rocketchat_env_file_source = join(self.snap_dir, 'config', 'rocketchat.env')
         self.rocketchat_env_file_target = join(self.data_dir, 'config', 'rocketchat.env')
         self.version_new_file = join(self.snap_dir, 'nodejs', 'rocketchat.version')
@@ -47,15 +48,15 @@ class Installer:
                 check_output(
                     '{0}/mongodb/bin/mongodump.sh --archive={1} --gzip'.format(self.snap_dir, self.database_dump),
                     shell=True))
-            # self.log.info(
-            #     check_output('{0}/mongodb/bin/mongo.sh --eval \'db.repairDatabase()\''.format(self.snap_dir),
-            #                  shell=True))
         except CalledProcessError as e:
             self.log.error("pre_refresh error: " + e.output.decode())
             raise e
 
     def post_refresh(self):
-        self.log.info('post refresh')
+        self.log.info('post refresh') 
+        if not path.isfile(self.database_dump):
+            raise Exception('please export database manually to {0}'.format(self.database_dump))
+        self.log.info(check_output('rm -rf {0}'.format(self.database_dir), shell=True))
         self.init_config()
 
     def install(self):
@@ -69,7 +70,7 @@ class Installer:
         self.log.info('creating log dir: {0}'.format(log_dir))
         fs.makepath(log_dir)
         fs.makepath(join(self.data_dir, 'nginx'))
-        fs.makepath(join(self.data_dir, 'mongodb'))
+        fs.makepath(self.database_dir)
 
         gen.generate_file_jinja(self.rocketchat_env_file_source, self.rocketchat_env_file_target, {'url': self.app_url})
 
@@ -99,6 +100,8 @@ class Installer:
             else:
                 raise Exception('cannot skip major versions, from {0} to {1}, please install {2} first'
                     .format(old_major, new_major, SUPPORTED_MAJOR_VERSION)) 
+        else:
+            shutil.copy(self.version_new_file, self.version_old_file)
 
     def major_version(self, version):
         return re.match(r'(.*?\..*?)\..*', version).group(1)
@@ -121,3 +124,4 @@ class Installer:
     def prepare_storage(self):
         app_storage_dir = storage.init_storage(APP_NAME, USER_NAME)
         return app_storage_dir
+
