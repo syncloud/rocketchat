@@ -141,7 +141,7 @@ local build(arch, test_ui) = [{
             }]
         } 
           for distro in ["buster", "jessie"] 
-	  for mode in ["mobile", "desktop"]
+	  for mode in ["desktop", "mobile"]
        ]
     else [] ) +
    ( if arch == "amd64" then [
