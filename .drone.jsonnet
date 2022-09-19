@@ -31,7 +31,7 @@ local build(arch, test_ui) = [{
         name: "build",
         image: "debian:buster-slim",
         commands: [
-            "./node/build.sh " + node_version
+            "./node/build.sh " + node_version + " " + rocketchat_version
         ],
         volumes: [
             {

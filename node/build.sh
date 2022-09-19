@@ -6,6 +6,7 @@ apt update
 apt install -y libltdl7 libnss3
 
 NODE_VERSION=$1
+ROCKRETCHAT_VERSION=$2
 
 BUILD_DIR=${DIR}/../build/rocketchat/nodejs
 
