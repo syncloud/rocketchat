@@ -24,14 +24,14 @@ local build(arch, test_ui) = [{
         name: "download",
         image: "debian:buster-slim",
         commands: [
-            "./download.sh " + name
+            "./download.sh " + name + " " + rocketchat_version
         ]
     },
     {
         name: "build",
         image: "debian:buster-slim",
         commands: [
-            "./node/build.sh " + node_version + " " + rocketchat_version
+            "./node/build.sh " + node_version
         ],
         volumes: [
             {
@@ -85,7 +85,7 @@ local build(arch, test_ui) = [{
             "VERSION=$(cat version)",
             "./package.sh " + name + " $VERSION " + arch
         ]
-    }
+   
     ] + ( if arch == "amd64" then [
     {
         name: "test-integration-jessie",

@@ -3,12 +3,9 @@
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 cd ${DIR}
 apt update
-apt install -y libltdl7 libnss3 wget
+apt install -y libltdl7 libnss3
 
 NODE_VERSION=$1
-ROCKRETCHAT_VERSION=$2
-
-wget https://cdn-download.rocket.chat/build/rocket.chat-$ROCKRETCHAT_VERSION.tgz -O rocketchat.tar.gz --progress dot:giga
 
 BUILD_DIR=${DIR}/../build/rocketchat/nodejs
 
