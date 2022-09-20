@@ -9,16 +9,13 @@ if [[ -z "$1" ]]; then
 fi
 
 NAME=$1
+ROCKRETCHAT_VERSION=$2
 ARCH=$(uname -m)
 DOWNLOAD_URL=https://github.com/syncloud/3rdparty/releases/download/
 BUILD_DIR=${DIR}/build/${NAME}
 mkdir -p $BUILD_DIR
 
-
 apt update
 apt -y install wget
 
-cd ${DIR}/build
-wget -c --progress=dot:giga ${DOWNLOAD_URL}/nginx/nginx-${ARCH}.tar.gz
-tar xf nginx-${ARCH}.tar.gz
-mv nginx ${BUILD_DIR}/
+wget https://cdn-download.rocket.chat/build/rocket.chat-$ROCKRETCHAT_VERSION.tgz -O $DIR/node/rocketchat.tar.gz --progress dot:giga

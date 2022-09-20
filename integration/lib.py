@@ -1,4 +1,5 @@
 from selenium.webdriver.common.keys import Keys
+import time
 
 
 def login_3(selenium, device_user, device_password):
@@ -25,4 +26,3 @@ def login_4(selenium, device_user, device_password):
     selenium.screenshot('login_progress')
     selenium.find_by_xpath("//button[@title='Search']")
     selenium.screenshot('main')
-
