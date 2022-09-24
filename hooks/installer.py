@@ -18,7 +18,7 @@ USER_NAME = 'rocketchat'
 PORT = 3000
 MONGODB_PORT = 27017
 # REST_URL = "http://localhost:{0}/api/v1".format(PORT)
-SUPPORTED_MAJOR_VERSION = '4.2'
+SUPPORTED_MAJOR_VERSION = '5.1'
 logger.init(logging.DEBUG, console=True, line_format='%(message)s')
 
 
@@ -30,7 +30,6 @@ class Installer:
         self.data_dir = '/var/snap/rocketchat/current'
         self.common_dir = '/var/snap/rocketchat/common'
         self.app_url = urls.get_app_url(APP_NAME)
-        self.install_file = join(self.common_dir, 'installed')
         self.database_dump = join(self.data_dir, 'database.dump.gzip')
         self.database_dir = join(self.data_dir, 'mongodb')
         self.rocketchat_env_file_source = join(self.snap_dir, 'config', 'rocketchat.env')
@@ -81,33 +80,32 @@ class Installer:
 
     def configure(self):
         self.log.info('configure')
-        self.check_major_version()
-        
         wait_for_rest(requests_unixsocket.Session(), self.base_url, 200, 100)
 
-        if path.isfile(self.install_file):
+        if path.isfile(self.version_old_file):
             self._upgrade()
         else:
-            storage.init_storage(APP_NAME, USER_NAME)
+            self._install()
  
+    def _install(self):
+        shutil.copy(self.version_new_file, self.version_old_file)
+        storage.init_storage(APP_NAME, USER_NAME)
 
     def check_major_version(self):
-        if path.isfile(self.version_old_file):
-            old_major = self.major_version(open(self.version_old_file).read().strip())
-            new_major = self.major_version(open(self.version_new_file).read().strip())
-            if old_major == SUPPORTED_MAJOR_VERSION or old_major == new_major:
-                shutil.copy(self.version_new_file, self.version_old_file)
-            else:
-                raise Exception('cannot skip major versions, from {0} to {1}, please install {2} first'
-                    .format(old_major, new_major, SUPPORTED_MAJOR_VERSION)) 
-        else:
+        old_major = self.major_version(open(self.version_old_file).read().strip())
+        new_major = self.major_version(open(self.version_new_file).read().strip())
+        if old_major == SUPPORTED_MAJOR_VERSION or old_major == new_major:
             shutil.copy(self.version_new_file, self.version_old_file)
-
+        else:
+            raise Exception('cannot skip major versions, from {0} to {1}, please install {2} first'
+                .format(old_major, new_major, SUPPORTED_MAJOR_VERSION)) 
+        
     def major_version(self, version):
         return re.match(r'(.*?\..*?)\..*', version).group(1)
      
     def _upgrade(self):
         self.log.info('configure upgrade')
+        self.check_major_version(self):
         if not path.isfile(self.database_dump):
             raise Exception('please export database manually to {0}'.format(self.database_dump))
 
@@ -124,4 +122,3 @@ class Installer:
     def prepare_storage(self):
         app_storage_dir = storage.init_storage(APP_NAME, USER_NAME)
         return app_storage_dir
-
