@@ -105,7 +105,7 @@ class Installer:
      
     def _upgrade(self):
         self.log.info('configure upgrade')
-        self.check_major_version(self):
+        self.check_major_version()
         if not path.isfile(self.database_dump):
             raise Exception('please export database manually to {0}'.format(self.database_dump))
 
