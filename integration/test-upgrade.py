@@ -41,7 +41,7 @@ def test_upgrade(device, selenium, device_user, device_password, device_host, ap
  
     selenium.find_by_xpath("//textarea[@placeholder='Message']").send_keys('test message')
     selenium.find_by_xpath("//textarea[@placeholder='Message']").send_keys(Keys.RETURN)
-    selenium.find_by_xpath("//div[@dir='auto' and contains(.,'test message')]")
+    selenium.find_by_xpath("//p[contains(.,'test message')]")
 
     device.run_ssh(
         '{0}/mongodb/bin/mongo.sh /mongodb.config.dump.js > {1}/mongo.config.old.dump.log'.format(app_dir, TMP_DIR),
