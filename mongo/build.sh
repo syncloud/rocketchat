@@ -22,7 +22,7 @@ cp ${DIR}/bin/* ${BUILD_DIR}/bin
 ls -la ${BUILD_DIR}/bin
 rm -rf ${BUILD_DIR}/usr/src
 rm ${BUILD_DIR}/usr/bin/mongos
-rm ${BUILD_DIR}/usr/bin/mongosh
+#rm ${BUILD_DIR}/usr/bin/mongosh
 rm ${BUILD_DIR}/usr/bin/bsondump
 rm ${BUILD_DIR}/usr/bin/mongotop
 rm ${BUILD_DIR}/usr/bin/mongostat
