@@ -34,7 +34,7 @@ def test_upgrade(device, selenium, device_user, device_password, device_host, ap
     device.run_ssh('snap install rocketchat')
     
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
-    login_3(selenium, device_user, device_password)
+    login_4(selenium, device_user, device_password)
 
     selenium.driver.get("https://{0}/channel/general".format(app_domain))
     selenium.find_by_xpath("//*[text()='Start of conversation']")
@@ -53,6 +53,7 @@ def test_upgrade(device, selenium, device_user, device_password, device_host, ap
         throw=False)
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
     selenium.driver.get("https://{0}/channel/general".format(app_domain))
+    login_4(selenium, device_user, device_password)
     selenium.find_by_xpath("//*[text()='Start of conversation']")
     selenium.find_by_xpath("//p[contains(.,'test message')]")
     selenium.screenshot('refresh-channel')
