@@ -1,5 +1,5 @@
 local name = "rocketchat";
-local rocketchat_version = "5.1.2";
+local rocketchat_version = "5.4.1";
 local node_version = "14.19.3";
 # local mongo_version = "5.0.11"; not supported on rpi4 64bit
 local mongo_version = "4.4.16";
