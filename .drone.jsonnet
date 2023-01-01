@@ -43,35 +43,27 @@ local build(arch, test_ui, dind) = [{
     },
     {
         name: "package mongo",
-        image: "debian:buster-slim",
+        image: "docker" + dind,
         commands: [
             "./mongo/build.sh " + mongo
         ],
         volumes: [
             {
-                name: "docker",
-                path: "/usr/bin/docker"
-            },
-            {
-               name: "docker.sock",
-               path: "/var/run/docker.sock"
+                name: "dockersock",
+		path: "/var/run"
             }
         ]
     },
     {
         name: "package python",
-        image: "debian:buster-slim",
+        image: "docker:" + dind,
         commands: [
             "./python/build.sh"
         ],
         volumes: [
             {
-                name: "docker",
-                path: "/usr/bin/docker"
-            },
-            {
-                name: "docker.sock",
-                path: "/var/run/docker.sock"
+                name: "dockersock",
+                path: "/var/run"
             }
         ]
     },
