@@ -43,7 +43,7 @@ local build(arch, test_ui, dind) = [{
     },
     {
         name: "package mongo",
-        image: "docker" + dind,
+        image: "docker:" + dind,
         commands: [
             "./mongo/build.sh " + mongo
         ],
