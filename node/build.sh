@@ -1,29 +1,28 @@
-#!/bin/bash -ex
+#!/bin/sh -ex
 
-DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+DIR=$( cd "$( dirname "$0" )" && pwd )
 cd ${DIR}
-apt update
-apt install -y libltdl7 libnss3
 
-NODE_VERSION=$1
-ROCKRETCHAT_VERSION=$2
+NODE=$1
+ROCKRETCHAT=$2
 
-BUILD_DIR=${DIR}/../build/rocketchat/nodejs
+BUILD_DIR=${DIR}/../build/snap/nodejs
 
-docker ps -a -q --filter ancestor=nodejs:syncloud --format="{{.ID}}" | xargs docker stop | xargs docker rm || true
-docker rmi nodejs:syncloud || true
-docker build --build-arg NODE_VERSION=$NODE_VERSION -t nodejs:syncloud .
+while ! docker ps; do
+    echo "waiting for docker"
+    sleep 2
+done
+
+docker build --build-arg NODE=$NODE -t nodejs:syncloud .
 docker run nodejs:syncloud nodejs --help
 docker create --name=nodejs nodejs:syncloud
 mkdir -p ${BUILD_DIR}
-echo $ROCKRETCHAT_VERSION > $BUILD_DIR/rocketchat.version
+echo $ROCKRETCHAT > $BUILD_DIR/rocketchat.version
 cd ${BUILD_DIR}
 docker export nodejs -o nodejs.tar
-docker ps -a -q --filter ancestor=nodejs:syncloud --format="{{.ID}}" | xargs docker stop | xargs docker rm || true
-docker rmi nodejs:syncloud || true
 tar xf nodejs.tar
 rm -rf nodejs.tar
 cp ${DIR}/node.sh ${BUILD_DIR}/bin/
-${BUILD_DIR}/bin/node.sh --help
+
 ls -la ${BUILD_DIR}/bin
 rm -rf ${BUILD_DIR}/usr/src
