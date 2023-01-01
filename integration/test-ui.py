@@ -28,7 +28,7 @@ def test_start(module_setup, app, domain, device_host):
 
 
 def test_login(selenium, device_user, device_password):
-    login_4(selenium, device_user, device_password)
+    login_5(selenium, device_user, device_password)
  
 
 def test_profile(selenium, app_domain):
