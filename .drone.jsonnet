@@ -5,7 +5,7 @@ local node_version = "14.19.3";
 local mongo_version = "4.4.16";
 local browser = "firefox";
 
-local build(arch, test_ui) = [{
+local build(arch, test_ui, dind) = [{
     kind: "pipeline",
     type: "docker",
     name: arch,
@@ -30,18 +30,14 @@ local build(arch, test_ui) = [{
     },
     {
         name: "build",
-        image: "debian:buster-slim",
+        image: "docker:" + dind,
         commands: [
             "./node/build.sh " + node_version + " " + rocketchat_version
         ],
         volumes: [
             {
-                name: "docker",
-                path: "/usr/bin/docker"
-            },
-            {
-               name: "docker.sock",
-               path: "/var/run/docker.sock"
+                name: "dockersock",
+                path: "/var/run"
             }
         ]
     },
@@ -223,6 +219,17 @@ local build(arch, test_ui) = [{
     },
     services: ( if arch == "amd64" then [
         {
+                name: "docker",
+                image: "docker:" + dind,
+                privileged: true,
+                volumes: [
+                    {
+                        name: "dockersock",
+                        path: "/var/run"
+                    }
+                ]
+            },
+{
             name: name + ".jessie.com",
             image: "syncloud/platform-jessie-" + arch,
             privileged: true,
@@ -287,17 +294,9 @@ local build(arch, test_ui) = [{
             temp: {}
         },
         {
-            name: "docker",
-            host: {
-                path: "/usr/bin/docker"
-            }
-        },
-        {
-            name: "docker.sock",
-            host: {
-                path: "/var/run/docker.sock"
-            }
-        }
+                name: "dockersock",
+                temp: {}
+            },
     ]
 },
 {
@@ -335,5 +334,5 @@ local build(arch, test_ui) = [{
      }
  }];
 
-build("amd64", true) + build("arm64", false)
-
+build("amd64", true, "20.10.21-dind") + 
+build("arm64", false, "20.10.21-dind")
