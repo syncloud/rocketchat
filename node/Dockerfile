@@ -1,5 +1,5 @@
-ARG NODE_VERSION
-FROM node:$NODE_VERSION
+ARG NODE
+FROM node:$NODE
 ADD ./build-rocketchat.sh /build/build-rocketchat.sh
 ADD ./rocketchat.tar.gz /build
 RUN /build/build-rocketchat.sh

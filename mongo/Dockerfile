@@ -1,3 +1,3 @@
-ARG MONGO_VERSION
-FROM mongo:$MONGO_VERSION
+ARG MONGO
+FROM mongo:$MONGO
 RUN rm -rf /var/lib/apt/lists/*
