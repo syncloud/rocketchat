@@ -42,6 +42,13 @@ local build(arch, test_ui, dind) = [{
         ]
     },
     {
+            name: "test",
+            image: "debian:buster-slim",
+            commands: [
+                "build/snap/nodejs/bin/node.sh --help"
+            ]
+        },
+    {
         name: "package mongo",
         image: "docker:" + dind,
         commands: [
