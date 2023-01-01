@@ -8,6 +8,11 @@ ROCKRETCHAT=$2
 
 BUILD_DIR=${DIR}/../build/snap/nodejs
 
+while ! docker ps; do
+    echo "waiting for docker"
+    sleep 2
+done
+
 docker build --build-arg NODE=$NODE -t nodejs:syncloud .
 docker run nodejs:syncloud nodejs --help
 docker create --name=nodejs nodejs:syncloud
