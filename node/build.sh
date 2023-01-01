@@ -2,7 +2,6 @@
 
 DIR=$( cd "$( dirname "$0" )" && pwd )
 cd ${DIR}
-apt install -y libltdl7 libnss3
 
 NODE=$1
 ROCKRETCHAT=$2
