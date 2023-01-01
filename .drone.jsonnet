@@ -1,8 +1,8 @@
 local name = "rocketchat";
-local rocketchat_version = "5.4.1";
-local node_version = "14.19.3";
+local rocketchat = "5.4.1";
+local node = "14.19.3";
 # local mongo_version = "5.0.11"; not supported on rpi4 64bit
-local mongo_version = "4.4.16";
+local mongo = "4.4.16";
 local browser = "firefox";
 
 local build(arch, test_ui, dind) = [{
@@ -16,7 +16,7 @@ local build(arch, test_ui, dind) = [{
     steps: [
     {
         name: "version",
-        image: "debian:buster-slim",
+        image: "alpine:3.17.0",
         commands: [
             "echo $DRONE_BUILD_NUMBER > version"
         ]
@@ -25,14 +25,14 @@ local build(arch, test_ui, dind) = [{
         name: "download",
         image: "debian:buster-slim",
         commands: [
-            "./download.sh " + name + " " + rocketchat_version
+            "./download.sh " + rocketchat
         ]
     },
     {
         name: "build",
         image: "docker:" + dind,
         commands: [
-            "./node/build.sh " + node_version + " " + rocketchat_version
+            "./node/build.sh " + node + " " + rocketchat
         ],
         volumes: [
             {
@@ -45,7 +45,7 @@ local build(arch, test_ui, dind) = [{
         name: "package mongo",
         image: "debian:buster-slim",
         commands: [
-            "./mongo/build.sh " + mongo_version
+            "./mongo/build.sh " + mongo
         ],
         volumes: [
             {
