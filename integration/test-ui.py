@@ -3,7 +3,7 @@ import time
 from os.path import dirname, join
 from subprocess import check_output
 from syncloudlib.integration.hosts import add_host_alias
-from integration.lib import login_4
+from integration.lib import login_4, login_5
 
 DIR = dirname(__file__)
 TMP_DIR = '/tmp/syncloud/ui'
