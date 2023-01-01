@@ -81,18 +81,7 @@ local build(arch, test_ui, dind) = [{
             "VERSION=$(cat version)",
             "./package.sh " + name + " $VERSION " + arch
         ]
-  } 
-    ] + ( if arch == "amd64" then [
-    {
-        name: "test-integration-jessie",
-        image: "python:3.8-slim-buster",
-        commands: [
-          "APP_ARCHIVE_PATH=$(realpath $(cat package.name))",
-          "cd integration",
-          "./deps.sh",
-          "py.test -x -s verify.py --device-user=testuser --distro=jessie --domain=jessie.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + ".jessie.com --app=" + name
-        ]
-    }] else []) + [
+  }, 
     {
         name: "test-integration-buster",
         image: "python:3.8-slim-buster",
@@ -136,7 +125,7 @@ local build(arch, test_ui, dind) = [{
                 path: "/videos"
             }]
         } 
-          for distro in ["buster", "jessie"] 
+          for distro in ["buster"] 
 	  for mode in ["desktop"]
        ]
     else [] ) +
@@ -180,7 +169,7 @@ local build(arch, test_ui, dind) = [{
     },
     {
         name: "artifact",
-        image: "appleboy/drone-scp:1.6.2",
+        image: "appleboy/drone-scp:1.6.4",
         settings: {
             host: {
                 from_secret: "artifact_host"
@@ -217,36 +206,17 @@ local build(arch, test_ui, dind) = [{
       ]
     },
     services: [
-{
-                name: "docker",
-                image: "docker:" + dind,
-                privileged: true,
-                volumes: [
-                    {
-                        name: "dockersock",
-                        path: "/var/run"
-                    }
-                ]
-            } 
-] + 
-
- ( if arch == "amd64" then [
-        
-{
-            name: name + ".jessie.com",
-            image: "syncloud/platform-jessie-" + arch,
+        {
+            name: "docker",
+	    image: "docker:" + dind,
             privileged: true,
             volumes: [
-                {
-                    name: "dbus",
-                    path: "/var/run/dbus"
-                },
-                {
-                    name: "dev",
-                    path: "/dev"
+             {
+                name: "dockersock",
+                path: "/var/run"
                 }
             ]
-        }] else []) + [
+        },
         {
             name: name + ".buster.com",
             image: "syncloud/platform-buster-" + arch + ":22.01",
