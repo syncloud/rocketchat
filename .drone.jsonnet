@@ -1,6 +1,6 @@
 local name = "rocketchat";
-local rocketchat = "5.4.1";
-local node = "14.19.3";
+local rocketchat = "6.2.11";
+local node = "14.21.3";
 # local mongo_version = "5.0.11"; not supported on rpi4 64bit
 local mongo = "4.4.16";
 local browser = "firefox";
