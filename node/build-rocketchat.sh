@@ -4,9 +4,9 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 apt update
 apt -y install patch libglib2.0-0 python build-essential pkg-config glib2.0-dev libexpat1-dev libtool autoconf g++ build-essential cmake graphicsmagick
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --profile minimal
-#rustup install 1.66.0
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh  -s -- -y
 source "$HOME/.cargo/env"
+rustup install 1.66.0
 
 cd ${DIR}/bundle/programs/server
 CXX=g++-4.8 
