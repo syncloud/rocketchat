@@ -7,11 +7,12 @@ VERSION=$1
 
 BUILD_DIR=${DIR}/../build/snap/node
 
+apt update
+apt -y install wget patch libglib2.0-0 python build-essential pkg-config glib2.0-dev libexpat1-dev libtool autoconf g++ build-essential cmake graphicsmagick
+
 wget https://cdn-download.rocket.chat/build/rocket.chat-$VERSION.tgz -O rocketchat.tar.gz
 tar xf rocketchat.tar.gz
 
-apt update
-apt -y install patch libglib2.0-0 python build-essential pkg-config glib2.0-dev libexpat1-dev libtool autoconf g++ build-essential cmake graphicsmagick
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh  -s -- -y
 source "$HOME/.cargo/env"
 rustup install 1.66.0

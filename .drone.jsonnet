@@ -22,13 +22,6 @@ local build(arch, test_ui, dind) = [{
         ]
     },
     {
-        name: "download",
-        image: "alpine:3.17.0",
-        commands: [
-            "./download.sh " + rocketchat
-        ]
-    },
-    {
         name: "node build",
         image: "node:" + node,
         commands: [
