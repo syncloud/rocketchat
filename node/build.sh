@@ -32,9 +32,8 @@ mkdir -p ${BUILD_DIR}
 mv ${DIR}/bundle $BUILD_DIR/rocketchat
 echo $VERSION > $BUILD_DIR/rocketchat.version
 
-cp /usr ${BUILD_DIR}
-cp /lib ${BUILD_DIR}
+cp -r /usr ${BUILD_DIR}
+cp -r /lib ${BUILD_DIR}
 cp -r ${DIR}/bin ${BUILD_DIR}/bin
 
-ls -la ${BUILD_DIR}/bin
 rm -rf ${BUILD_DIR}/usr/src
