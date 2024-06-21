@@ -30,22 +30,16 @@ local build(arch, test_ui, dind) = [{
     },
     {
         name: "node build",
-        image: "docker:" + dind,
+        image: "node:" + node,
         commands: [
-            "./node/build.sh " + node + " " + rocketchat
-        ],
-        volumes: [
-            {
-                name: "dockersock",
-                path: "/var/run"
-            }
+            "./node/build.sh " + rocketchat
         ]
     },
     {
             name: "node test",
             image: "debian:buster-slim",
             commands: [
-                "build/snap/nodejs/bin/node.sh --help"
+                "build/snap/node/bin/node.sh --help"
             ]
         },
     {

@@ -34,7 +34,7 @@ class Installer:
         self.database_dir = join(self.data_dir, 'mongodb')
         self.rocketchat_env_file_source = join(self.snap_dir, 'config', 'rocketchat.env')
         self.rocketchat_env_file_target = join(self.data_dir, 'config', 'rocketchat.env')
-        self.version_new_file = join(self.snap_dir, 'nodejs', 'rocketchat.version')
+        self.version_new_file = join(self.snap_dir, 'node', 'rocketchat.version')
         self.version_old_file = join(self.data_dir, 'rocketchat.version')
         self.socket = '{0}/web.socket'.format(self.common_dir).replace('/', '%2F')
         self.base_url = 'http+unix://{0}/api/v1'.format(self.socket)
