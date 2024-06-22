@@ -18,9 +18,7 @@ USER_NAME = 'rocketchat'
 PORT = 3000
 MONGODB_PORT = 27017
 # REST_URL = "http://localhost:{0}/api/v1".format(PORT)
-SUPPORTED_MAJOR_VERSION = '5.1'
 logger.init(logging.DEBUG, console=True, line_format='%(message)s')
-
 
 
 class Installer:
@@ -38,7 +36,6 @@ class Installer:
         self.version_old_file = join(self.data_dir, 'rocketchat.version')
         self.socket = '{0}/web.socket'.format(self.common_dir).replace('/', '%2F')
         self.base_url = 'http+unix://{0}/api/v1'.format(self.socket)
-
 
     def pre_refresh(self):
         try:
@@ -91,21 +88,8 @@ class Installer:
         shutil.copy(self.version_new_file, self.version_old_file)
         storage.init_storage(APP_NAME, USER_NAME)
 
-    def check_major_version(self):
-        old_major = self.major_version(open(self.version_old_file).read().strip())
-        new_major = self.major_version(open(self.version_new_file).read().strip())
-        if old_major == SUPPORTED_MAJOR_VERSION or old_major == new_major:
-            shutil.copy(self.version_new_file, self.version_old_file)
-        else:
-            raise Exception('cannot skip major versions, from {0} to {1}, please install {2} first'
-                .format(old_major, new_major, SUPPORTED_MAJOR_VERSION)) 
-        
-    def major_version(self, version):
-        return re.match(r'(.*?\..*?)\..*', version).group(1)
-     
     def _upgrade(self):
         self.log.info('configure upgrade')
-        self.check_major_version()
         if not path.isfile(self.database_dump):
             raise Exception('please export database manually to {0}'.format(self.database_dump))
 
@@ -117,7 +101,6 @@ class Installer:
         except CalledProcessError as e:
             self.log.error("upgrade error: " + e.output.decode())
             raise e
-
     
     def prepare_storage(self):
         app_storage_dir = storage.init_storage(APP_NAME, USER_NAME)
