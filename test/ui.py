@@ -48,7 +48,7 @@ def test_profile(selenium, app_domain):
 
     selenium.screenshot('profile-new-name')
 
-    save = selenium.find_by_xpath("//span[text()='Save changes']")
+    save = selenium.find_by_xpath("//button[text()='Save changes']")
     save.click()
     
     time.sleep(10)
