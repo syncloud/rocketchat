@@ -1,6 +1,6 @@
 local name = "rocketchat";
-local rocketchat = "5.4.1";
-local node = "14.19.3";
+local rocketchat = "6.9.2";
+local node = "14.21.3";
 # local mongo_version = "5.0.11"; not supported on rpi4 64bit
 local mongo = "4.4.16";
 local browser = "firefox";
@@ -22,34 +22,21 @@ local build(arch, test_ui, dind) = [{
         ]
     },
     {
-        name: "download",
-        image: "alpine:3.17.0",
+        name: "node build",
+        image: "node:" + node,
         commands: [
-            "./download.sh " + rocketchat
+            "./node/build.sh " + rocketchat
         ]
     },
     {
-        name: "build",
-        image: "docker:" + dind,
-        commands: [
-            "./node/build.sh " + node + " " + rocketchat
-        ],
-        volumes: [
-            {
-                name: "dockersock",
-                path: "/var/run"
-            }
-        ]
-    },
-    {
-            name: "test",
+            name: "node test",
             image: "debian:buster-slim",
             commands: [
-                "build/snap/nodejs/bin/node.sh --help"
+                "build/snap/node/bin/node.sh --help"
             ]
         },
     {
-        name: "package mongo",
+        name: "build mongo",
         image: "docker:" + dind,
         commands: [
             "./mongo/build.sh " + mongo
@@ -62,7 +49,7 @@ local build(arch, test_ui, dind) = [{
         ]
     },
     {
-        name: "package python",
+        name: "build python",
         image: "docker:" + dind,
         commands: [
             "./python/build.sh"
@@ -83,13 +70,13 @@ local build(arch, test_ui, dind) = [{
         ]
   }, 
     {
-        name: "test-integration-buster",
+        name: "test",
         image: "python:3.8-slim-buster",
         commands: [
           "APP_ARCHIVE_PATH=$(realpath $(cat package.name))",
-          "cd integration",
+          "cd test",
           "./deps.sh",
-          "py.test -x -s verify.py --device-user=testuser --distro=buster --domain=buster.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + ".buster.com --app=" + name
+          "py.test -x -s test.py --device-user=testuser --distro=buster --domain=buster.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + ".buster.com --app=" + name
         ]
     }] + ( if test_ui then [
     {
@@ -112,12 +99,12 @@ local build(arch, test_ui, dind) = [{
         ]
     }] +
 [{
-            name: "test-ui-" + mode + "-" + distro,
+            name: "test-ui",
             image: "python:3.8-slim-buster",
             commands: [
-              "cd integration",
+              "cd test",
               "./deps.sh",
-              "py.test -x -s test-ui.py --device-user=testuser --distro="+distro+" --ui-mode=" + mode + " --domain="+distro+".com --device-host=" + name + "."+distro+".com --app=" + name + " --browser=" + browser,
+              "py.test -x -s ui.py --device-user=testuser --distro="+distro+" --domain="+distro+".com --device-host=" + name + "."+distro+".com --app=" + name + " --browser=" + browser,
             ],
             privileged: true,
             volumes: [{
@@ -135,9 +122,9 @@ local build(arch, test_ui, dind) = [{
         image: "python:3.8-slim-buster",
         commands: [
           "APP_ARCHIVE_PATH=$(realpath $(cat package.name))",
-          "cd integration",
+          "cd test",
           "./deps.sh",
-          "py.test -x -s test-upgrade.py --device-user=testuser --distro=buster --ui-mode=desktop --domain=buster.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
+          "py.test -x -s upgrade.py --device-user=testuser --distro=buster --ui-mode=desktop --domain=buster.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
         ],
         privileged: true,
         volumes: [{
