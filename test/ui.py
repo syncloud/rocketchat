@@ -3,7 +3,7 @@ import time
 from os.path import dirname, join
 from subprocess import check_output
 from syncloudlib.integration.hosts import add_host_alias
-from integration.lib import login_4, login_5
+from test.lib import login_6, login_5
 
 DIR = dirname(__file__)
 TMP_DIR = '/tmp/syncloud/ui'
@@ -28,7 +28,7 @@ def test_start(module_setup, app, domain, device_host):
 
 
 def test_login(selenium, device_user, device_password):
-    login_5(selenium, device_user, device_password)
+    login_6(selenium, device_user, device_password)
  
 
 def test_profile(selenium, app_domain):
@@ -48,7 +48,7 @@ def test_profile(selenium, app_domain):
 
     selenium.screenshot('profile-new-name')
 
-    save = selenium.find_by_xpath("//button[text()='Save changes']")
+    save = selenium.find_by_xpath("//span[text()='Save changes']")
     save.click()
     
     time.sleep(10)
@@ -61,6 +61,3 @@ def test_profile(selenium, app_domain):
 #    selenium.find_by_xpath("//*[text()='Start of conversation']")
 #    selenium.screenshot('channel')
 
-
-def test_teardown(driver):
-    driver.quit()

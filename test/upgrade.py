@@ -2,7 +2,7 @@ import pytest
 from subprocess import check_output
 from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.installer import local_install
-from integration.lib import login_4
+from test.lib import login_5
 from syncloudlib.http import wait_for_rest
 from selenium.webdriver.common.keys import Keys
 import requests
@@ -34,14 +34,14 @@ def test_upgrade(device, selenium, device_user, device_password, device_host, ap
     device.run_ssh('snap install rocketchat')
     
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
-    login_4(selenium, device_user, device_password)
+    login_5(selenium, device_user, device_password)
 
     selenium.driver.get("https://{0}/channel/general".format(app_domain))
     selenium.find_by_xpath("//*[text()='Start of conversation']")
  
     selenium.find_by_xpath("//textarea[@placeholder='Message']").send_keys('test message')
     selenium.find_by_xpath("//textarea[@placeholder='Message']").send_keys(Keys.RETURN)
-    selenium.find_by_xpath("//p[contains(.,'test message')]")
+    selenium.find_by_xpath("//div[contains(.,'test message')]")
 
     device.run_ssh(
         '{0}/mongodb/bin/mongo.sh /mongodb.config.dump.js > {1}/mongo.config.old.dump.log'.format(app_dir, TMP_DIR),
@@ -55,5 +55,5 @@ def test_upgrade(device, selenium, device_user, device_password, device_host, ap
     #login_4(selenium, device_user, device_password)
     selenium.driver.get("https://{0}/channel/general".format(app_domain))
     selenium.find_by_xpath("//*[text()='Start of conversation']")
-    selenium.find_by_xpath("//p[contains(.,'test message')]")
+    selenium.find_by_xpath("//div[contains(.,'test message')]")
     selenium.screenshot('refresh-channel')
