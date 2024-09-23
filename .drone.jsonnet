@@ -51,6 +51,13 @@ local build(arch, test_ui, dind) = [{
             }
         ]
     },
+{
+      name: 'mattermost test',
+      image: 'syncloud/platform-buster-' + arch + ':' + platform,
+      commands: [
+        './mongo/test.sh',
+      ],
+    },
     {
         name: "build python",
         image: "docker:" + dind,
