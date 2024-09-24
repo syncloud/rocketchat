@@ -39,7 +39,7 @@ local build(arch, test_ui, dind) = [{
             ]
         },
     {
-        name: "build mongo",
+        name: "mongo build",
         image: "docker:" + dind,
         commands: [
             "./mongo/build.sh " + mongo
@@ -52,7 +52,7 @@ local build(arch, test_ui, dind) = [{
         ]
     },
 {
-      name: 'mattermost test',
+      name: 'mongo test',
       image: 'syncloud/platform-buster-' + arch + ':' + platform,
       commands: [
         './mongo/test.sh',
