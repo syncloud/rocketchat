@@ -5,7 +5,7 @@ cd ${DIR}
 
 BUILD_DIR=${DIR}/../build/snap/mongodb
 docker build --build-arg MONGO=$1 -t mongo:syncloud .
-docker run mongo:syncloud mongo --help
+docker run mongo:syncloud mongosh --help
 docker create --name=mongo mongo:syncloud
 mkdir -p ${BUILD_DIR}
 cd ${BUILD_DIR}
