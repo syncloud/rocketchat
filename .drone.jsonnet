@@ -2,7 +2,8 @@ local name = "rocketchat";
 local rocketchat = "6.9.2";
 local node = "14.21.3";
 # local mongo_version = "5.0.11"; not supported on rpi4 64bit
-local mongo = "4.4.16";
+local mongo = "6.0.17";
+#local mongo = "5.0.28";
 local browser = "firefox";
 local platform = '22.02';
 local selenium = '4.21.0-20240517';
@@ -39,7 +40,7 @@ local build(arch, test_ui, dind) = [{
             ]
         },
     {
-        name: "build mongo",
+        name: "mongo build",
         image: "docker:" + dind,
         commands: [
             "./mongo/build.sh " + mongo
@@ -50,6 +51,13 @@ local build(arch, test_ui, dind) = [{
 		path: "/var/run"
             }
         ]
+    },
+{
+      name: 'mongo test',
+      image: 'syncloud/platform-buster-' + arch + ':' + platform,
+      commands: [
+        './mongo/test.sh',
+      ],
     },
     {
         name: "build python",
@@ -291,5 +299,6 @@ local build(arch, test_ui, dind) = [{
     ]
 }];
 
-build("amd64", true, "20.10.21-dind") +
-build("arm64", false, "20.10.21-dind")
+build("amd64", true, "20.10.21-dind")
+# mongo above 4 only works on rpi5 and above
+# build("arm64", false, "20.10.21-dind")
