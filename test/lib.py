@@ -40,3 +40,7 @@ def login_6(selenium, device_user, device_password):
     selenium.screenshot('login_progress')
     selenium.find_by_xpath("//button[@title='Search']")
     selenium.screenshot('main')
+    selenium.find_by_xpath("//button[@title='Administration']").click()
+    selenium.find_by_xpath("//button[@title='Workspace']")
+    selenium.screenshot('admin')
+
