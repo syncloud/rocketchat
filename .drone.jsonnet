@@ -1,9 +1,8 @@
 local name = "rocketchat";
 local rocketchat = "6.12.1";
 local node = "14.21.3";
-# local mongo_version = "5.0.11"; not supported on rpi4 64bit
+# mongo 5 or above is supported only on rpi 5 or above
 local mongo = "6.0.17";
-#local mongo = "5.0.28";
 local browser = "firefox";
 local platform = '22.02';
 local selenium = '4.21.0-20240517';
@@ -24,6 +23,18 @@ local build(arch, test_ui, dind) = [{
         commands: [
             "echo $DRONE_BUILD_NUMBER > version"
         ]
+    },
+    {
+      name: 'cli',
+      image: 'golang:1.20',
+      commands: [
+        'cd cli',
+        "go build -ldflags '-linkmode external -extldflags -static' -o ../build/snap/meta/hooks/install ./cmd/install",
+        "go build -ldflags '-linkmode external -extldflags -static' -o ../build/snap/meta/hooks/configure ./cmd/configure",
+        "go build -ldflags '-linkmode external -extldflags -static' -o ../build/snap/meta/hooks/pre-refresh ./cmd/pre-refresh",
+        "go build -ldflags '-linkmode external -extldflags -static' -o ../build/snap/meta/hooks/post-refresh ./cmd/post-refresh",
+        "go build -ldflags '-linkmode external -extldflags -static' -o ../build/snap/bin/cli ./cmd/cli",
+      ],
     },
     {
         name: "node build",
@@ -60,26 +71,13 @@ local build(arch, test_ui, dind) = [{
       ],
     },
     {
-        name: "build python",
-        image: "docker:" + dind,
-        commands: [
-            "./python/build.sh"
-        ],
-        volumes: [
-            {
-                name: "dockersock",
-                path: "/var/run"
-            }
-        ]
+      name: 'package',
+      image: 'debian:buster-slim',
+      commands: [
+        'VERSION=$(cat version)',
+        './package.sh ' + name + ' $VERSION ',
+      ],
     },
-    {
-        name: "package",
-        image: "debian:buster-slim",
-        commands: [
-            "VERSION=$(cat version)",
-            "./package.sh " + name + " $VERSION " + arch
-        ]
-  }, 
     {
         name: "test",
         image: "python:3.8-slim-buster",

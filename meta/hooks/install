@@ -1,9 +1,0 @@
-#!/snap/rocketchat/current/python/bin/python
-
-from os.path import join
-import os, sys
-sys.path.append(join(os.environ['SNAP'], 'hooks'))
-
-import installer
-
-installer.Installer().install()
