@@ -29,7 +29,7 @@ func NewRocketChatClient(logger *zap.Logger) *RocketChatClient {
 
 func (c *RocketChatClient) WaitForStartup() {
 	attempt := 0
-	attempts := 100
+	attempts := 20
 	for attempt < attempts {
 		resp, err := c.client.Get("http://unix/api/v1")
 		if err == nil {

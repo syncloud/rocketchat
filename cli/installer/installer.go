@@ -18,7 +18,6 @@ const (
 
 type Variables struct {
 	Domain           string
-	DatabaseDir      string
 	DataDir          string
 	AppDir           string
 	CommonDir        string
@@ -152,6 +151,10 @@ func (i *Installer) PostRefresh() error {
 	if err != nil {
 		return err
 	}
+	err = i.database.Init()
+	if err != nil {
+		return err
+	}
 
 	err = i.ClearVersion()
 	if err != nil {
@@ -236,7 +239,6 @@ func (i *Installer) UpdateConfigs() error {
 
 	variables := Variables{
 		Domain:           domain,
-		DatabaseDir:      i.database.DatabaseDir(),
 		DataDir:          i.dataDir,
 		AppDir:           i.appDir,
 		CommonDir:        i.commonDir,

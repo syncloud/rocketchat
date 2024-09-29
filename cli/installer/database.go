@@ -34,10 +34,6 @@ func NewDatabase(
 	}
 }
 
-func (d *Database) DatabaseDir() string {
-	return d.databaseDir
-}
-
 func (d *Database) Remove() error {
 	if _, err := os.Stat(d.backupFile); errors.Is(err, os.ErrNotExist) {
 		return fmt.Errorf("backup file does not exist: %s", d.backupFile)
