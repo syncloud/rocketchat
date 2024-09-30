@@ -28,6 +28,10 @@ function wait_for_mongo() {
     echo "done waiting for mongo db"
 }
 
+if [[ -f /var/snap/platform/current/CI_TEST ]]; then
+  export NODE_EXTRA_CA_CERTS=/var/snap/platform/current/syncloud.ca.crt
+fi
+
 case $1 in
 start)
     started=0
