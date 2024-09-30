@@ -34,7 +34,7 @@ def login_6(selenium, device_user, device_password):
     selenium.screenshot('index')
     selenium.find_by(By.XPATH, "//span[.='Login with Syncloud']").click()
 
-    login_sso(device_user, device_password) 
+    login_sso(selenium, device_user, device_password) 
     
     selenium.find_by_xpath("//button[@title='Search']")
     selenium.screenshot('main')
@@ -42,7 +42,7 @@ def login_6(selenium, device_user, device_password):
     selenium.find_by_xpath("//button[@title='Workspace']")
     selenium.screenshot('admin')
 
-def login_sso(user, password):
+def login_sso(selenium, user, password):
     selenium.find_by(By.ID, "username-textfield").send_keys(duser)
     password = selenium.find_by(By.ID, "password-textfield")
     password.send_keys(password)
