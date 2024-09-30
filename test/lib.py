@@ -43,11 +43,12 @@ def login_6(selenium, device_user, device_password):
     selenium.screenshot('admin')
 
 def login_sso(selenium, user, password):
-    selenium.find_by(By.ID, "username-textfield").send_keys(duser)
+    selenium.find_by(By.ID, "username-textfield").send_keys(user)
     password = selenium.find_by(By.ID, "password-textfield")
     password.send_keys(password)
     selenium.screenshot('login')
     #password.send_keys(Keys.RETURN)
     selenium.find_by(By.ID, "sign-in-button").click()
     selenium.find_by(By.ID, "accept-button").click()
+
 
