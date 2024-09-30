@@ -42,10 +42,10 @@ def login_6(selenium, device_user, device_password):
     selenium.find_by_xpath("//button[@title='Workspace']")
     selenium.screenshot('admin')
 
-def login_sso(selenium, user, password):
-    selenium.find_by(By.ID, "username-textfield").send_keys(user)
+def login_sso(selenium, device_user, device_password):
+    selenium.find_by(By.ID, "username-textfield").send_keys(device_user)
     password = selenium.find_by(By.ID, "password-textfield")
-    password.send_keys(password)
+    password.send_keys(device_password)
     selenium.screenshot('login')
     #password.send_keys(Keys.RETURN)
     selenium.find_by(By.ID, "sign-in-button").click()
