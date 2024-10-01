@@ -35,12 +35,12 @@ def test_login(selenium, device_user, device_password):
 
 
 def test_setup(selenium):
-    selenium.screenshot('setup-wizard-1')
-    select = Select(selenium.find_by(By.NAME, 'Organization_Type'))
-    select.select_by_visible_text('Community')
+    #selenium.screenshot('setup-wizard-1')
+    #select = Select(selenium.find_by(By.NAME, 'Organization_Type'))
+    #select.select_by_visible_text('Community')
     
     selenium.screenshot('setup-wizard-2')
-    anme = selenium.find_by(By.NAME, 'Organization_Name')
+    anme = selenium.find_by(By.NAME, 'organizationName')
     anme.send_keys('Syncloud')
     
     selenium.screenshot('setup-wizard-3')
@@ -111,3 +111,4 @@ def test_profile(selenium, app_domain):
 #    selenium.driver.get("https://{0}/channel/general".format(app_domain))
 #    selenium.find_by_xpath("//*[text()='Start of conversation']")
 #    selenium.screenshot('channel')
+
