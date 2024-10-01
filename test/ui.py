@@ -4,6 +4,7 @@ from os.path import dirname, join
 from subprocess import check_output
 from syncloudlib.integration.hosts import add_host_alias
 from test.lib import login_6, login_5
+from selenium.webdriver.common.by import By
 
 DIR = dirname(__file__)
 TMP_DIR = '/tmp/syncloud/ui'
@@ -31,6 +32,51 @@ def test_start(module_setup, app, domain, device_host):
 def test_login(selenium, device_user, device_password):
     login_6(selenium, device_user, device_password)
  
+
+def test_setup(selenium):
+    selenium.screenshot('setup-wizard-1')
+    select = Select(selenium.find_by(By.NAME, 'Organization_Type'))
+    select.select_by_visible_text('Community')
+    
+    selenium.screenshot('setup-wizard-2')
+    anme = selenium.find_by(By.NAME, 'Organization_Name')
+    anme.send_keys('Syncloud')
+    
+    selenium.screenshot('setup-wizard-3')
+    select = Select(selenium.find_by(By.NAME, 'Industry'))
+    select.select_by_visible_text('Technology Provider')
+    
+    selenium.screenshot('setup-wizard-Size')
+    select = Select(selenium.find_by(By.NAME, 'Size'))
+    select.select_by_visible_text('4000 or more people')
+    
+    selenium.screenshot( 'setup-wizard-debug-Country')
+    select = Select(selenium.find_by(By.NAME, 'Country'))
+    select.select_by_visible_text('United Kingdom')
+    
+    selenium.screenshot( 'setup-wizard-debug-Website')
+    website = selenium.find_by(By.NAME, 'Website')
+    website.send_keys('syncloud.org')
+    
+    selenium.screenshot( 'setup-wizard-step-1')
+    selenium.find_by(By.CSS_SELECTOR, '.setup-wizard-forms__footer-next').click()
+    
+    selenium.screenshot( 'setup-wizard-debug-site-name')
+    site = selenium.find_by(By.NAME, 'Site_Name')
+    site.send_keys('Syncloud')
+    
+    selenium.screenshot( 'setup-wizard-debug-Server_Type')
+    select = Select(selenium.find_by(By.NAME, 'Server_Type'))
+    select.select_by_visible_text('Private Team')
+    
+    selenium.screenshot( 'setup-wizard-step-2')
+    selenium.find_by(By.CSS_SELECTOR, '.setup-wizard-forms__footer-next').click()
+    
+    selenium.screenshot( 'setup-wizard-step-3')
+    selenium.find_by(By.CSS_SELECTOR, '.setup-wizard-forms__content-register-radio-text').click()
+    selenium.find_by(By.CSS_SELECTOR, '.setup-wizard-forms__footer-next').click()
+  
+
 
 def test_profile(selenium, app_domain):
     selenium.driver.get("https://{0}/account/profile".format(app_domain))
