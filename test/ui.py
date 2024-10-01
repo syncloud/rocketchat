@@ -3,7 +3,7 @@ import time
 from os.path import dirname, join
 from subprocess import check_output
 from syncloudlib.integration.hosts import add_host_alias
-from test.lib import login_6, login_5
+from test.lib import login_6, admin
 from selenium.webdriver.common.by import By
 
 DIR = dirname(__file__)
@@ -31,7 +31,7 @@ def test_start(module_setup, app, domain, device_host):
 
 def test_login(selenium, device_user, device_password):
     login_6(selenium, device_user, device_password)
- 
+
 
 def test_setup(selenium):
     selenium.screenshot('setup-wizard-1')
@@ -77,6 +77,9 @@ def test_setup(selenium):
     selenium.find_by(By.CSS_SELECTOR, '.setup-wizard-forms__footer-next').click()
   
 
+def test_admin(selenium):
+    admin(selenium)
+
 
 def test_profile(selenium, app_domain):
     selenium.driver.get("https://{0}/account/profile".format(app_domain))
@@ -107,4 +110,3 @@ def test_profile(selenium, app_domain):
 #    selenium.driver.get("https://{0}/channel/general".format(app_domain))
 #    selenium.find_by_xpath("//*[text()='Start of conversation']")
 #    selenium.screenshot('channel')
-

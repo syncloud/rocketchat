@@ -2,7 +2,7 @@ import pytest
 from subprocess import check_output
 from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.installer import local_install
-from test.lib import login_6
+from test.lib import login_6, admin
 from syncloudlib.http import wait_for_rest
 from selenium.webdriver.common.keys import Keys
 import requests
@@ -35,6 +35,8 @@ def test_upgrade(device, selenium, device_user, device_password, device_host, ap
     
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
     login_6(selenium, device_user, device_password)
+
+    admin(selenium)
 
     selenium.driver.get("https://{0}/channel/general".format(app_domain))
     selenium.find_by_xpath("//*[text()='Start of conversation']")
