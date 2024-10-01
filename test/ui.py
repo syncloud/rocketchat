@@ -5,6 +5,7 @@ from subprocess import check_output
 from syncloudlib.integration.hosts import add_host_alias
 from test.lib import login_6, admin
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import Select
 
 DIR = dirname(__file__)
 TMP_DIR = '/tmp/syncloud/ui'
