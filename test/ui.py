@@ -44,10 +44,8 @@ def test_setup(selenium):
     anme.send_keys('Syncloud')
     
     selenium.screenshot('setup-wizard-3')
-    industry = selenium.find_by(By.XPATH, "//select[@name='organizationIndustry']")
-    industry.click()
-    select = Select(industry)
-    select.select_by_value('technologyProvider')
+    selenium.find_by(By.XPATH, "//button[@id='Industry']").click()
+    selenium.find_by(By.XPATH, "//span[.='Education']").click()
     
     selenium.screenshot('setup-wizard-Size')
     select = Select(selenium.find_by(By.NAME, 'organizationSize'))
