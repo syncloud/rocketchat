@@ -44,7 +44,9 @@ def test_setup(selenium):
     anme.send_keys('Syncloud')
     
     selenium.screenshot('setup-wizard-3')
-    select = Select(selenium.find_by(By.XPATH, "//select[@name='organizationIndustry']"))
+    industry = selenium.find_by(By.XPATH, "//select[@name='organizationIndustry']")
+    industry.click()
+    select = Select(industry)
     select.select_by_value('technologyProvider')
     
     selenium.screenshot('setup-wizard-Size')
