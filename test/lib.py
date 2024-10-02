@@ -5,8 +5,9 @@ import time
 
 def login_6(selenium, device_user, device_password):
     selenium.open_app()
+    login = selenium.find_by(By.XPATH, "//span[.='Login with Syncloud']")
     selenium.screenshot('index')
-    selenium.find_by(By.XPATH, "//span[.='Login with Syncloud']").click()
+    login.click()
 
     login_sso(selenium, device_user, device_password) 
 
