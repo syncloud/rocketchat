@@ -44,23 +44,23 @@ def test_setup(selenium):
     anme.send_keys('Syncloud')
     
     selenium.screenshot('setup-wizard-3')
-    select = Select(selenium.find_by(By.NAME, 'Industry'))
-    select.select_by_visible_text('Technology Provider')
+    select = Select(selenium.find_by(By.NAME, 'organizationIndustry'))
+    select.select_by_value('technologyProvider')
     
     selenium.screenshot('setup-wizard-Size')
-    select = Select(selenium.find_by(By.NAME, 'Size'))
-    select.select_by_visible_text('4000 or more people')
+    select = Select(selenium.find_by(By.NAME, 'organizationSize'))
+    select.select_by_value('1')
     
     selenium.screenshot( 'setup-wizard-debug-Country')
-    select = Select(selenium.find_by(By.NAME, 'Country'))
-    select.select_by_visible_text('United Kingdom')
+    select = Select(selenium.find_by(By.NAME, 'country'))
+    select.select_by_value('unitedKingdom')
     
     selenium.screenshot( 'setup-wizard-debug-Website')
     website = selenium.find_by(By.NAME, 'Website')
     website.send_keys('syncloud.org')
     
     selenium.screenshot( 'setup-wizard-step-1')
-    selenium.find_by(By.CSS_SELECTOR, '.setup-wizard-forms__footer-next').click()
+    selenium.find_by(By.XPATH, '//span[.="Next"]').click()
     
     selenium.screenshot( 'setup-wizard-debug-site-name')
     site = selenium.find_by(By.NAME, 'Site_Name')
@@ -111,4 +111,3 @@ def test_profile(selenium, app_domain):
 #    selenium.driver.get("https://{0}/channel/general".format(app_domain))
 #    selenium.find_by_xpath("//*[text()='Start of conversation']")
 #    selenium.screenshot('channel')
-
