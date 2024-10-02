@@ -45,7 +45,7 @@ def test_setup(selenium):
     
     selenium.screenshot('setup-wizard-3')
     selenium.find_by(By.XPATH, "//button[@name='organizationIndustry']").click()
-    selenium.find_by(By.XPATH, "//span[.='Education']").click()
+    selenium.find_by(By.XPATH, "//div[.='Education']").click()
     
     selenium.screenshot('setup-wizard-Size')
     select = Select(selenium.find_by(By.NAME, 'organizationSize'))
@@ -111,3 +111,4 @@ def test_profile(selenium, app_domain):
 #    selenium.driver.get("https://{0}/channel/general".format(app_domain))
 #    selenium.find_by_xpath("//*[text()='Start of conversation']")
 #    selenium.screenshot('channel')
+
