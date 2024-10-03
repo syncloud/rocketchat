@@ -34,7 +34,7 @@ def test_login(selenium, device_user, device_password):
     login_6(selenium, device_user, device_password)
 
 
-def test_setup(selenium, app_domain):
+def test_setup(selenium, app_domain, device):
     #selenium.screenshot('setup-wizard-1')
     #select = Select(selenium.find_by(By.NAME, 'Organization_Type'))
     #select.select_by_visible_text('Community')
