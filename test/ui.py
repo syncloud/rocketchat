@@ -47,17 +47,15 @@ def test_setup(selenium):
     selenium.find_by(By.XPATH, "//button[@name='organizationIndustry']").click()
     selenium.find_by(By.XPATH, "//div[.='Education']").click()
     
-    selenium.screenshot('setup-wizard-Size')
-    select = Select(selenium.find_by(By.NAME, 'organizationSize'))
-    select.select_by_value('1')
-    
-    selenium.screenshot( 'setup-wizard-debug-Country')
-    select = Select(selenium.find_by(By.NAME, 'country'))
-    select.select_by_value('unitedKingdom')
-    
-    selenium.screenshot( 'setup-wizard-debug-Website')
-    website = selenium.find_by(By.NAME, 'Website')
-    website.send_keys('syncloud.org')
+    selenium.find_by(By.XPATH, "//button[@name='organizationSize']").click()
+    selenium.find_by(By.XPATH, "//div[.='1']").click()
+
+    selenium.find_by(By.XPATH, "//button[@name='country']").click()
+    selenium.find_by(By.XPATH, "//div[.='Albania']").click()
+
+    #selenium.screenshot( 'setup-wizard-debug-Website')
+    #website = selenium.find_by(By.NAME, 'Website')
+    #website.send_keys('syncloud.org')
     
     selenium.screenshot( 'setup-wizard-step-1')
     selenium.find_by(By.XPATH, '//span[.="Next"]').click()
@@ -111,4 +109,3 @@ def test_profile(selenium, app_domain):
 #    selenium.driver.get("https://{0}/channel/general".format(app_domain))
 #    selenium.find_by_xpath("//*[text()='Start of conversation']")
 #    selenium.screenshot('channel')
-
