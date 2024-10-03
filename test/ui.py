@@ -48,7 +48,7 @@ def test_setup(selenium):
     selenium.find_by(By.XPATH, "//div[.='Education']").click()
     
     selenium.find_by(By.XPATH, "//button[@name='organizationSize']").click()
-    selenium.find_by(By.XPATH, "//div[.='1']").click()
+    selenium.find_by(By.XPATH, "//div[.='1-10 people']").click()
 
     selenium.find_by(By.XPATH, "//button[@name='country']").click()
     selenium.find_by(By.XPATH, "//div[.='Albania']").click()
