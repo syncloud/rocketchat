@@ -64,11 +64,11 @@ def test_setup(selenium):
     selenium.find_by(By.XPATH, "//label[contains(@class, 'rcx-check-box')]").click()
  
     selenium.screenshot( 'setup-wizard-7-register')
-    selenium.find_by(By.XPATH, "//div[@name='Register your workspace']").click()
+    selenium.find_by(By.XPATH, "//span[.='Register workspace']").click()
     
     selenium.screenshot( 'setup-wizard-7-finish')
-    selenium.find_by(By.CSS_SELECTOR, '.setup-wizard-forms__content-register-radio-text').click()
-    selenium.find_by(By.CSS_SELECTOR, '.setup-wizard-forms__footer-next').click()
+    #selenium.find_by(By.CSS_SELECTOR, '.setup-wizard-forms__content-register-radio-text').click()
+    #selenium.find_by(By.CSS_SELECTOR, '.setup-wizard-forms__footer-next').click()
   
 
 def test_admin(selenium):
