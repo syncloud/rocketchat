@@ -86,7 +86,7 @@ func (i *Installer) Install() error {
 }
 
 func (i *Installer) Configure() error {
-	i.rocketChatClient.WaitForStartup()
+	//i.rocketChatClient.WaitForStartup()
 	if i.IsInstalled() {
 		err := i.Upgrade()
 		if err != nil {
