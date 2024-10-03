@@ -34,7 +34,7 @@ def test_login(selenium, device_user, device_password):
     login_6(selenium, device_user, device_password)
 
 
-def test_setup(selenium):
+def test_setup(selenium, app_domain):
     #selenium.screenshot('setup-wizard-1')
     #select = Select(selenium.find_by(By.NAME, 'Organization_Type'))
     #select.select_by_visible_text('Community')
@@ -69,7 +69,8 @@ def test_setup(selenium):
     selenium.screenshot( 'setup-wizard-7-finish')
     #selenium.find_by(By.CSS_SELECTOR, '.setup-wizard-forms__content-register-radio-text').click()
     #selenium.find_by(By.CSS_SELECTOR, '.setup-wizard-forms__footer-next').click()
-  
+    device.run_ssh('/snap/rocketchat/current/bin/disable-wizard.sh')
+    selenium.driver.get("https://{0}".format(app_domain))
 
 def test_admin(selenium):
     admin(selenium)
