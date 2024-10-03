@@ -1,6 +1,7 @@
 import os
 from os.path import dirname, join
 from subprocess import check_output
+from syncloudlib.http import wait_for_rest
 
 import pytest
 import requests
@@ -52,22 +53,25 @@ def test_activate_device(device):
     assert response.status_code == 200, response.text
 
 
-def test_install(app_archive_path, device_host, device_password, device):
+def test_install(app_archive_path, device_host, device_password, device, app_domain):
     device.run_ssh('touch /var/snap/platform/current/CI_TEST')
     local_install(device_host, device_password, app_archive_path)
-    
+    wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
+
 
 def test_remove(device, app):
     response = device.app_remove(app)
     assert response.status_code == 200, response.text
 
 
-def test_reinstall(app_archive_path, device_host, device_password):
+def test_reinstall(app_archive_path, device_host, device_password, app_domain):
     local_install(device_host, device_password, app_archive_path)
+    wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
 
 
-def test_upgrade(app_archive_path, device_host, device_password):
+def test_upgrade(app_archive_path, device_host, device_password, app_domain):
     local_install(device_host, device_password, app_archive_path)
+    wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
 
 
 def test_mongo_export_on_upgrade(device):

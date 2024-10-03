@@ -61,7 +61,7 @@ def test_setup(selenium):
     email.send_keys('test@example.com')
     
     selenium.screenshot( 'setup-wizard-6-agreement')
-    selenium.find_by(By.XPATH, "//input[@name='agreement']").click()
+    selenium.find_by(By.XPATH, "//label[contains(@class, 'rcx-check-box')]").click()
  
     selenium.screenshot( 'setup-wizard-7-register')
     selenium.find_by(By.XPATH, "//div[@name='Register your workspace']").click()
