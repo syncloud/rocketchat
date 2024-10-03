@@ -13,8 +13,8 @@ TMP_DIR = '/tmp/syncloud/ui'
 
 @pytest.fixture(scope="session")
 def module_setup(request, device, artifact_dir, ui_mode, selenium):
+    device.activated()
     def module_teardown():
-        device.activated()
         device.run_ssh('mkdir -p {0}'.format(TMP_DIR), throw=False)
         device.run_ssh('journalctl > {0}/journalctl.log'.format(TMP_DIR, ui_mode), throw=False)
         device.run_ssh('cp /var/log/syslog {0}/syslog.log'.format(TMP_DIR, ui_mode), throw=False)
@@ -105,3 +105,4 @@ def test_profile(selenium, app_domain):
 #    selenium.driver.get("https://{0}/channel/general".format(app_domain))
 #    selenium.find_by_xpath("//*[text()='Start of conversation']")
 #    selenium.screenshot('channel')
+l')
