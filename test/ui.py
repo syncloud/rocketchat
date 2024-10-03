@@ -52,26 +52,21 @@ def test_setup(selenium):
 
     selenium.find_by(By.XPATH, "//button[@name='country']").click()
     selenium.find_by(By.XPATH, "//div[.='Albania']").click()
-
-    #selenium.screenshot( 'setup-wizard-debug-Website')
-    #website = selenium.find_by(By.NAME, 'Website')
-    #website.send_keys('syncloud.org')
     
-    selenium.screenshot( 'setup-wizard-step-1')
+    selenium.screenshot( 'setup-wizard-4-next')
     selenium.find_by(By.XPATH, '//span[.="Next"]').click()
     
-    selenium.screenshot( 'setup-wizard-debug-site-name')
-    site = selenium.find_by(By.NAME, 'Site_Name')
-    site.send_keys('Syncloud')
+    selenium.screenshot( 'setup-wizard-5-email')
+    email = selenium.find_by(By.XPATH, "//input[@name='email']")
+    email.send_keys('test@example.com')
     
-    selenium.screenshot( 'setup-wizard-debug-Server_Type')
-    select = Select(selenium.find_by(By.NAME, 'Server_Type'))
-    select.select_by_visible_text('Private Team')
+    selenium.screenshot( 'setup-wizard-6-agreement')
+    selenium.find_by(By.XPATH, "//input[@name='agreement']").click()
+ 
+    selenium.screenshot( 'setup-wizard-7-register')
+    selenium.find_by(By.XPATH, "//div[@name='Register your workspace']").click()
     
-    selenium.screenshot( 'setup-wizard-step-2')
-    selenium.find_by(By.CSS_SELECTOR, '.setup-wizard-forms__footer-next').click()
-    
-    selenium.screenshot( 'setup-wizard-step-3')
+    selenium.screenshot( 'setup-wizard-7-finish')
     selenium.find_by(By.CSS_SELECTOR, '.setup-wizard-forms__content-register-radio-text').click()
     selenium.find_by(By.CSS_SELECTOR, '.setup-wizard-forms__footer-next').click()
   
