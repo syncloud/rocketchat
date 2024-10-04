@@ -84,4 +84,4 @@ def test_mongo_config(device, app_dir):
 
 
 def test_storage_change(device, app_dir):
-    device.run_ssh('snap run rocketchat.storage-change > {1}/log/storage-change.log'.format(app_dir, TMP_DIR))
+    device.run_ssh('snap run rocketchat.storage-change > {1}/storage-change.log'.format(app_dir, TMP_DIR))
