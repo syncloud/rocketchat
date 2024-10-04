@@ -18,7 +18,6 @@ def module_setup(device, request, data_dir, platform_data_dir, artifact_dir):
         platform_log_dir = join(artifact_dir, 'platform_log')
         os.mkdir(platform_log_dir)
         device.scp_from_device('{0}/log/*'.format(platform_data_dir), platform_log_dir, throw=False)
-        device.run_ssh('mkdir {0}'.format(TMP_DIR))
         device.run_ssh('top -bn 1 -w 500 -c > {0}/top.log'.format(TMP_DIR), throw=False)
         device.run_ssh('ps auxfw > {0}/ps.log'.format(TMP_DIR), throw=False)
         device.run_ssh('systemctl status snap.rocketchat.server > {0}/rocketchat.status.log'.format(TMP_DIR), throw=False)
@@ -46,6 +45,7 @@ def module_setup(device, request, data_dir, platform_data_dir, artifact_dir):
 def test_start(module_setup, device, app, domain, device_host):
     add_host_alias(app, device_host, domain)
     device.run_ssh('date', retries=100, throw=True)
+    device.run_ssh('mkdir {0}'.format(TMP_DIR))
 
 
 def test_activate_device(device):
@@ -78,13 +78,10 @@ def test_mongo_export_on_upgrade(device):
     device.run_ssh('ls /var/snap/rocketchat/current/database.dump.gzip')
 
 
-def test_mongo_config(device, app_dir, data_dir):
-    device.scp_to_device('{0}/mongodb.config.dump.js'.format(DIR), '/')
+def test_mongo_config(device, app_dir):
     device.run_ssh(
-        '{0}/mongodb/bin/mongo.sh /mongodb.config.dump.js > {1}/log/mongo.config.dump.log'.format(app_dir, data_dir),
-        throw=False)
+        '{0}/mongodb/bin/mongo.sh {0}/config/mongo.config.dump.js > {1}/mongo.config.dump.log'.format(app_dir, TMP_DIR))
 
 
-def test_storage_change(device, app_dir, data_dir):
-    device.run_ssh('snap run rocketchat.storage-change > {1}/log/storage-change.log'.format(app_dir, data_dir),
-                   throw=False)
+def test_storage_change(device, app_dir):
+    device.run_ssh('snap run rocketchat.storage-change > {1}/log/storage-change.log'.format(app_dir, TMP_DIR))

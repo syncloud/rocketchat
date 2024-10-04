@@ -47,12 +47,12 @@ def test_upgrade(device, selenium, device_user, device_password, device_host, ap
     selenium.screenshot('upgrade-before')
 
     print(device.run_ssh(
-        '{0}/mongodb/bin/mongo.sh /mongodb.config.dump.js > {1}/mongo.config.old.dump.log'.format(app_dir, TMP_DIR),
+        '{0}/mongodb/bin/mongo.sh {0}/config/mongo.config.dump.js > {1}/mongo.config.old.dump.log'.format(app_dir, TMP_DIR),
         throw=False))
 
     local_install(device_host, device_password, app_archive_path)
     print(device.run_ssh(
-        '{0}/mongodb/bin/mongo.sh /mongodb.config.dump.js > {1}/mongo.config.refresh.dump.log'.format(app_dir, TMP_DIR),
+        '{0}/mongodb/bin/mongo.sh {0}/config/mongo.config.dump.js > {1}/mongo.config.refresh.dump.log'.format(app_dir, TMP_DIR),
         throw=False))
 
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
