@@ -7,12 +7,14 @@ import (
 	"go.uber.org/zap"
 	"os"
 	"path"
+	"time"
 )
 
 type Database struct {
 	backupFile  string
 	databaseDir string
 	dumpCmd     string
+	initCmd     string
 	restoreCmd  string
 	executor    *Executor
 	logger      *zap.Logger
@@ -29,6 +31,7 @@ func NewDatabase(
 		databaseDir: path.Join(dataDir, "mongodb"),
 		dumpCmd:     path.Join(appDir, "mongodb/bin/mongodump.sh"),
 		restoreCmd:  path.Join(appDir, "mongodb/bin/mongorestore.sh"),
+		initCmd:     path.Join(appDir, "bin/mongo-init.sh"),
 		executor:    executor,
 		logger:      logger,
 	}
@@ -43,6 +46,21 @@ func (d *Database) Remove() error {
 }
 
 func (d *Database) Init() error {
+	attempt := 0
+	attempts := 10
+	for attempt < attempts {
+		attempt++
+		err := d.executor.Run(d.initCmd)
+		if err == nil {
+			return nil
+		}
+		d.logger.Error("init failed", zap.Error(err), zap.Int("attempt", attempt))
+		time.Sleep(10 * time.Second)
+	}
+	return fmt.Errorf("init failed after %d attempts", attempts)
+}
+
+func (d *Database) InitConfig() error {
 	return linux.CreateMissingDirs(d.databaseDir)
 }
 

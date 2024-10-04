@@ -3,7 +3,6 @@
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )
 
 $DIR/bin/wait-for-configure.sh
-$DIR/bin/wait-for-mongo.sh
 
 . /var/snap/rocketchat/current/config/rocketchat.env
 

@@ -72,7 +72,7 @@ func (i *Installer) Install() error {
 		return err
 	}
 
-	err = i.database.Init()
+	err = i.database.InitConfig()
 	if err != nil {
 		return err
 	}
@@ -113,7 +113,12 @@ func (i *Installer) IsInstalled() bool {
 }
 
 func (i *Installer) Initialize() error {
-	err := i.StorageChange()
+	err := i.database.Init()
+	if err != nil {
+		return err
+	}
+
+	err = i.StorageChange()
 	if err != nil {
 		return err
 	}
@@ -127,7 +132,12 @@ func (i *Installer) Initialize() error {
 }
 
 func (i *Installer) Upgrade() error {
-	err := i.database.Restore()
+	err := i.database.Init()
+	if err != nil {
+		return err
+	}
+
+	err = i.database.Restore()
 	if err != nil {
 		return err
 	}
@@ -151,7 +161,7 @@ func (i *Installer) PostRefresh() error {
 	if err != nil {
 		return err
 	}
-	err = i.database.Init()
+	err = i.database.InitConfig()
 	if err != nil {
 		return err
 	}
