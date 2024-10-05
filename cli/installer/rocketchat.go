@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"go.uber.org/zap"
-	"io"
 	"net"
 	"net/http"
 	"time"
