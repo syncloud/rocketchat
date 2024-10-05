@@ -102,7 +102,7 @@ def test_profile(selenium, app_domain):
     selenium.screenshot('profile-new-picture')
 
 
-def test_message(selenium):
-    send_message(selenium)
-    read_essage(selenium)
+def test_message(selenium, app_domain):
+    send_message(selenium, app_domain)
+    read_essage(selenium, app_domain)
 

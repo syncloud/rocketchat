@@ -42,10 +42,11 @@ def test_login(selenium, device_user, device_password):
 def test_admin(selenium):
     admin(selenium)
 
-def test_upgrade(device, selenium):
 
-    send_message(selenium)
-    read_message(selenium)
+def test_upgrade(device, selenium, app_domain):
+
+    send_message(selenium, app_domain)
+    read_message(selenium, app_domain)
     
     print(device.run_ssh(
         '{0}/mongodb/bin/mongo.sh {0}/config/mongo.config.dump.js > {1}/mongo.config.old.dump.log'.format(app_dir, TMP_DIR),
@@ -58,5 +59,5 @@ def test_upgrade(device, selenium):
 
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
         
-    read_message(selenium)
+    read_message(selenium, app_domain)
     selenium.screenshot('refresh-channel')

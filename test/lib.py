@@ -29,7 +29,7 @@ def login_sso(selenium, device_user, device_password):
     selenium.find_by(By.ID, "accept-button").click()
 
 
-def send_message(selenium):
+def send_message(selenium, app_domain):
     selenium.driver.get("https://{0}/channel/general".format(app_domain))
     selenium.find_by_xpath("//*[text()='Start of conversation']")
  
@@ -37,7 +37,7 @@ def send_message(selenium):
     selenium.find_by_xpath("//textarea[@placeholder='Message #general']").send_keys(Keys.RETURN)
 
 
-def read_message(selenium):
+def read_message(selenium, app_domain):
     selenium.driver.get("https://{0}/channel/general".format(app_domain))
     selenium.find_by_xpath("//*[text()='Start of conversation']")
     selenium.find_by_xpath("//div[contains(.,'test message')]")
