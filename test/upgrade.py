@@ -39,10 +39,6 @@ def test_login(selenium, device_user, device_password):
     login_6(selenium, device_user, device_password)
 
 
-def test_admin(selenium):
-    admin(selenium)
-
-
 def test_upgrade(device, selenium, app_domain):
 
     send_message(selenium, app_domain)
@@ -61,3 +57,8 @@ def test_upgrade(device, selenium, app_domain):
         
     read_message(selenium, app_domain)
     selenium.screenshot('refresh-channel')
+
+
+def test_admin(selenium):
+    admin(selenium)
+
