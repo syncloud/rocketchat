@@ -3,7 +3,7 @@ import time
 from os.path import dirname, join
 from subprocess import check_output
 from syncloudlib.integration.hosts import add_host_alias
-from test.lib import login_6, admin
+from test.lib import login_6, admin, login_sso, send_message, read_message
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 from syncloudlib.http import wait_for_rest
@@ -33,7 +33,8 @@ def test_start(module_setup, app, domain, device_host):
 
 
 def test_login(selenium, device_user, device_password):
-    login_6(selenium, device_user, device_password)
+    selenium.open_app()
+    login_sso(selenium, device_user, device_password)
 
 
 def test_setup(selenium, app_domain, device):
@@ -91,21 +92,17 @@ def test_profile(selenium, app_domain):
     profile_file = selenium.find_by_css(profile_file)
     profile_file.send_keys(join(DIR, 'images', 'profile.jpeg'))
     
-    #email = selenium.find_by_xpath("//div/label[text()='Email']/following-sibling::span/label/input")
-    #email.clear()
-    #email.send_keys('test@gmail.com')
-
     selenium.screenshot('profile-new-name')
 
     save = selenium.find_by_xpath("//span[text()='Save changes']")
     save.click()
     
-    time.sleep(10)
+    time.sleep(2)
 
     selenium.screenshot('profile-new-picture')
 
 
-#def test_channel(selenium, app_domain):
-#    selenium.driver.get("https://{0}/channel/general".format(app_domain))
-#    selenium.find_by_xpath("//*[text()='Start of conversation']")
-#    selenium.screenshot('channel')
+def test_message(selenium):
+    send_message(selenium)
+    read_essage(selenium)
+

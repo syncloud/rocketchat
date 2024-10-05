@@ -2,7 +2,7 @@ import pytest
 from subprocess import check_output
 from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.installer import local_install
-from test.lib import login_6, admin
+from test.lib import login_6, admin, send_message, read_message
 from syncloudlib.http import wait_for_rest
 from selenium.webdriver.common.keys import Keys
 import requests
@@ -28,24 +28,25 @@ def test_start(module_setup, app, device_host, domain, device):
     device.run_ssh('mkdir {0}'.format(TMP_DIR), throw=False)
 
 
-def test_upgrade(device, selenium, device_user, device_password, device_host, app_archive_path, app_domain, app_dir):
+def test_install(device, selenium, device_user, device_password, device_host, app_archive_path, app_domain, app_dir):
 
     device.run_ssh('snap remove rocketchat')
-    device.run_ssh('snap install rocketchat')
-    
+    device.run_ssh('snap install rocketchat')    
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
+
+def test_login(selenium, device_user, device_password):
+    selenium.open_app()
     login_6(selenium, device_user, device_password)
 
+
+def test_admin(selenium):
     admin(selenium)
 
-    selenium.driver.get("https://{0}/channel/general".format(app_domain))
-    selenium.find_by_xpath("//*[text()='Start of conversation']")
- 
-    selenium.find_by_xpath("//textarea[@placeholder='Message #general']").send_keys('test message')
-    selenium.find_by_xpath("//textarea[@placeholder='Message #general']").send_keys(Keys.RETURN)
-    selenium.find_by_xpath("//div[contains(.,'test message')]")
-    selenium.screenshot('upgrade-before')
+def test_upgrade(device, selenium):
 
+    send_message(selenium)
+    read_message(selenium)
+    
     print(device.run_ssh(
         '{0}/mongodb/bin/mongo.sh {0}/config/mongo.config.dump.js > {1}/mongo.config.old.dump.log'.format(app_dir, TMP_DIR),
         throw=False))
@@ -56,8 +57,6 @@ def test_upgrade(device, selenium, device_user, device_password, device_host, ap
         throw=False))
 
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
-    #login_4(selenium, device_user, device_password)
-    selenium.driver.get("https://{0}/channel/general".format(app_domain))
-    selenium.find_by_xpath("//*[text()='Start of conversation']")
-    selenium.find_by_xpath("//div[contains(.,'test message')]")
+        
+    read_message(selenium)
     selenium.screenshot('refresh-channel')
