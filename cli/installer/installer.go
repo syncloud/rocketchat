@@ -38,7 +38,7 @@ type Installer struct {
 	appDir             string
 	dataDir            string
 	commonDir          string
-	rocketChatClient   *RocketChatClient
+	rocketChat         *RocketChat
 	logger             *zap.Logger
 }
 
@@ -60,7 +60,7 @@ func New(logger *zap.Logger) *Installer {
 		appDir:             appDir,
 		dataDir:            dataDir,
 		commonDir:          commonDir,
-		rocketChatClient:   NewRocketChatClient(logger),
+		rocketChat:         NewRocketChat(appDir, executor, logger),
 		logger:             logger,
 	}
 }
@@ -86,7 +86,6 @@ func (i *Installer) Install() error {
 }
 
 func (i *Installer) Configure() error {
-	//i.rocketChatClient.WaitForStartup()
 	if i.IsInstalled() {
 		err := i.Upgrade()
 		if err != nil {
@@ -104,7 +103,16 @@ func (i *Installer) Configure() error {
 		return err
 	}
 
-	return i.UpdateVersion()
+	err = i.UpdateVersion()
+	if err != nil {
+		return err
+	}
+
+	return i.DisableRegistration()
+}
+
+func (i *Installer) DisableRegistration() error {
+	return i.rocketChat.DisableRegistration()
 }
 
 func (i *Installer) IsInstalled() bool {

@@ -2,6 +2,7 @@ package installer
 
 import (
 	"context"
+	"fmt"
 	"go.uber.org/zap"
 	"io"
 	"net"
@@ -9,13 +10,17 @@ import (
 	"time"
 )
 
-type RocketChatClient struct {
-	client *http.Client
-	logger *zap.Logger
+type RocketChat struct {
+	appDir   string
+	executor *Executor
+	client   *http.Client
+	logger   *zap.Logger
 }
 
-func NewRocketChatClient(logger *zap.Logger) *RocketChatClient {
-	return &RocketChatClient{
+func NewRocketChat(appDir string, executor *Executor, logger *zap.Logger) *RocketChat {
+	return &RocketChat{
+		appDir:   appDir,
+		executor: executor,
 		client: &http.Client{
 			Transport: &http.Transport{
 				DialContext: func(_ context.Context, _, _ string) (net.Conn, error) {
@@ -27,7 +32,28 @@ func NewRocketChatClient(logger *zap.Logger) *RocketChatClient {
 	}
 }
 
-func (c *RocketChatClient) WaitForStartup() {
+func (c *RocketChat) DisableRegistration() error {
+	err := c.waitFoRC()
+	if err != nil {
+		return err
+	}
+	c.logger.Info("disabling registration wizard")
+	err = c.executor.Run(
+		fmt.Sprint(c.appDir, "/mongodb/bin/mongo.sh"),
+		fmt.Sprint(c.appDir, "/config/mongo.disable-wizard.js"),
+	)
+	if err != nil {
+		return err
+	}
+	c.logger.Info("restarting rocketchat")
+	err = c.executor.Run("snap", "restart", "rocketchat")
+	if err != nil {
+		return err
+	}
+	return c.waitFoRC()
+}
+
+func (c *RocketChat) waitFoRC() error {
 	attempt := 0
 	attempts := 20
 	for attempt < attempts {
@@ -38,10 +64,10 @@ func (c *RocketChatClient) WaitForStartup() {
 				body, err := io.ReadAll(resp.Body)
 				if err != nil {
 					c.logger.Info("RocketChat started", zap.Error(err))
-					return
+					return nil
 				}
 				c.logger.Info("RocketChat started", zap.String("resp", string(body)))
-				return
+				return nil
 			}
 			c.logger.Info("RocketChat API returned HTTP status, waiting", zap.Int("status", resp.StatusCode))
 		}
@@ -49,5 +75,5 @@ func (c *RocketChatClient) WaitForStartup() {
 		time.Sleep(10 * time.Second)
 		attempts++
 	}
-
+	return fmt.Errorf("timeout waiting for RocketChat API to start")
 }

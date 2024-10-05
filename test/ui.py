@@ -71,12 +71,8 @@ def test_setup(selenium, app_domain, device):
     selenium.find_by(By.XPATH, "//span[.='Register workspace']").click()
     
     selenium.screenshot( 'setup-wizard-7-finish')
-    #selenium.find_by(By.CSS_SELECTOR, '.setup-wizard-forms__content-register-radio-text').click()
-    #selenium.find_by(By.CSS_SELECTOR, '.setup-wizard-forms__footer-next').click()
-    device.run_ssh('/snap/rocketchat/current/bin/disable-wizard.sh')
-    device.run_ssh('snap restart rocketchat.server')
-    wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
-    selenium.driver.get("https://{0}".format(app_domain))
+    device.run_ssh('/snap/rocketchat/current/bin/cli disable-registration')
+    selenium.open_app()
 
 
 def test_admin(selenium):

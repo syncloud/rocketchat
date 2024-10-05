@@ -56,6 +56,13 @@ func main() {
 		},
 	})
 
+	cmd.AddCommand(&cobra.Command{
+		Use: "disable-registration",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return installer.New(logger).DisableRegistration()
+		},
+	})
+
 	err := cmd.Execute()
 	if err != nil {
 		fmt.Print(err)
