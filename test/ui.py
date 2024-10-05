@@ -1,13 +1,14 @@
-import pytest
 import time
 from os.path import dirname, join
 from subprocess import check_output
-from syncloudlib.integration.hosts import add_host_alias
-from test.lib import login_6, admin, login_sso, send_message, read_message
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import Select
-from syncloudlib.http import wait_for_rest
+
+import pytest
 import requests
+from selenium.webdriver.common.by import By
+from syncloudlib.http import wait_for_rest
+from syncloudlib.integration.hosts import add_host_alias
+
+from test.lib import admin, login_sso, send_message, read_message
 
 DIR = dirname(__file__)
 TMP_DIR = '/tmp/syncloud/ui'
@@ -77,32 +78,26 @@ def test_setup(selenium, app_domain, device):
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
     selenium.driver.get("https://{0}".format(app_domain))
 
+
 def test_admin(selenium):
     admin(selenium)
 
 
 def test_profile(selenium, app_domain):
-    selenium.driver.get("https://{0}/account/profile".format(app_domain))
-    selenium.screenshot('profile')
-    username = selenium.find_by_xpath("//div/label[text()='Name']/following-sibling::span/input")
-    username.send_keys('Syncloud user')
-    
+    selenium.find_by_xpath("//button[@title='User menu']").click()
+    selenium.find_by_xpath("//span[@title='Profile']").click()
+    selenium.find_by_xpath("//input[@name='username']").send_keys('Syncloud user')
     profile_file = 'input[type="file"]'
     selenium.driver.execute_script("document.querySelector('{0}').style.display='block';".format(profile_file))
     profile_file = selenium.find_by_css(profile_file)
     profile_file.send_keys(join(DIR, 'images', 'profile.jpeg'))
-    
     selenium.screenshot('profile-new-name')
-
-    save = selenium.find_by_xpath("//span[text()='Save changes']")
-    save.click()
-    
+    selenium.find_by_xpath("//span[text()='Save changes']").click()
     time.sleep(2)
-
     selenium.screenshot('profile-new-picture')
 
 
 def test_message(selenium, app_domain):
     send_message(selenium, app_domain)
-    read_essage(selenium, app_domain)
+    read_message(selenium, app_domain)
 

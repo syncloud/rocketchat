@@ -16,8 +16,10 @@ def login_6(selenium, device_user, device_password):
 
 def admin(selenium):
     selenium.find_by_xpath("//button[@title='Administration']").click()
-    selenium.find_by_xpath("//div[.='Workspace']")
+    selenium.find_by_xpath("//div[.='Workspace']").click()
+    selenium.find_by_xpath("//h1[.='Workspace']")
     selenium.screenshot('admin')
+    selenium.find_by_xpath("//button[@aria-label='Close']").click()
 
 
 def login_sso(selenium, device_user, device_password):
