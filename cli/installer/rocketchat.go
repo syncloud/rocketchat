@@ -38,19 +38,10 @@ func (c *RocketChat) DisableRegistration() error {
 		return err
 	}
 	c.logger.Info("disabling registration wizard")
-	err = c.executor.Run(
+	return c.executor.Run(
 		fmt.Sprint(c.appDir, "/mongodb/bin/mongo.sh"),
 		fmt.Sprint(c.appDir, "/config/mongo.disable-wizard.js"),
 	)
-	if err != nil {
-		return err
-	}
-	c.logger.Info("restarting rocketchat")
-	err = c.executor.Run("snap", "restart", "rocketchat")
-	if err != nil {
-		return err
-	}
-	return c.waitFoRC()
 }
 
 func (c *RocketChat) waitFoRC() error {
@@ -60,13 +51,7 @@ func (c *RocketChat) waitFoRC() error {
 		resp, err := c.client.Get("http://unix/api/v1")
 		if err == nil {
 			if resp.StatusCode == 200 {
-				defer resp.Body.Close()
-				body, err := io.ReadAll(resp.Body)
-				if err != nil {
-					c.logger.Info("RocketChat started", zap.Error(err))
-					return nil
-				}
-				c.logger.Info("RocketChat started", zap.String("resp", string(body)))
+				c.logger.Info("RocketChat started")
 				return nil
 			}
 			c.logger.Info("RocketChat API returned HTTP status, waiting", zap.Int("status", resp.StatusCode))
