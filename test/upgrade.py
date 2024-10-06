@@ -2,7 +2,7 @@ import pytest
 from subprocess import check_output
 from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.installer import local_install
-from test.lib import login_6, admin, send_message, read_message, login_sso
+from test.lib import login_6, admin, send_message, read_message, login_sso, disable_registration
 from syncloudlib.http import wait_for_rest
 from selenium.webdriver.common.keys import Keys
 import requests
