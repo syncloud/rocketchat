@@ -1,7 +1,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from syncloudlib.http import wait_for_rest
-
+import requests
 
 def login_6(selenium, device_user, device_password):
     selenium.find_by(By.XPATH, "//span[.='Login']")
@@ -51,6 +51,7 @@ def read_message(selenium, app_domain):
     selenium.driver.get("https://{0}/channel/general".format(app_domain))
     selenium.find_by_xpath("//*[text()='Start of conversation']")
     selenium.find_by_xpath("//div[contains(.,'test message')]")
+
 
 def disable_registration(selenium, app_domain, device):
     device.run_ssh('/snap/rocketchat/current/bin/cli disable-registration')
