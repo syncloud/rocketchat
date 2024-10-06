@@ -51,3 +51,8 @@ def read_message(selenium, app_domain):
     selenium.find_by_xpath("//*[text()='Start of conversation']")
     selenium.find_by_xpath("//div[contains(.,'test message')]")
 
+def disable_registration(selenium, app_domain, device):
+    device.run_ssh('/snap/rocketchat/current/bin/cli disable-registration')
+    device.run_ssh('snap restart rocketchat.server')
+    wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
+    selenium.open_app()
