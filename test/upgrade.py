@@ -39,7 +39,7 @@ def test_login(selenium, device_user, device_password):
     login_6(selenium, device_user, device_password)
 
 
-def test_upgrade(device, selenium, app_domain, app_dir):
+def test_upgrade(device, selenium, device_user, device_password, device_host, app_archive_path, app_domain, app_dir):
 
     send_message(selenium, app_domain)
     read_message(selenium, app_domain)
