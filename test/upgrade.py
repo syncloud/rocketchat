@@ -2,7 +2,7 @@ import pytest
 from subprocess import check_output
 from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.installer import local_install
-from test.lib import login_6, admin, send_message, read_message
+from test.lib import login_6, admin, send_message, read_message, login_sso
 from syncloudlib.http import wait_for_rest
 from selenium.webdriver.common.keys import Keys
 import requests
@@ -54,7 +54,8 @@ def test_upgrade(device, selenium, device_user, device_password, device_host, ap
         throw=False))
 
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
-        
+    
+    login_sso(selenium, device_user, device_password)
     read_message(selenium, app_domain)
     selenium.screenshot('refresh-channel')
 
