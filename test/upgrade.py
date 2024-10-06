@@ -54,7 +54,7 @@ def test_upgrade(device, selenium, device_user, device_password, device_host, ap
         throw=False))
 
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
-    
+    selenium.open_app()
     login_sso(selenium, device_user, device_password)
     read_message(selenium, app_domain)
     selenium.screenshot('refresh-channel')
