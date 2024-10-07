@@ -117,7 +117,7 @@ func (i *Installer) DisableRegistration() error {
 
 func (i *Installer) IsInstalled() bool {
 	_, err := os.Stat(i.installFile)
-	return os.IsExist(err)
+	return err == nil
 }
 
 func (i *Installer) Initialize() error {
@@ -131,11 +131,19 @@ func (i *Installer) Initialize() error {
 		return err
 	}
 
-	err = os.WriteFile(i.installFile, []byte("installed"), 0644)
+	err = i.MarkInstalled()
 	if err != nil {
 		return err
 	}
 
+	return nil
+}
+
+func (i *Installer) MarkInstalled() error {
+	err := os.WriteFile(i.installFile, []byte("installed"), 0644)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
