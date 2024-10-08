@@ -28,6 +28,7 @@ type Variables struct {
 }
 
 type Installer struct {
+	oidcPasswordFile   string
 	newVersionFile     string
 	currentVersionFile string
 	configDir          string
@@ -50,6 +51,7 @@ func New(logger *zap.Logger) *Installer {
 
 	executor := NewExecutor(logger)
 	return &Installer{
+		oidcPasswordFile:   path.Join(dataDir, "oidc.password"),
 		newVersionFile:     path.Join(appDir, "version"),
 		currentVersionFile: path.Join(dataDir, "version"),
 		configDir:          configDir,
@@ -140,11 +142,7 @@ func (i *Installer) Initialize() error {
 }
 
 func (i *Installer) MarkInstalled() error {
-	err := os.WriteFile(i.installFile, []byte("installed"), 0644)
-	if err != nil {
-		return err
-	}
-	return nil
+	return os.WriteFile(i.installFile, []byte("installed"), 0644)
 }
 
 func (i *Installer) Upgrade() error {
@@ -157,7 +155,30 @@ func (i *Installer) Upgrade() error {
 	if err != nil {
 		return err
 	}
+
+	err = i.UpdateDbSettings()
+	if err != nil {
+		return err
+	}
+
 	err = i.StorageChange()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (i *Installer) UpdateDbSettings() error {
+	password, err := i.readOidcPassword()
+	if err != nil {
+		return err
+	}
+
+	err = i.database.Update("Accounts_OAuth_Custom_Syncloud_secret", password)
+	if err != nil {
+		return err
+	}
+	err = i.database.Update("Show_Setup_Wizard", "completed")
 	if err != nil {
 		return err
 	}
@@ -196,6 +217,11 @@ func (i *Installer) PostRefresh() error {
 }
 func (i *Installer) AccessChange() error {
 	err := i.UpdateConfigs()
+	if err != nil {
+		return err
+	}
+
+	err = i.UpdateDbSettings()
 	if err != nil {
 		return err
 	}
@@ -263,7 +289,7 @@ func (i *Installer) UpdateConfigs() error {
 		return err
 	}
 
-	err = i.database.Update("Accounts_OAuth_Custom_Syncloud_secret", password)
+	err = i.saveOidcPassword(password)
 	if err != nil {
 		return err
 	}
@@ -340,4 +366,16 @@ func (i *Installer) RestorePreStart() error {
 
 func (i *Installer) RestorePostStart() error {
 	return i.Configure()
+}
+
+func (i *Installer) saveOidcPassword(value string) error {
+	return os.WriteFile(i.oidcPasswordFile, []byte(value), 0644)
+}
+
+func (i *Installer) readOidcPassword() (string, error) {
+	content, err := os.ReadFile(i.oidcPasswordFile)
+	if err != nil {
+		return "", err
+	}
+	return string(content), nil
 }
