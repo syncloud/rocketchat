@@ -263,6 +263,11 @@ func (i *Installer) UpdateConfigs() error {
 		return err
 	}
 
+	err = i.database.Update("Accounts_OAuth_Custom_Syncloud_secret", password)
+	if err != nil {
+		return err
+	}
+
 	variables := Variables{
 		Domain:           domain,
 		DataDir:          i.dataDir,

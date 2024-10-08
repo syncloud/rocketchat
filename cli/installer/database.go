@@ -11,13 +11,14 @@ import (
 )
 
 type Database struct {
-	backupFile  string
-	databaseDir string
-	dumpCmd     string
-	initCmd     string
-	restoreCmd  string
-	executor    *Executor
-	logger      *zap.Logger
+	backupFile    string
+	databaseDir   string
+	dumpCmd       string
+	initCmd       string
+	restoreCmd    string
+	mongoShellCmd string
+	executor      *Executor
+	logger        *zap.Logger
 }
 
 func NewDatabase(
@@ -27,13 +28,14 @@ func NewDatabase(
 	logger *zap.Logger,
 ) *Database {
 	return &Database{
-		backupFile:  path.Join(dataDir, "database.dump.gzip"),
-		databaseDir: path.Join(dataDir, "mongodb"),
-		dumpCmd:     path.Join(appDir, "mongodb/bin/mongodump.sh"),
-		restoreCmd:  path.Join(appDir, "mongodb/bin/mongorestore.sh"),
-		initCmd:     path.Join(appDir, "bin/mongo-init.sh"),
-		executor:    executor,
-		logger:      logger,
+		backupFile:    path.Join(dataDir, "database.dump.gzip"),
+		databaseDir:   path.Join(dataDir, "mongodb"),
+		dumpCmd:       path.Join(appDir, "mongodb/bin/mongodump.sh"),
+		restoreCmd:    path.Join(appDir, "mongodb/bin/mongorestore.sh"),
+		mongoShellCmd: path.Join(appDir, "mongodb/bin/mongo.sh"),
+		initCmd:       path.Join(appDir, "bin/mongo-init.sh"),
+		executor:      executor,
+		logger:        logger,
 	}
 }
 
@@ -80,4 +82,12 @@ func (d *Database) Backup() error {
 	return d.executor.Run(d.dumpCmd,
 		fmt.Sprint("--archive=", d.backupFile),
 		"--gzip")
+}
+
+func (d *Database) Update(key, value string) error {
+	return d.executor.Run(d.mongoShellCmd,
+		App,
+		"--eval",
+		fmt.Sprint("db.rocketchat_settings.update({'_id': '", key, "'}, {$set: {'value': '", value, "'}});"),
+	)
 }
