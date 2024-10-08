@@ -174,7 +174,7 @@ func (i *Installer) UpdateDbSettings() error {
 		return err
 	}
 
-	err = i.database.Update("Accounts_OAuth_Custom_Syncloud_secret", password)
+	err = i.database.Update("Accounts_OAuth_Custom-Syncloud-secret", password)
 	if err != nil {
 		return err
 	}
