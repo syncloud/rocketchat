@@ -7,9 +7,9 @@ import (
 	"github.com/syncloud/golib/linux"
 	"github.com/syncloud/golib/platform"
 	"go.uber.org/zap"
-
 	"os"
 	"path"
+	"time"
 )
 
 const (
@@ -288,6 +288,21 @@ func (i *Installer) UpdateConfigs() error {
 }
 
 func (i *Installer) FixPermissions() error {
+	attempt := 0
+	attempts := 10
+	for attempt < attempts {
+		attempt++
+		err := i.FixPermissionsOnce()
+		if err == nil {
+			return nil
+		}
+		i.logger.Error("fix permissions failed", zap.Error(err), zap.Int("attempt", attempt))
+		time.Sleep(1 * time.Second)
+	}
+	return fmt.Errorf("fix permissions failed after %d attempts", attempts)
+}
+
+func (i *Installer) FixPermissionsOnce() error {
 	storageDir, err := i.platformClient.InitStorage(App, App)
 	if err != nil {
 		return err
