@@ -131,6 +131,7 @@ local build(arch, test_ui, dind) = [{
             name: "test-ui",
             image: "python:3.8-slim-buster",
             commands: [
+              "APP_ARCHIVE_PATH=$(realpath $(cat package.name))",
               "cd test",
               "./deps.sh",
               "py.test -x -s ui.py --device-user=testuser --distro="+distro+" --domain="+distro+".com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + "."+distro+".com --app=" + name + " --browser=" + browser,
