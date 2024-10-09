@@ -16,7 +16,7 @@ TMP_DIR = '/tmp/syncloud/ui'
 
 @pytest.fixture(scope="session")
 def module_setup(request, device, artifact_dir, ui_mode, selenium):
-    device.activated()
+    
     def module_teardown():
         device.run_ssh('mkdir -p {0}'.format(TMP_DIR), throw=False)
         device.run_ssh('journalctl > {0}/journalctl.log'.format(TMP_DIR, ui_mode), throw=False)
@@ -31,47 +31,24 @@ def module_setup(request, device, artifact_dir, ui_mode, selenium):
 
 def test_start(module_setup, app, domain, device_host):
     add_host_alias(app, device_host, domain)
+    device.activated()
 
 
-def test_login(selenium, device_user, device_password):
+def test_local_install(device, selenium, device_user, device_password, device_host, app_archive_path, app_domain, app_dir):
+
+    device.run_ssh('snap remove rocketchat')
+    local_install(device_host, device_password, app_archive_path)
+    wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
     selenium.open_app()
     login_sso(selenium, device_user, device_password)
+    
 
-    
-def test_setup(selenium, app_domain, device):
-    #selenium.screenshot('setup-wizard-1')
-    #select = Select(selenium.find_by(By.NAME, 'Organization_Type'))
-    #select.select_by_visible_text('Community')
-    
-    selenium.screenshot('setup-wizard-2')
-    anme = selenium.find_by(By.NAME, 'organizationName')
-    anme.send_keys('Syncloud')
-    
-    selenium.screenshot('setup-wizard-3')
-    selenium.find_by(By.XPATH, "//button[@name='organizationIndustry']").click()
-    selenium.find_by(By.XPATH, "//div[.='Education']").click()
-    
-    selenium.find_by(By.XPATH, "//button[@name='organizationSize']").click()
-    selenium.find_by(By.XPATH, "//div[.='1-10 people']").click()
+def test_local_upgrade(device, selenium, device_user, device_password, device_host, app_archive_path, app_domain, app_dir):
 
-    selenium.find_by(By.XPATH, "//button[@name='country']").click()
-    selenium.find_by(By.XPATH, "//div[.='Albania']").click()
-    
-    selenium.screenshot( 'setup-wizard-4-next')
-    selenium.find_by(By.XPATH, '//span[.="Next"]').click()
-    
-    selenium.screenshot( 'setup-wizard-5-email')
-    email = selenium.find_by(By.XPATH, "//input[@name='email']")
-    email.send_keys('test@example.com')
-    
-    selenium.screenshot( 'setup-wizard-6-agreement')
-    selenium.find_by(By.XPATH, "//label[contains(@class, 'rcx-check-box')]").click()
- 
-    selenium.screenshot( 'setup-wizard-7-register')
-    selenium.find_by(By.XPATH, "//span[.='Register workspace']").click()
-    
-    selenium.screenshot( 'setup-wizard-7-finish')
-    disable_registration(selenium, app_domain, device)
+    local_install(device_host, device_password, app_archive_path)
+    wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
+    selenium.open_app()
+    login_sso(selenium, device_user, device_password)
 
 
 def test_admin(selenium):
