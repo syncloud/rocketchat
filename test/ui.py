@@ -53,10 +53,10 @@ def test_local_upgrade(device, selenium, device_user, device_password, device_ho
     local_install(device_host, device_password, app_archive_path)
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
     selenium.open_app()
-    login_sso(selenium, device_user, device_password)
+    #login_sso(selenium, device_user, device_password)
     #selenium.find_by(By.XPATH, "//div[.='Organization Info']")
     selenium.find_by_xpath("//button[@title='User menu']")
-    selenium.screenshot('login-sso-2-done')
+    selenium.screenshot('local-upgrade-done')
 
 
 def test_admin(selenium):
