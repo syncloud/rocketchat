@@ -133,7 +133,7 @@ local build(arch, test_ui, dind) = [{
             commands: [
               "cd test",
               "./deps.sh",
-              "py.test -x -s ui.py --device-user=testuser --distro="+distro+" --domain="+distro+".com --device-host=" + name + "."+distro+".com --app=" + name + " --browser=" + browser,
+              "py.test -x -s ui.py --device-user=testuser --distro="+distro+" --domain="+distro+".com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + "."+distro+".com --app=" + name + " --browser=" + browser,
             ],
             privileged: true,
             volumes: [{
