@@ -29,7 +29,7 @@ def module_setup(request, device, artifact_dir, ui_mode, selenium):
     request.addfinalizer(module_teardown)
 
 
-def test_start(module_setup, app, domain, device_host):
+def test_start(module_setup, app, domain, device_host, device):
     add_host_alias(app, device_host, domain)
     device.activated()
 
