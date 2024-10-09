@@ -35,9 +35,7 @@ def login_sso(selenium, device_user, device_password):
     selenium.find_by(By.ID, "sign-in-button").click()
     selenium.screenshot('login-sso-accept')
     selenium.find_by(By.ID, "accept-button").click()
-    #selenium.find_by(By.XPATH, "//div[.='Organization Info']")
-    selenium.find_by_xpath("//button[@title='User menu']")
-    selenium.screenshot('login-sso-done')
+
 
 def send_message(selenium, app_domain):
     selenium.driver.get("https://{0}/channel/general".format(app_domain))
