@@ -7,6 +7,7 @@ import requests
 from selenium.webdriver.common.by import By
 from syncloudlib.http import wait_for_rest
 from syncloudlib.integration.hosts import add_host_alias
+from syncloudlib.integration.installer import local_install
 
 from test.lib import admin, login_sso, send_message, read_message, disable_registration
 
