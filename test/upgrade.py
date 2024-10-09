@@ -57,11 +57,11 @@ def test_upgrade(device, selenium, device_user, device_password, device_host, ap
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
     selenium.open_app()
     login_sso(selenium, device_user, device_password)
-    #selenium.find_by(By.XPATH, "//div[.='Organization Info']")
-    selenium.find_by_xpath("//button[@title='User menu']")
+    selenium.find_by(By.XPATH, "//div[.='Organization Info']")
+    #selenium.find_by_xpath("//button[@title='User menu']")
     selenium.screenshot('login-sso-3-done')
 
-    #disable_registration(selenium, app_domain, device)
+    disable_registration(selenium, app_domain, device)
    
     read_message(selenium, app_domain)
     selenium.screenshot('refresh-channel')
@@ -69,4 +69,5 @@ def test_upgrade(device, selenium, device_user, device_password, device_host, ap
 
 def test_admin(selenium):
     admin(selenium)
+
 
