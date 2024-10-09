@@ -92,3 +92,9 @@ def disable_registration(selenium, app_domain, device):
     device.run_ssh('snap restart rocketchat.server')
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
     selenium.open_app()
+    selenium.find_by_xpath("//button[@title='User menu']")
+    selenium.screenshot( 'disabled-registration-1')
+    selenium.open_app()
+    selenium.find_by_xpath("//button[@title='User menu']")
+    selenium.screenshot( 'disabled-registration-2')
+
