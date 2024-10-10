@@ -63,7 +63,11 @@ def test_upgrade(device, selenium, device_user, device_password, device_host, ap
 
     disable_registration(selenium, app_domain, device)
    
-    read_message(selenium, app_domain)
+    #read_message(selenium, app_domain)
+    selenium.find_by(By.XPATH, "//div[.='general']").click()
+    selenium.find_by_xpath("//*[text()='Start of conversation']")
+    selenium.find_by_xpath("//div[contains(.,'test message')]")
+
     selenium.screenshot('refresh-channel')
 
 
