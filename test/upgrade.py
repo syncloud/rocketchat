@@ -2,9 +2,10 @@ import pytest
 from subprocess import check_output
 from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.installer import local_install
-from test.lib import login_6
+from test.lib import login_6, admin, send_message, read_message, login_sso, disable_registration, wizard
 from syncloudlib.http import wait_for_rest
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
 import requests
 
 TMP_DIR = '/tmp/syncloud'
@@ -28,34 +29,49 @@ def test_start(module_setup, app, device_host, domain, device):
     device.run_ssh('mkdir {0}'.format(TMP_DIR), throw=False)
 
 
-def test_upgrade(device, selenium, device_user, device_password, device_host, app_archive_path, app_domain, app_dir):
+def test_install(device, selenium, device_user, device_password, device_host, app_archive_path, app_domain, app_dir):
 
     device.run_ssh('snap remove rocketchat')
-    device.run_ssh('snap install rocketchat')
-    
+    device.run_ssh('snap install rocketchat')    
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
+
+def test_login(selenium, device_user, device_password):
+    selenium.open_app()
     login_6(selenium, device_user, device_password)
 
-    selenium.driver.get("https://{0}/channel/general".format(app_domain))
-    selenium.find_by_xpath("//*[text()='Start of conversation']")
- 
-    selenium.find_by_xpath("//textarea[@placeholder='Message #general']").send_keys('test message')
-    selenium.find_by_xpath("//textarea[@placeholder='Message #general']").send_keys(Keys.RETURN)
-    selenium.find_by_xpath("//div[contains(.,'test message')]")
-    selenium.screenshot('upgrade-before')
 
+def test_upgrade(device, selenium, device_user, device_password, device_host, app_archive_path, app_domain, app_dir):
+
+    send_message(selenium, app_domain)
+    read_message(selenium, app_domain)
+    
     print(device.run_ssh(
-        '{0}/mongodb/bin/mongo.sh /mongodb.config.dump.js > {1}/mongo.config.old.dump.log'.format(app_dir, TMP_DIR),
+        '{0}/mongodb/bin/mongo.sh {0}/config/mongo.config.dump.js > {1}/mongo.config.old.dump.log'.format(app_dir, TMP_DIR),
         throw=False))
 
     local_install(device_host, device_password, app_archive_path)
     print(device.run_ssh(
-        '{0}/mongodb/bin/mongo.sh /mongodb.config.dump.js > {1}/mongo.config.refresh.dump.log'.format(app_dir, TMP_DIR),
+        '{0}/mongodb/bin/mongo.sh {0}/config/mongo.config.dump.js > {1}/mongo.config.refresh.dump.log'.format(app_dir, TMP_DIR),
         throw=False))
 
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
-    #login_4(selenium, device_user, device_password)
-    selenium.driver.get("https://{0}/channel/general".format(app_domain))
+    selenium.open_app()
+    # login_sso(selenium, device_user, device_password)
+    selenium.find_by(By.XPATH, "//div[.='Organization Info']")
+    #selenium.find_by_xpath("//button[@title='User menu']")
+    selenium.screenshot('login-sso-3-done')
+    wizard(selenium, app_domain, device)
+    # disable_registration(selenium, app_domain, device)
+   
+    #read_message(selenium, app_domain)
+    selenium.find_by(By.XPATH, "//div[.='general']").click()
     selenium.find_by_xpath("//*[text()='Start of conversation']")
     selenium.find_by_xpath("//div[contains(.,'test message')]")
+
     selenium.screenshot('refresh-channel')
+
+
+def test_admin(selenium):
+    admin(selenium)
+
+
