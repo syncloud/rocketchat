@@ -208,6 +208,12 @@ func (i *Installer) PostRefresh() error {
 		return err
 	}
 
+	//TODO: fix missing install flag, remove after the release
+	err = i.MarkInstalled()
+	if err != nil {
+		return err
+	}
+
 	err = i.FixPermissions()
 	if err != nil {
 		return err
