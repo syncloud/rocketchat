@@ -1,5 +1,5 @@
 local name = "rocketchat";
-local rocketchat = "6.12.1";
+local rocketchat = "7.7.3";
 local node = "14.21.3";
 # mongo 5 or above is supported only on rpi 5 or above
 local mongo = "6.0.17";
