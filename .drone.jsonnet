@@ -1,5 +1,5 @@
 local name = "rocketchat";
-local rocketchat = "7.7.3";
+local rocketchat = "7.7.1";
 local node = "22.14.0";
 # mongo 5 or above is supported only on rpi 5 or above
 local mongo = "6.0.17";
@@ -37,14 +37,14 @@ local build(arch, test_ui, dind) = [{
       ],
     },
     {
-        name: "node build",
-        image: "node:" + node,
+        name: "server build",
+        image: "rocket.chat:" + rocketchat,
         commands: [
             "./node/build.sh " + rocketchat
         ]
     },
     {
-            name: "node test",
+            name: "server test",
             image: "debian:buster-slim",
             commands: [
                 "build/snap/node/bin/node.sh --help"
