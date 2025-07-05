@@ -19,6 +19,6 @@ docker export syncloud -o syncloud.tar
 tar xf syncloud.tar
 rm -rf syncloud.tar
 
-echo $VERSION > $BUILD_DIR/rocketchat.version
-cp -r ${DIR}/bin ${BUILD_DIR}/bin
-rm -rf ${BUILD_DIR}/usr/src
+echo $VERSION > rocketchat.version
+cp ${DIR}/bin/* bin
+rm -rf /usr/src
