@@ -38,10 +38,16 @@ local build(arch, test_ui, dind) = [{
     },
     {
         name: "server build",
-        image: "rocket.chat:" + rocketchat,
+        image: 'docker:' + dind,
         commands: [
             "./node/build.sh " + rocketchat
-        ]
+        ],
+        volumes: [
+        {
+            name: 'dockersock',
+            path: '/var/run',
+        },
+      ],
     },
     {
             name: "server test",
@@ -301,4 +307,3 @@ local build(arch, test_ui, dind) = [{
 build("amd64", true, "20.10.21-dind")
 # mongo above 4 only works on rpi5 and above
 # build("arm64", false, "20.10.21-dind")
-
