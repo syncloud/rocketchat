@@ -47,9 +47,9 @@ func (c *RocketChat) waitFoRC() error {
 	attempt := 0
 	attempts := 20
 	for attempt < attempts {
-		resp, err := c.client.Get("http://unix/api/v1")
+		resp, err := c.client.Get("http://unix/status")
 		if err == nil {
-			if resp.StatusCode == 200 {
+			if resp.StatusCode == 202 {
 				c.logger.Info("RocketChat started")
 				return nil
 			}
