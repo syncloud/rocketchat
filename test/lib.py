@@ -96,7 +96,7 @@ def wizard_7(selenium, app_domain, device):
     anme.send_keys('Syncloud')
     
     selenium.screenshot('setup-wizard-3')
-    selenium.find_by(By.XPATH, "//label[text()='Organization industry']"/..//button).click()
+    selenium.find_by(By.XPATH, "//label[text()='Organization industry']/..//button").click()
     selenium.find_by(By.XPATH, "//div[.='Education']").click()
     
     selenium.find_by(By.XPATH, "//button[@name='organizationSize']").click()
