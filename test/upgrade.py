@@ -2,7 +2,7 @@ import pytest
 from subprocess import check_output
 from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.installer import local_install
-from test.lib import login_6, admin, send_message, read_message, login_sso, disable_registration, wizard_7
+from test.lib import login_6, admin, send_message, read_message, login_sso, disable_registration, wizard_7, wizard_6
 from syncloudlib.http import wait_for_rest
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -38,6 +38,7 @@ def test_install(device, selenium, device_user, device_password, device_host, ap
 def test_login(selenium, device_user, device_password):
     selenium.open_app()
     login_sso(selenium, device_user, device_password)
+    wizard_6(selenium, app_domain, device)
 
 
 def test_upgrade(device, selenium, device_user, device_password, device_host, app_archive_path, app_domain, app_dir):
