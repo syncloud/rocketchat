@@ -99,7 +99,7 @@ def wizard_7(selenium, app_domain, device):
     selenium.find_by(By.XPATH, "//label[text()='Organization industry']/..//button").click()
     selenium.find_by(By.XPATH, "//div[.='Education']").click()
     
-    selenium.find_by(By.XPATH, "//button[@name='organizationSize']").click()
+    selenium.find_by(By.XPATH, "//label[@name='Organization size']/..//button").click()
     selenium.find_by(By.XPATH, "//div[.='1-10 people']").click()
 
     selenium.find_by(By.XPATH, "//button[@name='country']").click()
@@ -132,4 +132,5 @@ def disable_registration(selenium, app_domain, device):
     # selenium.open_app()
     # selenium.find_by_xpath("//button[@title='User menu']")
     # selenium.screenshot( 'disabled-registration-2')
+
 
