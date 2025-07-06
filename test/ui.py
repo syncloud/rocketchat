@@ -9,7 +9,7 @@ from syncloudlib.http import wait_for_rest
 from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.installer import local_install
 
-from test.lib import admin, login_sso, send_message, read_message, disable_registration, wizard
+from test.lib import admin, login_sso, send_message, read_message, disable_registration, wizard_7
 
 DIR = dirname(__file__)
 TMP_DIR = '/tmp/syncloud/ui'
@@ -42,7 +42,7 @@ def test_local_install(device, selenium, device_user, device_password, device_ho
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
     selenium.open_app()
     login_sso(selenium, device_user, device_password)
-    wizard(selenium, app_domain, device)
+    wizard_7(selenium, app_domain, device)
 
     #selenium.find_by_xpath("//button[@title='User menu']")
     selenium.screenshot('login-sso-1-done')

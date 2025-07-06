@@ -51,7 +51,7 @@ def read_message(selenium, app_domain):
     selenium.find_by_xpath("//div[contains(.,'test message')]")
 
 
-def wizard(selenium, app_domain, device):
+def wizard_6(selenium, app_domain, device):
     #selenium.screenshot('setup-wizard-1')
     #select = Select(selenium.find_by(By.NAME, 'Organization_Type'))
     #select.select_by_visible_text('Community')
@@ -62,6 +62,41 @@ def wizard(selenium, app_domain, device):
     
     selenium.screenshot('setup-wizard-3')
     selenium.find_by(By.XPATH, "//button[@name='organizationIndustry']").click()
+    selenium.find_by(By.XPATH, "//div[.='Education']").click()
+    
+    selenium.find_by(By.XPATH, "//button[@name='organizationSize']").click()
+    selenium.find_by(By.XPATH, "//div[.='1-10 people']").click()
+
+    selenium.find_by(By.XPATH, "//button[@name='country']").click()
+    selenium.find_by(By.XPATH, "//div[.='Albania']").click()
+    
+    selenium.screenshot( 'setup-wizard-4-next')
+    selenium.find_by(By.XPATH, '//span[.="Next"]').click()
+    
+    selenium.screenshot( 'setup-wizard-5-email')
+    email = selenium.find_by(By.XPATH, "//input[@name='email']")
+    email.send_keys('test@example.com')
+    
+    selenium.screenshot( 'setup-wizard-6-agreement')
+    selenium.find_by(By.XPATH, "//label[contains(@class, 'rcx-check-box')]").click()
+ 
+    selenium.screenshot( 'setup-wizard-7-register')
+    selenium.find_by(By.XPATH, "//span[.='Register workspace']").click()
+    
+    selenium.screenshot( 'setup-wizard-7-finish')
+    disable_registration(selenium, app_domain, device)
+
+def wizard_7(selenium, app_domain, device):
+    #selenium.screenshot('setup-wizard-1')
+    #select = Select(selenium.find_by(By.NAME, 'Organization_Type'))
+    #select.select_by_visible_text('Community')
+    
+    selenium.screenshot('setup-wizard-2')
+    anme = selenium.find_by(By.NAME, 'organizationName')
+    anme.send_keys('Syncloud')
+    
+    selenium.screenshot('setup-wizard-3')
+    selenium.find_by(By.XPATH, "//label[text()='Organization industry']"/..//button).click()
     selenium.find_by(By.XPATH, "//div[.='Education']").click()
     
     selenium.find_by(By.XPATH, "//button[@name='organizationSize']").click()
