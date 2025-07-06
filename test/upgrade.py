@@ -37,7 +37,7 @@ def test_install(device, selenium, device_user, device_password, device_host, ap
 
 def test_login(selenium, device_user, device_password):
     selenium.open_app()
-    login_6(selenium, device_user, device_password)
+    login_sso(selenium, device_user, device_password)
 
 
 def test_upgrade(device, selenium, device_user, device_password, device_host, app_archive_path, app_domain, app_dir):
