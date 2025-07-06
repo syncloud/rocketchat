@@ -102,7 +102,7 @@ def wizard_7(selenium, app_domain, device):
     selenium.find_by(By.XPATH, "//label[text()='Organization size']/..//button").click()
     selenium.find_by(By.XPATH, "//div[.='1-10 people']").click()
 
-    selenium.find_by(By.XPATH, "//button[@name='country']").click()
+    selenium.find_by(By.XPATH, "//label[text()='Country']/..//button").click()
     selenium.find_by(By.XPATH, "//div[.='Albania']").click()
     
     selenium.screenshot( 'setup-wizard-4-next')
