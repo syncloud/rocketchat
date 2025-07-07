@@ -35,7 +35,7 @@ def test_install(device, selenium, device_user, device_password, device_host, ap
     device.run_ssh('snap install rocketchat')    
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
 
-def test_login(selenium, device_user, device_password):
+def test_login(selenium, device_user, device_password, app_domain, device):
     selenium.open_app()
     login_sso(selenium, device_user, device_password)
     wizard_6(selenium, app_domain, device)
