@@ -62,7 +62,7 @@ def test_upgrade(device, selenium, device_user, device_password, device_host, ap
     #selenium.find_by_xpath("//button[@title='User menu']")
     selenium.screenshot('login-sso-3-done')
     wizard_7(selenium, app_domain, device)
-    # disable_registration(selenium, app_domain, device)
+    disable_registration(selenium, app_domain, device)
    
     #read_message(selenium, app_domain)
     selenium.find_by(By.XPATH, "//div[.='general']").click()
@@ -74,5 +74,7 @@ def test_upgrade(device, selenium, device_user, device_password, device_host, ap
 
 def test_admin(selenium):
     admin(selenium)
+
+
 
 

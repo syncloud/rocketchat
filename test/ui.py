@@ -66,7 +66,7 @@ def test_admin(selenium):
 def test_profile(selenium, app_domain):
     selenium.find_by_xpath("//button[@title='User menu']").click()
     selenium.find_by_xpath("//div[.='Profile']").click()
-    selenium.find_by_xpath("//input[@name='username']").send_keys('Syncloud user')
+    selenium.find_by_xpath("//input[@name='username']").send_keys('1')
     profile_file = 'input[type="file"]'
     selenium.driver.execute_script("document.querySelector('{0}').style.display='block';".format(profile_file))
     profile_file = selenium.find_by_css(profile_file)
@@ -80,3 +80,4 @@ def test_profile(selenium, app_domain):
 def test_message(selenium, app_domain):
     send_message(selenium, app_domain)
     read_message(selenium, app_domain)
+app_domain)

@@ -44,11 +44,14 @@ def send_message(selenium, app_domain):
     selenium.find_by_xpath("//textarea[@placeholder='Message #general']").send_keys('test message')
     selenium.find_by_xpath("//textarea[@placeholder='Message #general']").send_keys(Keys.RETURN)
 
+    selenium.screenshot('message-write')
 
 def read_message(selenium, app_domain):
     selenium.driver.get("https://{0}/channel/general".format(app_domain))
     selenium.find_by_xpath("//*[text()='Start of conversation']")
     selenium.find_by_xpath("//div[contains(.,'test message')]")
+
+    selenium.screenshot('message-read')
 
 
 def wizard_6(selenium, app_domain, device):
