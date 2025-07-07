@@ -80,4 +80,3 @@ def test_profile(selenium, app_domain):
 def test_message(selenium, app_domain):
     send_message(selenium, app_domain)
     read_message(selenium, app_domain)
-app_domain)
