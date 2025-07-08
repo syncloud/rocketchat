@@ -87,7 +87,7 @@ def wizard_6(selenium, app_domain, device):
     selenium.find_by(By.XPATH, "//span[.='Register workspace']").click()
     
     selenium.screenshot( 'setup-wizard-7-finish')
-    disable_registration(selenium, app_domain, device)
+    disable_registration_6(selenium, app_domain, device)
 
 def wizard_7(selenium, app_domain, device):
     #selenium.screenshot('setup-wizard-1')
@@ -122,18 +122,18 @@ def wizard_7(selenium, app_domain, device):
     selenium.find_by(By.XPATH, "//span[.='Register workspace']").click()
     
     selenium.screenshot( 'setup-wizard-7-finish')
-    disable_registration(selenium, app_domain, device)
+    disable_registration_7(selenium, app_domain, device)
 
 
-def disable_registration(selenium, app_domain, device):
+def disable_registration_6(selenium, app_domain, device):
+    device.run_ssh('/snap/rocketchat/current/bin/cli disable-registration')
+    device.run_ssh('snap restart rocketchat.server')
+    wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
+    selenium.open_app()
+
+def disable_registration_7(selenium, app_domain, device):
     device.run_ssh('/snap/rocketchat/current/bin/cli disable-registration')
     device.run_ssh('/snap/rocketchat/current/bin/mongo-disable-registration.sh')
     device.run_ssh('snap restart rocketchat.server')
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
     selenium.open_app()
-    # selenium.find_by_xpath("//button[@title='User menu']")
-    # selenium.screenshot( 'disabled-registration-1')
-    # selenium.open_app()
-    # selenium.find_by_xpath("//button[@title='User menu']")
-    # selenium.screenshot( 'disabled-registration-2')
-
