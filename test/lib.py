@@ -122,7 +122,7 @@ def wizard_7(selenium, app_domain, device):
     selenium.find_by(By.XPATH, "//span[.='Register workspace']").click()
     
     selenium.screenshot( 'setup-wizard-7-finish')
-    disable_registration_7(selenium, app_domain, device)
+    # disable_registration_7(selenium, app_domain, device)
 
 
 def disable_registration_6(selenium, app_domain, device):
