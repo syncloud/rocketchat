@@ -1,12 +1,13 @@
-import pytest
 from subprocess import check_output
+
+import pytest
+import requests
+from selenium.webdriver.common.by import By
+from syncloudlib.http import wait_for_rest
 from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.installer import local_install
-from test.lib import login_6, admin, send_message, read_message, login_sso, disable_registration, wizard_7, wizard_6
-from syncloudlib.http import wait_for_rest
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
-import requests
+
+from test.lib import admin, send_message, read_message, login_sso, wizard_7, wizard_6
 
 TMP_DIR = '/tmp/syncloud'
 

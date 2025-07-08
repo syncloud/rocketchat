@@ -9,7 +9,7 @@ from syncloudlib.http import wait_for_rest
 from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.installer import local_install
 
-from test.lib import admin, login_sso, send_message, read_message, disable_registration, wizard_7
+from test.lib import admin, login_sso, send_message, read_message, wizard_7
 
 DIR = dirname(__file__)
 TMP_DIR = '/tmp/syncloud/ui'
