@@ -89,11 +89,8 @@ def wizard_6(selenium, app_domain, device):
     selenium.screenshot( 'setup-wizard-7-finish')
     disable_registration_6(selenium, app_domain, device)
 
-def wizard_7(selenium, app_domain, device):
-    #selenium.screenshot('setup-wizard-1')
-    #select = Select(selenium.find_by(By.NAME, 'Organization_Type'))
-    #select.select_by_visible_text('Community')
-    
+def wizard_7(selenium):
+
     selenium.screenshot('setup-wizard-2')
     anme = selenium.find_by(By.NAME, 'organizationName')
     anme.send_keys('Syncloud')
@@ -110,7 +107,9 @@ def wizard_7(selenium, app_domain, device):
     
     selenium.screenshot( 'setup-wizard-4-next')
     selenium.find_by(By.XPATH, '//span[.="Next"]').click()
-    
+
+
+def register_7(selenium):
     selenium.screenshot( 'setup-wizard-5-email')
     email = selenium.find_by(By.XPATH, "//input[@name='email']")
     email.send_keys('test@example.com')
@@ -122,7 +121,6 @@ def wizard_7(selenium, app_domain, device):
     selenium.find_by(By.XPATH, "//span[.='Register workspace']").click()
     
     selenium.screenshot( 'setup-wizard-7-finish')
-    # disable_registration_7(selenium, app_domain, device)
 
 
 def disable_registration_6(selenium, app_domain, device):
