@@ -56,10 +56,10 @@ def test_upgrade(device, selenium, device_user, device_password, device_host, ap
         '{0}/mongodb/bin/mongo.sh {0}/config/mongo.config.dump.js > {1}/mongo.config.refresh.dump.log'.format(app_dir, TMP_DIR),
         throw=False))
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
-    disable_registration_7(selenium, app_domain, device)
+    #disable_registration_7(selenium, app_domain, device)
     selenium.open_app()
     # login_sso(selenium, device_user, device_password)
-    selenium.find_by(By.XPATH, "//div[.='Organization Info']")
+    selenium.find_by(By.XPATH, "//span[.='Register workspace']")
     #selenium.find_by_xpath("//button[@title='User menu']")
     selenium.screenshot('login-sso-3-done')
     wizard_7(selenium, app_domain, device)
