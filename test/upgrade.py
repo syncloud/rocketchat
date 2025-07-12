@@ -7,7 +7,7 @@ from syncloudlib.http import wait_for_rest
 from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.installer import local_install
 
-from test.lib import admin, send_message, read_message, login_sso, wizard_7, wizard_6, disable_registration_7, \
+from test.lib import admin, send_message, read_message, login_sso, wizard_6, disable_registration, \
     register_7
 
 TMP_DIR = '/tmp/syncloud'
@@ -64,7 +64,7 @@ def test_upgrade(device, selenium, device_user, device_password, device_host, ap
     #selenium.find_by_xpath("//button[@title='User menu']")
     selenium.screenshot('login-sso-3-done')
     register_7(selenium)
-    disable_registration_7(selenium, app_domain, device)
+    disable_registration(selenium, app_domain, device)
 
     #read_message(selenium, app_domain)
     selenium.find_by(By.XPATH, "//div[.='general']").click()

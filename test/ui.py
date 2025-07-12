@@ -4,12 +4,11 @@ from subprocess import check_output
 
 import pytest
 import requests
-from selenium.webdriver.common.by import By
 from syncloudlib.http import wait_for_rest
 from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.installer import local_install
 
-from test.lib import admin, login_sso, send_message, read_message, wizard_7, disable_registration_7, register_7
+from test.lib import admin, login_sso, send_message, read_message, wizard_7, disable_registration, register_7
 
 DIR = dirname(__file__)
 TMP_DIR = '/tmp/syncloud/ui'
@@ -44,7 +43,7 @@ def test_local_install(device, selenium, device_user, device_password, device_ho
     login_sso(selenium, device_user, device_password)
     wizard_7(selenium)
     register_7(selenium)
-    disable_registration_7(selenium, app_domain, device)
+    disable_registration(selenium, app_domain, device)
     selenium.find_by_xpath("//button[@title='User menu']")
     selenium.screenshot('login-sso-1-done')
 
