@@ -51,7 +51,7 @@ local build(arch, test_ui, dind) = [{
     },
     {
             name: "server test",
-            image: "debian:buster-slim",
+            image: "debian:bookworm-slim",
             commands: [
                 "build/snap/node/bin/node.sh --help"
             ]
@@ -78,7 +78,7 @@ local build(arch, test_ui, dind) = [{
     },
     {
       name: 'package',
-      image: 'debian:buster-slim',
+      image: 'debian:bookworm-slim',
       commands: [
         'VERSION=$(cat version)',
         './package.sh ' + name + ' $VERSION ',
@@ -170,7 +170,7 @@ local build(arch, test_ui, dind) = [{
     } ] else [] ) + [
     {
         name: "upload",
-        image: "debian:buster-slim",
+        image: "debian:bookworm-slim",
         environment: {
             AWS_ACCESS_KEY_ID: {
                 from_secret: "AWS_ACCESS_KEY_ID"
@@ -196,7 +196,7 @@ local build(arch, test_ui, dind) = [{
     },
     {
             name: "promote",
-            image: "debian:buster-slim",
+            image: "debian:bookworm-slim",
             environment: {
                 AWS_ACCESS_KEY_ID: {
                     from_secret: "AWS_ACCESS_KEY_ID"
