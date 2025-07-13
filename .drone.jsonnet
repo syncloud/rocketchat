@@ -151,7 +151,7 @@ local build(arch, test_ui, dind) = [{
                     'APP_ARCHIVE_PATH=$(realpath $(cat package.name))',
                     'cd test',
                     './deps.sh',
-                    'py.test -x -s ui.py --device-user=testuser --distro=' + distro_default + ' --domain=' + distro_default + '.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=' + name + '.' + distro_default + ".com --app=' + name + ' --browser=" + browser,
+                    'py.test -x -s ui.py --device-user=testuser --distro=' + distro_default + ' --domain=' + distro_default + '.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=' + name + '.' + distro_default + '.com --app=' + name + ' --browser=' + browser,
                   ],
                   privileged: true,
                   volumes: [{
