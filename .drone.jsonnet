@@ -273,10 +273,10 @@ local build(arch, test_ui, dind) = [{
           path: '/var/run',
         },
       ],
-    },
+    }] + [
     {
-      name: name + '.buster.com',
-      image: 'syncloud/platform-buster-' + arch + ':22.01',
+      name: name + '.' + distro + '.com',
+      image: 'syncloud/platform-' + distro + '-' + arch + ':' + platform,
       privileged: true,
       volumes: [
         {
@@ -288,7 +288,7 @@ local build(arch, test_ui, dind) = [{
           path: '/dev',
         },
       ],
-    },
+    } for distro in distros
   ],
   volumes: [
     {
