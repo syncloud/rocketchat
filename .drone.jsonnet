@@ -98,7 +98,7 @@ local build(arch, test_ui, dind) = [{
                'APP_ARCHIVE_PATH=$(realpath $(cat package.name))',
                'cd test',
                './deps.sh',
-               'py.test -x -s test.py --distro=' + distro + ' --domain=' + distro + '.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=' + name + '.' + distro + '.com --app=' + name + ' --arch=' + arch,
+               'py.test -x -s test.py --device-user=testuser --distro=' + distro + ' --domain=' + distro + '.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=' + name + '.' + distro + '.com --app=' + name + ' --arch=' + arch,
              ],
            }
            for distro in distros
@@ -124,26 +124,25 @@ local build(arch, test_ui, dind) = [{
                     '/opt/bin/entry_point.sh',
                   ],
                 },
-
                 {
-                  name: 'selenium-video',
-                  image: 'selenium/video:ffmpeg-4.3.1-20220208',
-                  detach: true,
-                  environment: {
-                    DISPLAY_CONTAINER_NAME: 'selenium',
-                    FILE_NAME: 'video.mkv',
-                  },
-                  volumes: [
-                    {
-                      name: 'shm',
-                      path: '/dev/shm',
-                    },
-                    {
-                      name: 'videos',
-                      path: '/videos',
-                    },
-                  ],
-                },
+             name: 'selenium-video',
+             image: 'selenium/video:ffmpeg-6.1.1-20240621',
+             detach: true,
+             environment: {
+               DISPLAY_CONTAINER_NAME: 'selenium',
+               FILE_NAME: 'video.mkv',
+             },
+             volumes: [
+               {
+                 name: 'shm',
+                 path: '/dev/shm',
+               },
+               {
+                 name: 'videos',
+                 path: '/videos',
+               },
+             ],
+           },
                 {
                   name: 'test-ui',
                   image: 'python:' + python,
