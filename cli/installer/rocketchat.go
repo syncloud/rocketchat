@@ -38,8 +38,7 @@ func (c *RocketChat) DisableRegistration() error {
 	}
 	c.logger.Info("disabling registration wizard")
 	return c.executor.Run(
-		fmt.Sprint(c.appDir, "/mongodb/bin/mongo.sh"),
-		fmt.Sprint(c.appDir, "/config/mongo.disable-wizard.js"),
+		fmt.Sprint(c.appDir, "/bin/mongo-disable-wizard.sh"),
 	)
 }
 
@@ -47,7 +46,7 @@ func (c *RocketChat) waitFoRC() error {
 	attempt := 0
 	attempts := 20
 	for attempt < attempts {
-		resp, err := c.client.Get("http://unix/api/v1")
+		resp, err := c.client.Get("http://unix/status")
 		if err == nil {
 			if resp.StatusCode == 200 {
 				c.logger.Info("RocketChat started")

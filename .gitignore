@@ -17,3 +17,7 @@ geckodriver
 *.test.download
 *.test.upload
 test.file*
+artifact
+.drone.yml
+package.name
+*.snap

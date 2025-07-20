@@ -1,12 +1,14 @@
-import pytest
 from subprocess import check_output
+
+import pytest
+import requests
+from selenium.webdriver.common.by import By
+from syncloudlib.http import wait_for_rest
 from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.installer import local_install
-from test.lib import login_6, admin, send_message, read_message, login_sso, disable_registration, wizard
-from syncloudlib.http import wait_for_rest
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
-import requests
+
+from test.lib import admin, send_message, read_message, login_sso, wizard_6, disable_registration, \
+    register_7
 
 TMP_DIR = '/tmp/syncloud'
 
@@ -35,9 +37,10 @@ def test_install(device, selenium, device_user, device_password, device_host, ap
     device.run_ssh('snap install rocketchat')    
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
 
-def test_login(selenium, device_user, device_password):
+def test_login(selenium, device_user, device_password, app_domain, device):
     selenium.open_app()
-    login_6(selenium, device_user, device_password)
+    login_sso(selenium, device_user, device_password)
+    wizard_6(selenium, app_domain, device)
 
 
 def test_upgrade(device, selenium, device_user, device_password, device_host, app_archive_path, app_domain, app_dir):
@@ -53,16 +56,16 @@ def test_upgrade(device, selenium, device_user, device_password, device_host, ap
     print(device.run_ssh(
         '{0}/mongodb/bin/mongo.sh {0}/config/mongo.config.dump.js > {1}/mongo.config.refresh.dump.log'.format(app_dir, TMP_DIR),
         throw=False))
-
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
+    #disable_registration_7(selenium, app_domain, device)
     selenium.open_app()
     # login_sso(selenium, device_user, device_password)
-    selenium.find_by(By.XPATH, "//div[.='Organization Info']")
+    selenium.find_by(By.XPATH, "//span[.='Register workspace']")
     #selenium.find_by_xpath("//button[@title='User menu']")
     selenium.screenshot('login-sso-3-done')
-    wizard(selenium, app_domain, device)
-    # disable_registration(selenium, app_domain, device)
-   
+    register_7(selenium)
+    disable_registration(selenium, app_domain, device)
+
     #read_message(selenium, app_domain)
     selenium.find_by(By.XPATH, "//div[.='general']").click()
     selenium.find_by_xpath("//*[text()='Start of conversation']")
@@ -73,5 +76,7 @@ def test_upgrade(device, selenium, device_user, device_password, device_host, ap
 
 def test_admin(selenium):
     admin(selenium)
+
+
 
 

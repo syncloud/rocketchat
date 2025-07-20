@@ -4,12 +4,11 @@ from subprocess import check_output
 
 import pytest
 import requests
-from selenium.webdriver.common.by import By
 from syncloudlib.http import wait_for_rest
 from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.installer import local_install
 
-from test.lib import admin, login_sso, send_message, read_message, disable_registration, wizard
+from test.lib import admin, login_sso, send_message, read_message, wizard_7, disable_registration, register_7
 
 DIR = dirname(__file__)
 TMP_DIR = '/tmp/syncloud/ui'
@@ -42,9 +41,10 @@ def test_local_install(device, selenium, device_user, device_password, device_ho
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
     selenium.open_app()
     login_sso(selenium, device_user, device_password)
-    wizard(selenium, app_domain, device)
-
-    #selenium.find_by_xpath("//button[@title='User menu']")
+    wizard_7(selenium)
+    register_7(selenium)
+    disable_registration(selenium, app_domain, device)
+    selenium.find_by_xpath("//button[@title='User menu']")
     selenium.screenshot('login-sso-1-done')
 
 
@@ -66,7 +66,7 @@ def test_admin(selenium):
 def test_profile(selenium, app_domain):
     selenium.find_by_xpath("//button[@title='User menu']").click()
     selenium.find_by_xpath("//div[.='Profile']").click()
-    selenium.find_by_xpath("//input[@name='username']").send_keys('Syncloud user')
+    selenium.find_by_xpath("//input[@name='username']").send_keys('1')
     profile_file = 'input[type="file"]'
     selenium.driver.execute_script("document.querySelector('{0}').style.display='block';".format(profile_file))
     profile_file = selenium.find_by_css(profile_file)
