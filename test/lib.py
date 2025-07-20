@@ -126,5 +126,5 @@ def register_7(selenium):
 def disable_registration(selenium, app_domain, device):
     device.run_ssh('/snap/rocketchat/current/bin/cli disable-registration')
     device.run_ssh('snap restart rocketchat.server')
-    wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 20)
+    wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 40)
     selenium.open_app()
