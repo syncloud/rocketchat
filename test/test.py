@@ -2,6 +2,9 @@ import os
 from os.path import dirname, join
 from subprocess import check_output
 from syncloudlib.http import wait_for_rest
+import logging
+log = logging.getLogger()
+log.setLevel(logging.DEBUG)
 
 import pytest
 import requests
@@ -42,12 +45,8 @@ def module_setup(device, request, data_dir, platform_data_dir, artifact_dir):
     request.addfinalizer(module_teardown)
 
 
-def test_start(module_setup):
-    print("setup")
-
-
-def test_prepare(module_setup, device, app, domain, device_host):
-    print("prepare")
+def test_start(module_setup, device, app, domain, device_host):
+    log.debug("start")
     add_host_alias(app, device_host, domain)
     device.run_ssh('date', retries=2, throw=True)
     device.run_ssh('mkdir {0}'.format(TMP_DIR))
