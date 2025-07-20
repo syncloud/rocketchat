@@ -1,5 +1,5 @@
 local name = 'rocketchat';
-local rocketchat = '7.7.1';
+local rocketchat = '7.7.5';
 // mongo 5 or above is supported only on rpi 5 or above
 local mongo = '6.0.17';
 local browser = 'chrome';
