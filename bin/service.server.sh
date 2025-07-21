@@ -14,7 +14,7 @@ echo "starting server"
 started=0
 set +e
 for i in $(seq 1 30); do
-  ${DIR}/node/bin/node.sh ${DIR}/node/rocketchat/main.js
+  ${DIR}/node/bin/node.sh ${DIR}/node/app/bundle/main.js
   if [[ $? == 0 ]]; then
     started=1
     break

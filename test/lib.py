@@ -44,14 +44,17 @@ def send_message(selenium, app_domain):
     selenium.find_by_xpath("//textarea[@placeholder='Message #general']").send_keys('test message')
     selenium.find_by_xpath("//textarea[@placeholder='Message #general']").send_keys(Keys.RETURN)
 
+    selenium.screenshot('message-write')
 
 def read_message(selenium, app_domain):
     selenium.driver.get("https://{0}/channel/general".format(app_domain))
     selenium.find_by_xpath("//*[text()='Start of conversation']")
     selenium.find_by_xpath("//div[contains(.,'test message')]")
 
+    selenium.screenshot('message-read')
 
-def wizard(selenium, app_domain, device):
+
+def wizard_6(selenium, app_domain, device):
     #selenium.screenshot('setup-wizard-1')
     #select = Select(selenium.find_by(By.NAME, 'Organization_Type'))
     #select.select_by_visible_text('Community')
@@ -86,15 +89,42 @@ def wizard(selenium, app_domain, device):
     selenium.screenshot( 'setup-wizard-7-finish')
     disable_registration(selenium, app_domain, device)
 
+def wizard_7(selenium):
+
+    selenium.screenshot('setup-wizard-2')
+    anme = selenium.find_by(By.NAME, 'organizationName')
+    anme.send_keys('Syncloud')
+    
+    selenium.screenshot('setup-wizard-3')
+    selenium.find_by(By.XPATH, "//label[text()='Organization industry']/..//button").click()
+    selenium.find_by(By.XPATH, "//div[.='Education']").click()
+    
+    selenium.find_by(By.XPATH, "//label[text()='Organization size']/..//button").click()
+    selenium.find_by(By.XPATH, "//div[.='1-10 people']").click()
+
+    selenium.find_by(By.XPATH, "//label[text()='Country']/..//button").click()
+    selenium.find_by(By.XPATH, "//div[.='Albania']").click()
+    
+    selenium.screenshot( 'setup-wizard-4-next')
+    selenium.find_by(By.XPATH, '//span[.="Next"]').click()
+
+
+def register_7(selenium):
+    selenium.screenshot( 'setup-wizard-5-email')
+    email = selenium.find_by(By.XPATH, "//input[@name='email']")
+    email.send_keys('test@example.com')
+    
+    selenium.screenshot( 'setup-wizard-6-agreement')
+    selenium.find_by(By.XPATH, "//label[contains(@class, 'rcx-check-box')]").click()
+ 
+    selenium.screenshot( 'setup-wizard-7-register')
+    selenium.find_by(By.XPATH, "//span[.='Register workspace']").click()
+    
+    selenium.screenshot( 'setup-wizard-7-finish')
+
 
 def disable_registration(selenium, app_domain, device):
     device.run_ssh('/snap/rocketchat/current/bin/cli disable-registration')
     device.run_ssh('snap restart rocketchat.server')
-    wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
+    wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 40)
     selenium.open_app()
-    # selenium.find_by_xpath("//button[@title='User menu']")
-    # selenium.screenshot( 'disabled-registration-1')
-    # selenium.open_app()
-    # selenium.find_by_xpath("//button[@title='User menu']")
-    # selenium.screenshot( 'disabled-registration-2')
-
