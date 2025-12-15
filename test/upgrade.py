@@ -7,7 +7,7 @@ from syncloudlib.http import wait_for_rest
 from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.installer import local_install
 
-from test.lib import admin, send_message, read_message, login_sso, wizard_6, disable_registration, \
+from test.lib import admin, send_message, read_message, login_sso, wizard_7, disable_registration, \
     register_7
 
 TMP_DIR = '/tmp/syncloud'
@@ -40,7 +40,9 @@ def test_install(device, selenium, device_user, device_password, device_host, ap
 def test_login(selenium, device_user, device_password, app_domain, device):
     selenium.open_app()
     login_sso(selenium, device_user, device_password)
-    wizard_6(selenium, app_domain, device)
+    wizard_7(selenium)
+    register_7(selenium)
+    disable_registration(selenium, app_domain, device)
 
 
 def test_upgrade(device, selenium, device_user, device_password, device_host, app_archive_path, app_domain, app_dir):
@@ -57,16 +59,13 @@ def test_upgrade(device, selenium, device_user, device_password, device_host, ap
         '{0}/mongodb/bin/mongo.sh {0}/config/mongo.config.dump.js > {1}/mongo.config.refresh.dump.log'.format(app_dir, TMP_DIR),
         throw=False))
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
-    #disable_registration_7(selenium, app_domain, device)
-    selenium.open_app()
-    # login_sso(selenium, device_user, device_password)
-    selenium.find_by(By.XPATH, "//span[.='Register workspace']")
-    #selenium.find_by_xpath("//button[@title='User menu']")
-    selenium.screenshot('login-sso-3-done')
-    register_7(selenium)
-    disable_registration(selenium, app_domain, device)
 
-    #read_message(selenium, app_domain)
+    selenium.open_app()
+
+    selenium.find_by(By.XPATH, "//span[.='Register workspace']")
+
+    selenium.screenshot('login-sso-3-done')
+    
     selenium.find_by(By.XPATH, "//div[.='general']").click()
     selenium.find_by_xpath("//*[text()='Start of conversation']")
     selenium.find_by_xpath("//div[contains(.,'test message')]")
@@ -76,7 +75,4 @@ def test_upgrade(device, selenium, device_user, device_password, device_host, ap
 
 def test_admin(selenium):
     admin(selenium)
-
-
-
 
