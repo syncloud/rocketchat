@@ -62,9 +62,9 @@ def test_upgrade(device, selenium, device_user, device_password, device_host, ap
 
     selenium.open_app()
 
-    selenium.find_by(By.XPATH, "//span[.='Register workspace']")
+    #selenium.find_by(By.XPATH, "//span[.='Register workspace']")
 
-    selenium.screenshot('login-sso-3-done')
+    #selenium.screenshot('login-sso-3-done')
     
     selenium.find_by(By.XPATH, "//div[.='general']").click()
     selenium.find_by_xpath("//*[text()='Start of conversation']")
