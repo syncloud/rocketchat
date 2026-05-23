@@ -32,7 +32,7 @@ apps:
     command: bin/cli restore-post-start
 
 confinement: strict
-description: Rocket.Chat
+description: Text, voice and video chat
 grade: stable
 name: rocketchat
 summary: Rocket.Chat
