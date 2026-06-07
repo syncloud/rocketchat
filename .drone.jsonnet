@@ -3,10 +3,10 @@ local rocketchat = '7.7.5';
 // mongo 5 or above is supported only on rpi 5 or above
 local mongo = '6.0.17';
 local browser = 'chrome';
-local platform = '25.02';
+local platform = '26.06.01';
 local selenium = '4.21.0-20240517';
-local playwright = 'mcr.microsoft.com/playwright:v1.59.1-jammy';
-local deployer = 'https://github.com/syncloud/store/releases/download/4/syncloud-release';
+local playwright = 'v1.59.1-jammy';
+local store_publisher = 'stable-291';
 local python = '3.12-slim-bookworm';
 local distro_default = 'buster';
 local distros = ['bookworm', 'buster'];
@@ -146,7 +146,7 @@ local build(arch, test_ui, dind) = [{
            },
                 {
                   name: 'test-ui',
-                  image: playwright,
+                  image: 'mcr.microsoft.com/playwright:' + playwright,
                   commands: [
                     './test/e2e/run.sh ' + distro_default + ' ' + name,
                   ],
@@ -175,53 +175,14 @@ local build(arch, test_ui, dind) = [{
             },
           ] else []) + [
     {
-      name: 'upload',
-      image: 'debian:bookworm-slim',
+      name: 'publish',
+      image: 'syncloud/store-publisher:' + store_publisher,
       environment: {
-        AWS_ACCESS_KEY_ID: {
-          from_secret: 'AWS_ACCESS_KEY_ID',
-        },
-        AWS_SECRET_ACCESS_KEY: {
-          from_secret: 'AWS_SECRET_ACCESS_KEY',
-        },
-        SYNCLOUD_TOKEN: {
-          from_secret: 'SYNCLOUD_TOKEN',
-        },
+        SYNCLOUD_TOKEN: { from_secret: 'SYNCLOUD_TOKEN' },
       },
-      commands: [
-        'PACKAGE=$(cat package.name)',
-        'apt update && apt install -y wget',
-        'wget ' + deployer + '-' + arch + ' -O release --progress=dot:giga',
-        'chmod +x release',
-        './release publish -f $PACKAGE -b $DRONE_BRANCH',
-      ],
+      command: ['snap', '-c', '${DRONE_BRANCH}'],
       when: {
-        branch: ['stable', 'master'],
-        event: ['push'],
-      },
-    },
-    {
-      name: 'promote',
-      image: 'debian:bookworm-slim',
-      environment: {
-        AWS_ACCESS_KEY_ID: {
-          from_secret: 'AWS_ACCESS_KEY_ID',
-        },
-        AWS_SECRET_ACCESS_KEY: {
-          from_secret: 'AWS_SECRET_ACCESS_KEY',
-        },
-        SYNCLOUD_TOKEN: {
-          from_secret: 'SYNCLOUD_TOKEN',
-        },
-      },
-      commands: [
-        'apt update && apt install -y wget',
-        'wget ' + deployer + '-' + arch + ' -O release --progress=dot:giga',
-        'chmod +x release',
-        './release promote -n ' + name + ' -a $(dpkg --print-architecture)',
-      ],
-      when: {
-        branch: ['stable'],
+        branch: ['master', 'stable'],
         event: ['push'],
       },
     },
@@ -270,6 +231,7 @@ local build(arch, test_ui, dind) = [{
       name: name + '.' + distro + '.com',
       image: 'syncloud/platform-' + distro + '-' + arch + ':' + platform,
       privileged: true,
+      entrypoint: ['/bin/sh', '-c', "mkdir -p /etc/systemd/system/snapd.service.d && printf '[Service]\\nExecStartPost=/bin/sh -c \"/usr/bin/snap set system refresh.hold=2099-01-01T00:00:00Z\"\\n' > /etc/systemd/system/snapd.service.d/disable-refresh.conf && exec /sbin/init"],
       volumes: [
         {
           name: 'dbus',
