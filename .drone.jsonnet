@@ -2,9 +2,7 @@ local name = 'rocketchat';
 local rocketchat = '7.7.5';
 // mongo 5 or above is supported only on rpi 5 or above
 local mongo = '6.0.17';
-local browser = 'chrome';
 local platform = '26.06.01';
-local selenium = '4.21.0-20240517';
 local playwright = 'v1.59.1-jammy';
 local store_publisher = 'stable-291';
 local python = '3.12-slim-bookworm';
@@ -105,46 +103,6 @@ local build(arch, test_ui, dind) = [{
            for distro in distros
          ] + (if test_ui then [
                 {
-                  name: 'selenium',
-                  image: 'selenium/standalone-' + browser + ':' + selenium,
-                  detach: true,
-                  environment: {
-                    SE_NODE_SESSION_TIMEOUT: '999999',
-                    START_XVFB: 'true',
-                  },
-                  volumes: [{
-                    name: 'shm',
-                    path: '/dev/shm',
-                  }],
-                  commands: [
-                    'cat /etc/hosts',
-                    'DOMAIN="' + distro_default + '.com"',
-                    'APP_DOMAIN="' + name + '.' + distro_default + '.com"',
-                    'getent hosts $APP_DOMAIN | sed "s/$APP_DOMAIN/auth.$DOMAIN/g" | sudo tee -a /etc/hosts',
-                    'cat /etc/hosts',
-                    '/opt/bin/entry_point.sh',
-                  ],
-                },
-                {
-             name: 'selenium-video',
-             image: 'selenium/video:ffmpeg-6.1.1-20240621',
-             detach: true,
-             environment: {
-               DISPLAY_CONTAINER_NAME: 'selenium',
-               FILE_NAME: 'video.mkv',
-             },
-             volumes: [
-               {
-                 name: 'shm',
-                 path: '/dev/shm',
-               },
-               {
-                 name: 'videos',
-                 path: '/videos',
-               },
-             ],
-           },
-                {
                   name: 'test-ui',
                   image: 'mcr.microsoft.com/playwright:' + playwright,
                   commands: [
@@ -165,13 +123,15 @@ local build(arch, test_ui, dind) = [{
                 'APP_ARCHIVE_PATH=$(realpath $(cat package.name))',
                 'cd test',
                 './deps.sh',
-                'py.test -x -s upgrade.py --device-user=testuser --distro=' + distro_default + ' --app-archive-path=$APP_ARCHIVE_PATH --app=' + name + ' --browser=' + browser,
+                'py.test -x -s upgrade.py --device-user=testuser --distro=' + distro_default + ' --app-archive-path=$APP_ARCHIVE_PATH --app=' + name,
               ],
-              privileged: true,
-              volumes: [{
-                name: 'videos',
-                path: '/videos',
-              }],
+            },
+            {
+              name: 'test-ui-after-upgrade',
+              image: 'mcr.microsoft.com/playwright:' + playwright,
+              commands: [
+                './test/e2e/run.sh ' + distro_default + ' ' + name + ' e2e-after-upgrade',
+              ],
             },
           ] else []) + [
     {
@@ -255,14 +215,6 @@ local build(arch, test_ui, dind) = [{
       host: {
         path: '/dev',
       },
-    },
-    {
-      name: 'shm',
-      temp: {},
-    },
-    {
-      name: 'videos',
-      temp: {},
     },
     {
       name: 'dockersock',
