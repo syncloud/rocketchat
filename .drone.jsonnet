@@ -5,6 +5,7 @@ local mongo = '6.0.17';
 local browser = 'chrome';
 local platform = '25.02';
 local selenium = '4.21.0-20240517';
+local playwright = 'mcr.microsoft.com/playwright:v1.59.1-jammy';
 local deployer = 'https://github.com/syncloud/store/releases/download/4/syncloud-release';
 local python = '3.12-slim-bookworm';
 local distro_default = 'buster';
@@ -145,18 +146,10 @@ local build(arch, test_ui, dind) = [{
            },
                 {
                   name: 'test-ui',
-                  image: 'python:' + python,
+                  image: playwright,
                   commands: [
-                    'APP_ARCHIVE_PATH=$(realpath $(cat package.name))',
-                    'cd test',
-                    './deps.sh',
-                    'py.test -x -s ui.py --device-user=testuser --distro=' + distro_default + ' --app-archive-path=$APP_ARCHIVE_PATH --app=' + name + ' --browser=' + browser,
+                    './test/e2e/run.sh ' + distro_default + ' ' + name,
                   ],
-                  privileged: true,
-                  volumes: [{
-                    name: 'videos',
-                    path: '/videos',
-                  }],
                 },
               ]
               else []) +
