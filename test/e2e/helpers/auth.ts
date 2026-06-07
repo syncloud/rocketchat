@@ -17,11 +17,7 @@ export async function signInSso(page: Page) {
   await page.locator('#password-textfield').fill(devicePassword)
   await page.locator('#sign-in-button').click()
 
-  try {
-    await page.locator('#accept-button').click({ timeout: 30_000 })
-  } catch {
-    // consent screen only shows on first authorization; skip when already granted
-  }
+  await page.locator('#accept-button').click()
 
   await expect(page.locator('button[title="User menu"]')).toBeVisible({ timeout: 60_000 })
 }
