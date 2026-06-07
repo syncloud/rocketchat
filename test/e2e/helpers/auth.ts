@@ -17,7 +17,12 @@ export async function signInSso(page: Page) {
   await page.locator('#password-textfield').fill(devicePassword)
   await page.locator('#sign-in-button').click()
 
-  await page.locator('#accept-button').click()
+  const userMenu = page.locator('button[title="User menu"]')
+  const consent = page.locator('#accept-button')
+  await expect(userMenu.or(consent)).toBeVisible({ timeout: 60_000 })
+  if (await consent.isVisible()) {
+    await consent.click()
+  }
 
-  await expect(page.locator('button[title="User menu"]')).toBeVisible({ timeout: 60_000 })
+  await expect(userMenu).toBeVisible({ timeout: 60_000 })
 }
