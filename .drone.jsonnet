@@ -1,7 +1,7 @@
 local name = 'rocketchat';
-local rocketchat = '7.7.5';
-// mongo 5 or above is supported only on rpi 5 or above
-local mongo = '6.0.17';
+local rocketchat = '8.4.3';
+// mongo 5+ needs ARMv8.2-A (rpi5 / Odroid C4/HC4); the install hook rejects older arm64 (rpi4)
+local mongo = '8.0.23';
 local platform = '26.06.01';
 local playwright = 'v1.59.1-jammy';
 local store_publisher = 'stable-291';
@@ -9,7 +9,7 @@ local python = '3.12-slim-bookworm';
 local distro_default = 'buster';
 local distros = ['bookworm', 'buster'];
 
-local build(arch, test_ui, dind) = [{
+local build(arch, test_ui) = [{
   kind: 'pipeline',
   type: 'docker',
   name: arch,
@@ -39,15 +39,10 @@ local build(arch, test_ui, dind) = [{
            },
            {
              name: 'server build',
-             image: 'docker:' + dind,
+             image: 'rocketchat/rocket.chat:' + rocketchat,
+             user: 'root',
              commands: [
                './node/build.sh ' + rocketchat,
-             ],
-             volumes: [
-               {
-                 name: 'dockersock',
-                 path: '/var/run',
-               },
              ],
            },
            {
@@ -59,15 +54,9 @@ local build(arch, test_ui, dind) = [{
            },
            {
              name: 'mongo build',
-             image: 'docker:' + dind,
+             image: 'mongo:' + mongo,
              commands: [
-               './mongo/build.sh ' + mongo,
-             ],
-             volumes: [
-               {
-                 name: 'dockersock',
-                 path: '/var/run',
-               },
+               './mongo/build.sh',
              ],
            },
            {
@@ -176,17 +165,6 @@ local build(arch, test_ui, dind) = [{
   },
   services: [
     {
-      name: 'docker',
-      image: 'docker:' + dind,
-      privileged: true,
-      volumes: [
-        {
-          name: 'dockersock',
-          path: '/var/run',
-        },
-      ],
-    }] + [
-    {
       name: name + '.' + distro + '.com',
       image: 'syncloud/platform-' + distro + '-' + arch + ':' + platform,
       privileged: true,
@@ -216,13 +194,8 @@ local build(arch, test_ui, dind) = [{
         path: '/dev',
       },
     },
-    {
-      name: 'dockersock',
-      temp: {},
-    },
   ],
 }];
 
-build('amd64', true, '20.10.21-dind')
-// mongo above 4 only works on rpi5 and above
-// build("arm64", false, "20.10.21-dind")
+build('amd64', true) +
+build('arm64', false)

@@ -7,18 +7,18 @@ VERSION=$1
 
 BUILD_DIR=${DIR}/../build/snap/node
 
-while ! docker ps; do
-    echo "waiting for docker"
-    sleep 2
-done
+rm -rf ${BUILD_DIR}
+mkdir -p ${BUILD_DIR}/bin
 
-docker create --name=syncloud rocket.chat:$VERSION
-mkdir -p ${BUILD_DIR}
-cd ${BUILD_DIR}
-docker export syncloud -o syncloud.tar
-tar xf syncloud.tar
-rm -rf syncloud.tar
+cp -r /app ${BUILD_DIR}/app
+cp -r /usr ${BUILD_DIR}/usr
+cp -r /lib ${BUILD_DIR}/lib
+if [ -d /lib64 ]; then cp -r /lib64 ${BUILD_DIR}/lib64; fi
 
-echo $VERSION > rocketchat.version
-cp ${DIR}/bin/* bin
-rm -rf /usr/src
+rm -rf ${BUILD_DIR}/usr/src
+
+cp ${DIR}/bin/* ${BUILD_DIR}/bin
+
+echo $VERSION > ${BUILD_DIR}/rocketchat.version
+
+${BUILD_DIR}/bin/node.sh --version
