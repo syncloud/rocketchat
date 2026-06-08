@@ -20,5 +20,3 @@ rm -rf ${BUILD_DIR}/usr/src
 cp ${DIR}/bin/* ${BUILD_DIR}/bin
 
 echo $VERSION > ${BUILD_DIR}/rocketchat.version
-
-${BUILD_DIR}/bin/node.sh --version

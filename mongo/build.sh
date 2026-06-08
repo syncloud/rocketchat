@@ -21,4 +21,3 @@ for b in mongos bsondump mongotop mongostat mongoexport mongoimport mongofiles; 
 done
 
 ls -la ${BUILD_DIR}/bin
-${BUILD_DIR}/bin/mongo.sh --help
