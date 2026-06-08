@@ -9,6 +9,8 @@ import (
 	"go.uber.org/zap"
 	"os"
 	"path"
+	"runtime"
+	"strings"
 	"time"
 )
 
@@ -67,9 +69,44 @@ func New(logger *zap.Logger) *Installer {
 	}
 }
 
+func (i *Installer) CheckArch() error {
+	return checkArch(runtime.GOARCH, "/proc/cpuinfo")
+}
+
+func checkArch(goarch, cpuinfoPath string) error {
+	if goarch != "arm64" {
+		return nil
+	}
+	data, err := os.ReadFile(cpuinfoPath)
+	if err != nil {
+		return nil
+	}
+	if archSupported(string(data)) {
+		return nil
+	}
+	return fmt.Errorf("unsupported CPU: rocketchat requires an ARMv8.2-A CPU " +
+		"(Raspberry Pi 5, Odroid C4/HC4/M1, AWS Graviton2+, ...). This device looks like " +
+		"ARMv8.0-A (e.g. Raspberry Pi 4 / Cortex-A72), which MongoDB 8 does not support. " +
+		"Aborting to keep any existing installation working")
+}
+
+func archSupported(cpuinfo string) bool {
+	for _, feature := range []string{"asimddp", "atomics", "asimdhp"} {
+		if strings.Contains(cpuinfo, feature) {
+			return true
+		}
+	}
+	return false
+}
+
 func (i *Installer) Install() error {
 
-	err := i.UpdateConfigs()
+	err := i.CheckArch()
+	if err != nil {
+		return err
+	}
+
+	err = i.UpdateConfigs()
 	if err != nil {
 		return err
 	}
@@ -88,6 +125,11 @@ func (i *Installer) Install() error {
 }
 
 func (i *Installer) Configure() error {
+	err := i.CheckArch()
+	if err != nil {
+		return err
+	}
+
 	if i.IsInstalled() {
 		err := i.Upgrade()
 		if err != nil {
@@ -100,7 +142,7 @@ func (i *Installer) Configure() error {
 		}
 	}
 
-	err := i.FixPermissions()
+	err = i.FixPermissions()
 	if err != nil {
 		return err
 	}
@@ -190,7 +232,12 @@ func (i *Installer) PreRefresh() error {
 }
 
 func (i *Installer) PostRefresh() error {
-	err := i.UpdateConfigs()
+	err := i.CheckArch()
+	if err != nil {
+		return err
+	}
+
+	err = i.UpdateConfigs()
 	if err != nil {
 		return err
 	}
