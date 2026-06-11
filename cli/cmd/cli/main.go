@@ -57,9 +57,9 @@ func main() {
 	})
 
 	cmd.AddCommand(&cobra.Command{
-		Use: "disable-registration",
+		Use: "disable-setup-wizard",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return installer.New(logger).DisableRegistration()
+			return installer.New(logger).DisableSetupWizard()
 		},
 	})
 

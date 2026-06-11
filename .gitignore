@@ -21,3 +21,4 @@ artifact
 .drone.yml
 package.name
 *.snap
+.claude

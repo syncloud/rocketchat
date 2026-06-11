@@ -31,12 +31,12 @@ func NewRocketChat(appDir string, executor *Executor, logger *zap.Logger) *Rocke
 	}
 }
 
-func (c *RocketChat) DisableRegistration() error {
+func (c *RocketChat) DisableSetupWizard() error {
 	err := c.waitFoRC()
 	if err != nil {
 		return err
 	}
-	c.logger.Info("disabling registration wizard")
+	c.logger.Info("disabling setup wizard")
 	return c.executor.Run(
 		fmt.Sprint(c.appDir, "/bin/mongo-disable-wizard.sh"),
 	)

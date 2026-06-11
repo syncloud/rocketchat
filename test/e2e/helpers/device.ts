@@ -1,0 +1,60 @@
+import * as https from 'node:https'
+import * as path from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { ssh, scpTo } from './ssh'
+import { requireEnv } from './env'
+
+const here = path.dirname(fileURLToPath(import.meta.url))
+const repoRoot = path.join(here, '..', '..', '..')
+const disableWizardJs = path.join(repoRoot, 'config', 'mongo.disable-wizard.js')
+
+const appDomain = requireEnv('PLAYWRIGHT_APP_DOMAIN')
+
+function httpStatus(url: string): Promise<number> {
+  return new Promise((resolve) => {
+    const req = https.get(url, { rejectUnauthorized: false }, (res: any) => {
+      res.resume()
+      resolve(res.statusCode ?? 0)
+    })
+    req.on('error', () => resolve(0))
+    req.setTimeout(10_000, () => { req.destroy(); resolve(0) })
+  })
+}
+
+async function waitForApp(attempts = 90) {
+  let ok = 0
+  for (let i = 0; i < attempts; i++) {
+    if (await httpStatus(`https://${appDomain}/`) === 200) {
+      if (++ok >= 3) return
+    } else {
+      ok = 0
+    }
+    await new Promise((r) => setTimeout(r, 10_000))
+  }
+  throw new Error(`rocketchat did not answer 200 at https://${appDomain}/`)
+}
+
+export async function installStoreVersion() {
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    await ssh('snap remove rocketchat', { throw: false, timeout: 300_000 })
+    await ssh('snap install rocketchat', { throw: false, timeout: 1_200_000 })
+    try {
+      await waitForApp()
+      return
+    } catch (e) {
+      if (attempt === 3) throw e
+    }
+  }
+}
+
+export async function disableSetupWizard() {
+  await scpTo(disableWizardJs, '/tmp/mongo.disable-wizard.js')
+  await ssh('/snap/rocketchat/current/mongodb/bin/mongo.sh localhost/rocketchat /tmp/mongo.disable-wizard.js')
+}
+
+export async function upgradeToBuild() {
+  const appArchive = requireEnv('PLAYWRIGHT_APP_ARCHIVE')
+  await scpTo(appArchive, '/rocketchat.snap')
+  await ssh('snap install --devmode /rocketchat.snap', { timeout: 600_000 })
+  await waitForApp()
+}

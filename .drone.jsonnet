@@ -1,16 +1,15 @@
 local name = 'rocketchat';
-local rocketchat = '7.7.5';
-// mongo 5 or above is supported only on rpi 5 or above
-local mongo = '6.0.17';
-local browser = 'chrome';
-local platform = '25.02';
-local selenium = '4.21.0-20240517';
-local deployer = 'https://github.com/syncloud/store/releases/download/4/syncloud-release';
+local rocketchat = '8.4.3';
+// mongo 5+ needs ARMv8.2-A (rpi5 / Odroid C4/HC4); the install hook rejects older arm64 (rpi4)
+local mongo = '8.0.23';
+local platform = '26.06.01';
+local playwright = 'v1.59.1-jammy';
+local store_publisher = 'stable-291';
 local python = '3.12-slim-bookworm';
 local distro_default = 'buster';
 local distros = ['bookworm', 'buster'];
 
-local build(arch, test_ui, dind) = [{
+local build(arch, test_ui) = [{
   kind: 'pipeline',
   type: 'docker',
   name: arch,
@@ -20,70 +19,51 @@ local build(arch, test_ui, dind) = [{
   },
   steps: [
            {
-             name: 'version',
-             image: 'alpine:3.17.0',
-             commands: [
-               'echo $DRONE_BUILD_NUMBER > version',
-             ],
-           },
-           {
              name: 'cli',
-            image: 'golang:1.23',
-            commands: [
-              'cd cli',
-              'CGO_ENABLED=0 go build -o ../build/snap/meta/hooks/install ./cmd/install',
-              'CGO_ENABLED=0 go build -o ../build/snap/meta/hooks/configure ./cmd/configure',
-              'CGO_ENABLED=0 go build -o ../build/snap/meta/hooks/pre-refresh ./cmd/pre-refresh',
-              'CGO_ENABLED=0 go build -o ../build/snap/meta/hooks/post-refresh ./cmd/post-refresh',
-              'CGO_ENABLED=0 go build -o ../build/snap/bin/cli ./cmd/cli',
-            ],
-           },
-           {
-             name: 'server build',
-             image: 'docker:' + dind,
+             image: 'golang:1.23',
              commands: [
-               './node/build.sh ' + rocketchat,
-             ],
-             volumes: [
-               {
-                 name: 'dockersock',
-                 path: '/var/run',
-               },
+               './cli/build.sh',
              ],
            },
            {
-             name: 'server test',
-             image: 'debian:bookworm-slim',
+             name: 'rocketchat build',
+             image: 'rocketchat/rocket.chat:' + rocketchat,
+             user: 'root',
              commands: [
-               'build/snap/node/bin/node.sh --help',
+               './rocketchat/build.sh ' + rocketchat,
              ],
            },
            {
              name: 'mongo build',
-             image: 'docker:' + dind,
+             image: 'mongo:' + mongo,
              commands: [
-               './mongo/build.sh ' + mongo,
-             ],
-             volumes: [
-               {
-                 name: 'dockersock',
-                 path: '/var/run',
-               },
+               './mongo/build.sh',
              ],
            },
+         ] + [
            {
-             name: 'mongo test',
-             image: 'syncloud/platform-buster-' + arch + ':' + platform,
+             name: 'rocketchat test ' + distro,
+             image: 'syncloud/platform-' + distro + '-' + arch + ':' + platform,
+             commands: [
+               './rocketchat/test.sh',
+             ],
+           }
+           for distro in distros
+         ] + [
+           {
+             name: 'mongo test ' + distro,
+             image: 'syncloud/platform-' + distro + '-' + arch + ':' + platform,
              commands: [
                './mongo/test.sh',
              ],
-           },
+           }
+           for distro in distros
+         ] + [
            {
              name: 'package',
              image: 'debian:bookworm-slim',
              commands: [
-               'VERSION=$(cat version)',
-               './package.sh ' + name + ' $VERSION ',
+               './package.sh ' + name + ' $DRONE_BUILD_NUMBER',
              ],
            },
          ] + [
@@ -104,131 +84,40 @@ local build(arch, test_ui, dind) = [{
            for distro in distros
          ] + (if test_ui then [
                 {
-                  name: 'selenium',
-                  image: 'selenium/standalone-' + browser + ':' + selenium,
-                  detach: true,
-                  environment: {
-                    SE_NODE_SESSION_TIMEOUT: '999999',
-                    START_XVFB: 'true',
-                  },
+                  name: 'test-ui',
+                  image: 'mcr.microsoft.com/playwright:' + playwright,
                   volumes: [{
                     name: 'shm',
                     path: '/dev/shm',
                   }],
                   commands: [
-                    'cat /etc/hosts',
-                    'DOMAIN="' + distro_default + '.com"',
-                    'APP_DOMAIN="' + name + '.' + distro_default + '.com"',
-                    'getent hosts $APP_DOMAIN | sed "s/$APP_DOMAIN/auth.$DOMAIN/g" | sudo tee -a /etc/hosts',
-                    'cat /etc/hosts',
-                    '/opt/bin/entry_point.sh',
+                    './test/e2e/run.sh ' + distro_default + ' ' + name + ' e2e ./specs',
                   ],
-                },
-                {
-             name: 'selenium-video',
-             image: 'selenium/video:ffmpeg-6.1.1-20240621',
-             detach: true,
-             environment: {
-               DISPLAY_CONTAINER_NAME: 'selenium',
-               FILE_NAME: 'video.mkv',
-             },
-             volumes: [
-               {
-                 name: 'shm',
-                 path: '/dev/shm',
-               },
-               {
-                 name: 'videos',
-                 path: '/videos',
-               },
-             ],
-           },
-                {
-                  name: 'test-ui',
-                  image: 'python:' + python,
-                  commands: [
-                    'APP_ARCHIVE_PATH=$(realpath $(cat package.name))',
-                    'cd test',
-                    './deps.sh',
-                    'py.test -x -s ui.py --device-user=testuser --distro=' + distro_default + ' --app-archive-path=$APP_ARCHIVE_PATH --app=' + name + ' --browser=' + browser,
-                  ],
-                  privileged: true,
-                  volumes: [{
-                    name: 'videos',
-                    path: '/videos',
-                  }],
                 },
               ]
               else []) +
          (if arch == 'amd64' then [
             {
               name: 'test-upgrade',
-              image: 'python:' + python,
-              commands: [
-                'DOMAIN="' + distro_default + '.com"',
-                'APP_DOMAIN="' + name + '.' + distro_default + '.com"',
-                'getent hosts $APP_DOMAIN | sed "s/$APP_DOMAIN/auth.$DOMAIN/g" | tee -a /etc/hosts',
-                'cat /etc/hosts',
-                'APP_ARCHIVE_PATH=$(realpath $(cat package.name))',
-                'cd test',
-                './deps.sh',
-                'py.test -x -s upgrade.py --device-user=testuser --distro=' + distro_default + ' --app-archive-path=$APP_ARCHIVE_PATH --app=' + name + ' --browser=' + browser,
-              ],
-              privileged: true,
+              image: 'mcr.microsoft.com/playwright:' + playwright,
               volumes: [{
-                name: 'videos',
-                path: '/videos',
+                name: 'shm',
+                path: '/dev/shm',
               }],
+              commands: [
+                './test/e2e/run.sh ' + distro_default + ' ' + name + ' e2e-upgrade ./specs-upgrade',
+              ],
             },
           ] else []) + [
     {
-      name: 'upload',
-      image: 'debian:bookworm-slim',
+      name: 'publish',
+      image: 'syncloud/store-publisher:' + store_publisher,
       environment: {
-        AWS_ACCESS_KEY_ID: {
-          from_secret: 'AWS_ACCESS_KEY_ID',
-        },
-        AWS_SECRET_ACCESS_KEY: {
-          from_secret: 'AWS_SECRET_ACCESS_KEY',
-        },
-        SYNCLOUD_TOKEN: {
-          from_secret: 'SYNCLOUD_TOKEN',
-        },
+        SYNCLOUD_TOKEN: { from_secret: 'SYNCLOUD_TOKEN' },
       },
-      commands: [
-        'PACKAGE=$(cat package.name)',
-        'apt update && apt install -y wget',
-        'wget ' + deployer + '-' + arch + ' -O release --progress=dot:giga',
-        'chmod +x release',
-        './release publish -f $PACKAGE -b $DRONE_BRANCH',
-      ],
+      command: ['snap', '-c', '${DRONE_BRANCH}'],
       when: {
-        branch: ['stable', 'master'],
-        event: ['push'],
-      },
-    },
-    {
-      name: 'promote',
-      image: 'debian:bookworm-slim',
-      environment: {
-        AWS_ACCESS_KEY_ID: {
-          from_secret: 'AWS_ACCESS_KEY_ID',
-        },
-        AWS_SECRET_ACCESS_KEY: {
-          from_secret: 'AWS_SECRET_ACCESS_KEY',
-        },
-        SYNCLOUD_TOKEN: {
-          from_secret: 'SYNCLOUD_TOKEN',
-        },
-      },
-      commands: [
-        'apt update && apt install -y wget',
-        'wget ' + deployer + '-' + arch + ' -O release --progress=dot:giga',
-        'chmod +x release',
-        './release promote -n ' + name + ' -a $(dpkg --print-architecture)',
-      ],
-      when: {
-        branch: ['stable'],
+        branch: ['master', 'stable'],
         event: ['push'],
       },
     },
@@ -258,25 +147,14 @@ local build(arch, test_ui, dind) = [{
   trigger: {
     event: [
       'push',
-      'pull_request',
     ],
   },
   services: [
     {
-      name: 'docker',
-      image: 'docker:' + dind,
-      privileged: true,
-      volumes: [
-        {
-          name: 'dockersock',
-          path: '/var/run',
-        },
-      ],
-    }] + [
-    {
       name: name + '.' + distro + '.com',
       image: 'syncloud/platform-' + distro + '-' + arch + ':' + platform,
       privileged: true,
+      entrypoint: ['/bin/sh', '-c', "mkdir -p /etc/systemd/system/snapd.service.d && printf '[Service]\\nExecStartPost=/bin/sh -c \"/usr/bin/snap set system refresh.hold=2099-01-01T00:00:00Z\"\\n' > /etc/systemd/system/snapd.service.d/disable-refresh.conf && exec /sbin/init"],
       volumes: [
         {
           name: 'dbus',
@@ -306,17 +184,8 @@ local build(arch, test_ui, dind) = [{
       name: 'shm',
       temp: {},
     },
-    {
-      name: 'videos',
-      temp: {},
-    },
-    {
-      name: 'dockersock',
-      temp: {},
-    },
   ],
 }];
 
-build('amd64', true, '20.10.21-dind')
-// mongo above 4 only works on rpi5 and above
-// build("arm64", false, "20.10.21-dind")
+build('amd64', true) +
+build('arm64', false)
