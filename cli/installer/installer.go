@@ -9,6 +9,7 @@ import (
 	"go.uber.org/zap"
 	"os"
 	"path"
+	"runtime"
 	"time"
 )
 
@@ -40,6 +41,7 @@ type Installer struct {
 	dataDir            string
 	commonDir          string
 	rocketChat         *RocketChat
+	cpuChecker         *CpuChecker
 	logger             *zap.Logger
 }
 
@@ -63,13 +65,19 @@ func New(logger *zap.Logger) *Installer {
 		dataDir:            dataDir,
 		commonDir:          commonDir,
 		rocketChat:         NewRocketChat(appDir, executor, logger),
+		cpuChecker:         NewCpuChecker(runtime.GOARCH, "/proc/cpuinfo"),
 		logger:             logger,
 	}
 }
 
 func (i *Installer) Install() error {
 
-	err := i.UpdateConfigs()
+	err := i.cpuChecker.Check()
+	if err != nil {
+		return err
+	}
+
+	err = i.UpdateConfigs()
 	if err != nil {
 		return err
 	}
@@ -110,11 +118,11 @@ func (i *Installer) Configure() error {
 		return err
 	}
 
-	return i.DisableRegistration()
+	return i.DisableSetupWizard()
 }
 
-func (i *Installer) DisableRegistration() error {
-	return i.rocketChat.DisableRegistration()
+func (i *Installer) DisableSetupWizard() error {
+	return i.rocketChat.DisableSetupWizard()
 }
 
 func (i *Installer) IsInstalled() bool {
@@ -190,7 +198,12 @@ func (i *Installer) PreRefresh() error {
 }
 
 func (i *Installer) PostRefresh() error {
-	err := i.UpdateConfigs()
+	err := i.cpuChecker.Check()
+	if err != nil {
+		return err
+	}
+
+	err = i.UpdateConfigs()
 	if err != nil {
 		return err
 	}
