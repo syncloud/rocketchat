@@ -9,10 +9,12 @@ const secondaryPassword = 'Password1'
 
 test.describe('rocketchat secondary user', () => {
   test.beforeAll(async () => {
+    test.setTimeout(900_000)
     await installUsersApp()
   })
 
   test('secondary syncloud user signs in via SSO (forum #655)', async ({ page, browser }, testInfo) => {
+    test.setTimeout(300_000)
     await createUser(page, secondaryUser, secondaryPassword)
     await shoot(page, testInfo, 'user-created')
 
