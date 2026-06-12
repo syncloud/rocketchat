@@ -52,21 +52,6 @@ export async function disableSetupWizard() {
   await ssh('/snap/rocketchat/current/mongodb/bin/mongo.sh localhost/rocketchat /tmp/mongo.disable-wizard.js')
 }
 
-const ldapAdd = '/snap/platform/current/openldap/bin/ldapadd.sh'
-
-export async function addUser(username: string, password: string) {
-  await ssh(`snap run platform.cli user add ${username} --password=${password}`, { throw: false })
-  const ldif = `dn: cn=${username},ou=groups,dc=syncloud,dc=org\\nobjectClass: posixGroup\\nobjectClass: top\\ncn: ${username}\\ngidNumber: 11\\nmemberUid: ${username}\\n`
-  const out = await ssh(`printf '${ldif}' > /tmp/${username}.group.ldif && ${ldapAdd} -x -w syncloud -D "dc=syncloud,dc=org" -f /tmp/${username}.group.ldif`, { throw: false })
-  if (!/adding new entry|Already exists/.test(out)) {
-    throw new Error(`failed to create ldap group ${username}: ${out}`)
-  }
-}
-
-export async function removeUser(username: string) {
-  await ssh(`snap run platform.cli user remove ${username}`, { throw: false })
-}
-
 export async function upgradeToBuild() {
   const appArchive = requireEnv('PLAYWRIGHT_APP_ARCHIVE')
   await scpTo(appArchive, '/rocketchat.snap')
