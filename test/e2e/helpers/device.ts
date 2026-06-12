@@ -52,6 +52,14 @@ export async function disableSetupWizard() {
   await ssh('/snap/rocketchat/current/mongodb/bin/mongo.sh localhost/rocketchat /tmp/mongo.disable-wizard.js')
 }
 
+export async function addUser(username: string, password: string) {
+  await ssh(`snap run platform.cli user add ${username} --password=${password}`, { throw: false })
+}
+
+export async function removeUser(username: string) {
+  await ssh(`snap run platform.cli user remove ${username}`, { throw: false })
+}
+
 export async function upgradeToBuild() {
   const appArchive = requireEnv('PLAYWRIGHT_APP_ARCHIVE')
   await scpTo(appArchive, '/rocketchat.snap')
