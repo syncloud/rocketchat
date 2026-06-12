@@ -55,7 +55,6 @@ export async function createUser(page: Page, username: string, password: string)
   await page.locator('#cn').fill(username)
   await page.locator('input[name="password"]').fill(password)
   await page.locator('input[name="password_match"]').fill(password)
-  await page.locator('#mail').fill(`${username}@example.com`)
   await page.locator('button', { hasText: 'Create account' }).click()
 
   await expect(page.getByText('The account was created')).toBeVisible({ timeout: 30_000 })

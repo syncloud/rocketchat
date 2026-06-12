@@ -190,6 +190,15 @@ func (i *Installer) UpdateDbSettings() error {
 	if err != nil {
 		return err
 	}
+
+	domain, err := i.platformClient.GetAppDomainName(App)
+	if err != nil {
+		return err
+	}
+	err = i.database.Update("Accounts_OAuth_Custom-Syncloud-email_field", fmt.Sprintf("{{preferred_username}}@%s", domain))
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
