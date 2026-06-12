@@ -5,7 +5,7 @@ import { shoot } from '../helpers/screenshot'
 import { requireEnv } from '../helpers/env'
 
 const secondaryUser = 'seconduser'
-const secondaryPassword = 'Password1'
+const secondaryPassword = 'Larkspur-Velvet-Harbor-73'
 
 test.describe('rocketchat secondary user', () => {
   test.beforeAll(async () => {

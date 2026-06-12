@@ -8,7 +8,7 @@ import { shoot } from '../helpers/screenshot'
 import { requireEnv } from '../helpers/env'
 
 const secondaryUser = 'upgradeuser'
-const secondaryPassword = 'Password1'
+const secondaryPassword = 'Larkspur-Velvet-Harbor-73'
 
 function freshContext(page: any) {
   return page.context().browser()!.newContext({
