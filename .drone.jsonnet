@@ -182,7 +182,10 @@ local build(arch, test_ui) = [{
     },
     {
       name: 'shm',
-      temp: {},
+      temp: {
+        medium: 'memory',
+        size_limit: '1GiB',
+      },
     },
   ],
 }];

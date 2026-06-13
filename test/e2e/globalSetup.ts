@@ -12,6 +12,7 @@ export default async function () {
     `${address} ${fullDomain}`,
     `${address} ${appDomain}`,
     `${address} auth.${fullDomain}`,
+    `${address} users.${fullDomain}`,
   ]
   fs.appendFileSync('/etc/hosts', entries.join('\n') + '\n')
 }

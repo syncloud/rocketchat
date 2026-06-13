@@ -2,15 +2,15 @@ import { Page, expect } from '@playwright/test'
 import { dismissStartupModal } from './modal'
 import { requireEnv } from './env'
 
-const deviceUser = requireEnv('PLAYWRIGHT_DEVICE_USER')
-const devicePassword = requireEnv('PLAYWRIGHT_DEVICE_PASSWORD')
+export const deviceUser = requireEnv('PLAYWRIGHT_DEVICE_USER')
+export const devicePassword = requireEnv('PLAYWRIGHT_DEVICE_PASSWORD')
 
-export async function signInSso(page: Page) {
+export async function signInSso(page: Page, user: string, password: string) {
   await page.goto('/')
   await page.getByText('Login with Syncloud').click()
 
-  await page.locator('#username-textfield').fill(deviceUser)
-  await page.locator('#password-textfield').fill(devicePassword)
+  await page.locator('#username-textfield').fill(user)
+  await page.locator('#password-textfield').fill(password)
   await page.locator('#sign-in-button').click()
 
   const userMenu = page.getByRole('button', { name: 'User menu' })
