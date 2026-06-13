@@ -199,6 +199,10 @@ func (i *Installer) UpdateDbSettings() error {
 	if err != nil {
 		return err
 	}
+	err = i.database.UpdateBool("Accounts_ShowFormLogin", false)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

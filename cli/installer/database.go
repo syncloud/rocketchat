@@ -91,3 +91,11 @@ func (d *Database) Update(key, value string) error {
 		fmt.Sprint("db.rocketchat_settings.update({'_id': '", key, "'}, {$set: {'value': '", value, "'}});"),
 	)
 }
+
+func (d *Database) UpdateBool(key string, value bool) error {
+	return d.executor.Run(d.mongoShellCmd,
+		App,
+		"--eval",
+		fmt.Sprintf("db.rocketchat_settings.update({'_id': '%s'}, {$set: {'value': %t}});", key, value),
+	)
+}
