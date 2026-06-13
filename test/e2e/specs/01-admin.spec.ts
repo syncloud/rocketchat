@@ -1,5 +1,5 @@
 import { test } from '../helpers/fixtures'
-import { signInSso } from '../helpers/auth'
+import { signInSso, deviceUser, devicePassword } from '../helpers/auth'
 import { openAdminWorkspace } from '../helpers/rc8'
 import { shoot } from '../helpers/screenshot'
 
@@ -8,7 +8,7 @@ test.describe('rocketchat admin rights', () => {
     await page.goto('/')
     await shoot(page, testInfo, 'login')
 
-    await signInSso(page)
+    await signInSso(page, deviceUser, devicePassword)
     await shoot(page, testInfo, 'logged-in')
 
     await openAdminWorkspace(page)
