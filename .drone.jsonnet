@@ -1,13 +1,19 @@
 local name = 'rocketchat';
-local rocketchat = '8.4.3';
-// mongo 5+ needs ARMv8.2-A (rpi5 / Odroid C4/HC4); the install hook rejects older arm64 (rpi4)
-local mongo = '8.0.23';
-local platform = '26.06.01';
-local playwright = 'v1.59.1-jammy';
+local rocketchat = '9.0.0';
+local mongo = '8.0.38';
+local platform = '26.10.02';
+local playwright = 'mcr.microsoft.com/playwright:v1.59.1-jammy';
 local store_publisher = 'stable-346';
 local python = '3.12-slim-bookworm';
-local distro_default = 'buster';
+local golang = '1.25';
+local debian = 'bookworm-slim';
+local distro_default = 'bookworm';
 local distros = ['bookworm', 'buster'];
+
+local platform_image(distro) =
+  'syncloud/platform-' + distro + ':' + platform;
+
+local snapd_hold = "mkdir -p /etc/systemd/system/snapd.service.d && printf '[Service]\\nExecStartPost=/bin/sh -c \"/usr/bin/snap set system refresh.hold=2099-01-01T00:00:00Z\"\\n' > /etc/systemd/system/snapd.service.d/disable-refresh.conf && exec /sbin/init";
 
 local build(arch, test_ui) = [{
   kind: 'pipeline',
@@ -18,97 +24,112 @@ local build(arch, test_ui) = [{
     arch: arch,
   },
   steps: [
-           {
-             name: 'cli',
-             image: 'golang:1.23',
-             commands: [
-               './cli/build.sh',
-             ],
-           },
-           {
-             name: 'rocketchat build',
-             image: 'rocketchat/rocket.chat:' + rocketchat,
-             user: 'root',
-             commands: [
-               './rocketchat/build.sh ' + rocketchat,
-             ],
-           },
-           {
-             name: 'mongo build',
-             image: 'mongo:' + mongo,
-             commands: [
-               './mongo/build.sh',
-             ],
-           },
-         ] + [
-           {
-             name: 'rocketchat test ' + distro,
-             image: 'syncloud/platform-' + distro + '-' + arch + ':' + platform,
-             commands: [
-               './rocketchat/test.sh',
-             ],
-           }
-           for distro in distros
-         ] + [
-           {
-             name: 'mongo test ' + distro,
-             image: 'syncloud/platform-' + distro + '-' + arch + ':' + platform,
-             commands: [
-               './mongo/test.sh',
-             ],
-           }
-           for distro in distros
-         ] + [
-           {
-             name: 'package',
-             image: 'debian:bookworm-slim',
-             commands: [
-               './package.sh ' + name + ' $DRONE_BUILD_NUMBER',
-             ],
-           },
-         ] + [
-           {
-             name: 'test ' + distro,
-             image: 'python:' + python,
-             commands: [
-               'DOMAIN="' + distro + '.com"',
-               'APP_DOMAIN="' + name + '.' + distro + '.com"',
-               'getent hosts $APP_DOMAIN | sed "s/$APP_DOMAIN/auth.$DOMAIN/g" | tee -a /etc/hosts',
-               'cat /etc/hosts',
-               'APP_ARCHIVE_PATH=$(realpath $(cat package.name))',
-               'cd test',
-               './deps.sh',
-               'py.test -x -s test.py --device-user=testuser --distro=' + distro + ' --app-archive-path=$APP_ARCHIVE_PATH --app=' + name + ' --arch=' + arch,
-             ],
-           }
-           for distro in distros
-         ] + (if test_ui then [
-                {
-                  name: 'test-ui',
-                  image: 'mcr.microsoft.com/playwright:' + playwright,
-                  volumes: [{
-                    name: 'shm',
-                    path: '/dev/shm',
-                  }],
-                  commands: [
-                    './test/e2e/run.sh ' + distro_default + ' ' + name + ' e2e ./specs',
-                  ],
-                },
-              ]
-              else []) +
-         (if arch == 'amd64' then [
-            {
-              name: 'test-upgrade',
-              image: 'mcr.microsoft.com/playwright:' + playwright,
-              volumes: [{
-                name: 'shm',
-                path: '/dev/shm',
-              }],
-              commands: [
-                './test/e2e/run.sh ' + distro_default + ' ' + name + ' e2e-upgrade ./specs-upgrade',
-              ],
-            },
-          ] else []) + [
+    {
+      name: 'cli',
+      image: 'golang:' + golang,
+      commands: [
+        './cli/build.sh',
+      ],
+    },
+    {
+      name: 'rocketchat',
+      image: 'rocketchat/rocket.chat:' + rocketchat,
+      user: 'root',
+      commands: [
+        './rocketchat/build.sh ' + rocketchat,
+      ],
+    },
+    {
+      name: 'mongo',
+      image: 'mongo:' + mongo,
+      commands: [
+        './mongo/build.sh',
+      ],
+    },
+  ] + [
+    {
+      name: 'cli test ' + distro,
+      image: platform_image(distro),
+      commands: [
+        './cli/test.sh',
+      ],
+    }
+    for distro in distros
+  ] + [
+    {
+      name: 'rocketchat test ' + distro,
+      image: platform_image(distro),
+      commands: [
+        './rocketchat/test.sh',
+      ],
+    }
+    for distro in distros
+  ] + [
+    {
+      name: 'mongo test ' + distro,
+      image: platform_image(distro),
+      commands: [
+        './mongo/test.sh',
+      ],
+    }
+    for distro in distros
+  ] + [
+    {
+      name: 'package',
+      image: 'debian:' + debian,
+      commands: [
+        './package.sh ' + name + ' $DRONE_BUILD_NUMBER',
+      ],
+    },
+  ] + [
+    {
+      name: 'test ' + distro,
+      image: 'python:' + python,
+      commands: [
+        './ci/test.sh test.py ' + distro + ' ' + name + ' ' + arch,
+      ],
+    }
+    for distro in distros
+  ] + (if test_ui then [
+         {
+           name: 'e2e',
+           image: playwright,
+           volumes: [{ name: 'shm', path: '/dev/shm' }],
+           commands: [
+             './test/e2e/run.sh specs/01-smoke.spec.ts',
+           ],
+         },
+         {
+           name: 'test-upgrade-prev',
+           image: 'python:' + python,
+           commands: [
+             './ci/test.sh upgrade_prev.py ' + distro_default + ' ' + name + ' ' + arch,
+           ],
+         },
+         {
+           name: 'e2e-before-upgrade',
+           image: playwright,
+           volumes: [{ name: 'shm', path: '/dev/shm' }],
+           commands: [
+             './test/e2e/run.sh specs/02-pre-upgrade.spec.ts',
+           ],
+         },
+         {
+           name: 'test-upgrade',
+           image: 'python:' + python,
+           commands: [
+             './ci/test.sh upgrade.py ' + distro_default + ' ' + name + ' ' + arch,
+           ],
+         },
+         {
+           name: 'e2e-after-upgrade',
+           image: playwright,
+           volumes: [{ name: 'shm', path: '/dev/shm' }],
+           commands: [
+             './test/e2e/run.sh specs/03-post-upgrade.spec.ts',
+           ],
+         },
+       ] else []) + [
     {
       name: 'publish',
       image: 'syncloud/store-publisher:' + store_publisher,
@@ -125,13 +146,9 @@ local build(arch, test_ui) = [{
       name: 'artifact',
       image: 'appleboy/drone-scp:1.6.4',
       settings: {
-        host: {
-          from_secret: 'artifact_host',
-        },
+        host: { from_secret: 'artifact_host' },
         username: 'artifact',
-        key: {
-          from_secret: 'artifact_key',
-        },
+        key: { from_secret: 'artifact_key' },
         timeout: '2m',
         command_timeout: '2m',
         target: '/home/artifact/repo/' + name + '/${DRONE_BUILD_NUMBER}-' + arch,
@@ -145,48 +162,25 @@ local build(arch, test_ui) = [{
     },
   ],
   trigger: {
-    event: [
-      'push',
-    ],
+    event: ['push'],
   },
   services: [
     {
       name: name + '.' + distro + '.com',
-      image: 'syncloud/platform-' + distro + '-' + arch + ':' + platform,
+      image: platform_image(distro),
       privileged: true,
-      entrypoint: ['/bin/sh', '-c', "mkdir -p /etc/systemd/system/snapd.service.d && printf '[Service]\\nExecStartPost=/bin/sh -c \"/usr/bin/snap set system refresh.hold=2099-01-01T00:00:00Z\"\\n' > /etc/systemd/system/snapd.service.d/disable-refresh.conf && exec /sbin/init"],
+      entrypoint: ['/bin/sh', '-c', snapd_hold],
       volumes: [
-        {
-          name: 'dbus',
-          path: '/var/run/dbus',
-        },
-        {
-          name: 'dev',
-          path: '/dev',
-        },
+        { name: 'dbus', path: '/var/run/dbus' },
+        { name: 'dev', path: '/dev' },
       ],
-    } for distro in distros
+    }
+    for distro in distros
   ],
   volumes: [
-    {
-      name: 'dbus',
-      host: {
-        path: '/var/run/dbus',
-      },
-    },
-    {
-      name: 'dev',
-      host: {
-        path: '/dev',
-      },
-    },
-    {
-      name: 'shm',
-      temp: {
-        medium: 'memory',
-        size_limit: '1GiB',
-      },
-    },
+    { name: 'dbus', host: { path: '/var/run/dbus' } },
+    { name: 'dev', host: { path: '/dev' } },
+    { name: 'shm', temp: { medium: 'memory', size_limit: '1GiB' } },
   ],
 }];
 

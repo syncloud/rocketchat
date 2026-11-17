@@ -1,5 +1,5 @@
 #!/bin/bash -e
+DIR=$( cd "$( dirname "$0" )" && pwd )
 
-apt-get update
-apt-get install -y sshpass openssh-client
-pip install -r requirements.txt
+${DIR}/../apt.sh sshpass openssh-client
+${DIR}/../retry.sh pip install -r ${DIR}/requirements.txt

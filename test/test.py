@@ -9,7 +9,10 @@ log.setLevel(logging.DEBUG)
 import pytest
 import requests
 from syncloudlib.integration.hosts import add_host_alias
-from syncloudlib.integration.installer import local_install, wait_for_installer
+from syncloudlib.integration.installer import local_install
+
+import services
+import snapd
 
 DIR = dirname(__file__)
 TMP_DIR = '/tmp/syncloud'
@@ -35,7 +38,6 @@ def module_setup(device, request, data_dir, platform_data_dir, artifact_dir):
         device.run_ssh('ls -la /var/snap/rocketchat/common/> {0}/var.common.ls.log'.format(TMP_DIR), throw=False)
         device.run_ssh('ls -la {0}/log > {1}/data.log.dir.ls.log'.format(data_dir, TMP_DIR), throw=False)
         device.run_ssh('df -h > {0}/df.log'.format(TMP_DIR), throw=False)
-        device.run_ssh('df -h > {0}/df.log'.format(TMP_DIR), throw=False)
 
         device.scp_from_device('{0}/config/rocketchat.env'.format(data_dir), artifact_dir)
         device.scp_from_device('{0}/*'.format(TMP_DIR), artifact_dir)
@@ -49,7 +51,8 @@ def test_start(module_setup, device, app, domain, device_host):
     log.info("start")
     add_host_alias(app, device_host, domain)
     device.run_ssh('date', retries=2, throw=True)
-    device.run_ssh('mkdir {0}'.format(TMP_DIR))
+    device.run_ssh('mkdir -p {0}'.format(TMP_DIR))
+    snapd.settle(device)
 
 
 def test_activate_device(device):
@@ -57,10 +60,11 @@ def test_activate_device(device):
     assert response.status_code == 200, response.text
 
 
-def test_install(app_archive_path, device_host, device_password, device, app_domain):
+def test_install(app_archive_path, device_host, device_password, device, app_domain, app):
     device.run_ssh('touch /var/snap/platform/current/CI_TEST')
     local_install(device_host, device_password, app_archive_path)
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
+    services.assert_no_restarts(device, app)
 
 
 def test_remove(device, app):
@@ -68,14 +72,16 @@ def test_remove(device, app):
     assert response.status_code == 200, response.text
 
 
-def test_reinstall(app_archive_path, device_host, device_password, app_domain):
+def test_reinstall(app_archive_path, device_host, device_password, device, app_domain, app):
     local_install(device_host, device_password, app_archive_path)
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
+    services.assert_no_restarts(device, app)
 
 
-def test_upgrade(app_archive_path, device_host, device_password, app_domain):
+def test_upgrade(app_archive_path, device_host, device_password, device, app_domain, app):
     local_install(device_host, device_password, app_archive_path)
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
+    services.assert_no_restarts(device, app)
 
 
 def test_mongo_export_on_upgrade(device):

@@ -12,25 +12,26 @@ NAME=$1
 VERSION=$2
 ARCH=$(dpkg --print-architecture)
 
+echo $VERSION > ${DIR}/version
+
 SNAP_DIR=${DIR}/build/snap
 
-apt update
-apt -y install squashfs-tools wget
+${DIR}/apt.sh squashfs-tools
 
 cp -r ${DIR}/bin ${SNAP_DIR}
 cp -r ${DIR}/config ${SNAP_DIR}
-cp ${DIR}/meta/snap.yaml ${SNAP_DIR}/meta
+mkdir -p ${SNAP_DIR}/meta
+cp -r ${DIR}/meta/. ${SNAP_DIR}/meta
 
 echo "version: $VERSION" >> ${SNAP_DIR}/meta/snap.yaml
 echo "architectures:" >> ${SNAP_DIR}/meta/snap.yaml
 echo "- ${ARCH}" >> ${SNAP_DIR}/meta/snap.yaml
 echo $VERSION > ${SNAP_DIR}/version
-echo $VERSION > ${DIR}/version
 
 du -d10 -h $SNAP_DIR | sort -h | tail -100
 
 PACKAGE=${NAME}_${VERSION}_${ARCH}.snap
 echo ${PACKAGE} > ${DIR}/package.name
 mksquashfs ${SNAP_DIR} ${DIR}/${PACKAGE} -noappend -comp xz -no-xattrs -all-root
-mkdir ${DIR}/artifact
+mkdir -p ${DIR}/artifact
 cp ${DIR}/${PACKAGE} ${DIR}/artifact

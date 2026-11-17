@@ -1,38 +1,30 @@
+name: rocketchat
+summary: Rocket.Chat
+description: Text, voice and video chat
+grade: stable
+
 apps:
   mongodb:
     command: bin/service.mongodb.sh start
     daemon: simple
-    plugs:
-    - network
-    - network-bind
     restart-condition: always
     start-timeout: 2000s
+    restart-delay: 10s
   server:
     command: bin/service.server.sh start
     daemon: simple
-    plugs:
-    - network
-    - network-bind
     restart-condition: always
     start-timeout: 2000s
-
+    restart-delay: 10s
+  cli:
+    command: bin/cli
   storage-change:
     command: bin/cli storage-change
-
   access-change:
     command: bin/cli access-change
-
   backup-pre-stop:
     command: bin/cli backup-pre-stop
-
   restore-pre-start:
     command: bin/cli restore-pre-start
-
   restore-post-start:
     command: bin/cli restore-post-start
-
-confinement: strict
-description: Text, voice and video chat
-grade: stable
-name: rocketchat
-summary: Rocket.Chat

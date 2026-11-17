@@ -1,9 +1,9 @@
 import { execFile } from 'node:child_process'
-import { requireEnv } from './env'
+import { env } from './env'
 
-export const deviceHost = requireEnv('PLAYWRIGHT_DEVICE_HOST')
-export const sshUser = requireEnv('PLAYWRIGHT_SSH_USER')
-export const sshPassword = requireEnv('PLAYWRIGHT_SSH_PASSWORD')
+export const deviceHost = env('PLAYWRIGHT_DEVICE_HOST')
+export const sshUser = env('PLAYWRIGHT_SSH_USER')
+export const sshPassword = env('PLAYWRIGHT_SSH_PASSWORD')
 
 const baseArgs = [
   '-o', 'StrictHostKeyChecking=no',
@@ -45,9 +45,4 @@ export async function scpFrom(remote: string, local: string, opts: { throw?: boo
   } catch (e) {
     if (opts.throw !== false) throw e
   }
-}
-
-export async function scpTo(local: string, remote: string): Promise<void> {
-  const args = ['-p', sshPassword, 'scp', ...baseArgs, local, `${sshUser}@${deviceHost}:${remote}`]
-  await run(args, 120_000)
 }

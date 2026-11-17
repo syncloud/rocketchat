@@ -14,7 +14,8 @@ import (
 )
 
 const (
-	App = "rocketchat"
+	App       = "rocketchat"
+	AdminRole = "syncloud"
 )
 
 type Variables struct {
@@ -118,7 +119,12 @@ func (i *Installer) Configure() error {
 		return err
 	}
 
-	return i.DisableSetupWizard()
+	err = i.DisableSetupWizard()
+	if err != nil {
+		return err
+	}
+
+	return i.database.GrantAdminRole(AdminRole)
 }
 
 func (i *Installer) DisableSetupWizard() error {
@@ -234,7 +240,6 @@ func (i *Installer) PostRefresh() error {
 		return err
 	}
 
-	//TODO: fix missing install flag, remove after the release
 	err = i.MarkInstalled()
 	if err != nil {
 		return err
@@ -316,7 +321,7 @@ func (i *Installer) UpdateConfigs() error {
 		return err
 	}
 
-	password, err := i.platformClient.RegisterOIDCClient(App, "/_oauth/syncloud", false, "client_secret_post")
+	password, err := i.platformClient.RegisterOIDCClient(App, []string{"/_oauth/syncloud"}, false, "client_secret_post")
 	if err != nil {
 		return err
 	}

@@ -44,7 +44,7 @@ func (c *RocketChat) DisableSetupWizard() error {
 
 func (c *RocketChat) waitFoRC() error {
 	attempt := 0
-	attempts := 20
+	attempts := 90
 	for attempt < attempts {
 		resp, err := c.client.Get("http://unix/status")
 		if err == nil {
@@ -56,7 +56,7 @@ func (c *RocketChat) waitFoRC() error {
 		}
 		c.logger.Info("RocketChat API error, waiting", zap.Error(err))
 		time.Sleep(10 * time.Second)
-		attempts++
+		attempt++
 	}
 	return fmt.Errorf("timeout waiting for RocketChat API to start")
 }

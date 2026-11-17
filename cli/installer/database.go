@@ -99,3 +99,11 @@ func (d *Database) UpdateBool(key string, value bool) error {
 		fmt.Sprintf("db.rocketchat_settings.update({'_id': '%s'}, {$set: {'value': %t}});", key, value),
 	)
 }
+
+func (d *Database) GrantAdminRole(role string) error {
+	return d.executor.Run(d.mongoShellCmd,
+		App,
+		"--eval",
+		fmt.Sprintf("db.rocketchat_roles.updateOne({_id:'%s'},{$set:{name:'%s',scope:'Users',description:'Syncloud administrators',protected:false,mandatory2fa:false}},{upsert:true});db.rocketchat_permissions.updateMany({roles:'admin'},{$addToSet:{roles:'%s'}});", role, role, role),
+	)
+}
